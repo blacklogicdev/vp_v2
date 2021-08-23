@@ -13,7 +13,7 @@
 // Load Visual Python
 //============================================================================
 (
-    requirejs.specified('base/js/namespace')
+    require.specified('base/js/namespace')
         ? define
         : function (deps, callback) {
             "use strict";
@@ -23,13 +23,11 @@
             return define('vs_base/js/loadVisualpython', deps, callback);
         }
 )([
-    'require',
-    'jquery',
      'vp_base/src/common/vpCommon',
      'vp_base/src/common/StringBuilder',
      'vp_base/src/container/vpContainer',
      'vp_base/js/com/com_const'
-], function (requirejs, $, vpCommon, sb, vpContainer, com_const) {
+], function (vpCommon, sb, vpContainer, com_const) {
     "use strict";
 
     //========================================================================
@@ -50,8 +48,8 @@
         // namespace 의 경우 specifed 체크. events 에 대한 예외 발생 가능할 것으로 예상.
         // this will work in a live notebook because nbextensions & custom.js are loaded
         // by/after notebook.js, which requires base/js/namespace
-        Jupyter = requirejs('base/js/namespace');
-        events = requirejs('base/js/events');
+        Jupyter = require('base/js/namespace');
+        events = require('base/js/events');
         liveNotebook = true;
     } catch (err) {
         // We *are* theoretically in a non-live notebook
@@ -587,11 +585,11 @@
  * Export initVisualpython to global namespace for backwards compatibility
  * Do export synchronously, so that it's defined as soon as this file is loaded
  */
-if (!requirejs.specified('base/js/namespace')) {
+if (!require.specified('base/js/namespace')) {
     window.initVisualpython = function (cfg, st) {
         "use strict";
         // Use require to ensure the module is correctly loaded before the actual call is made
-        requirejs(['vp_base/js/loadVisualpython'], function (loadVisualpython) {
+        require(['vp_base/js/loadVisualpython'], function (loadVisualpython) {
             loadVisualpython.initVisualpython(cfg, st);
         });
     };
