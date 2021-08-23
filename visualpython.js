@@ -22,13 +22,11 @@ require.config({
 // Load extension
 //============================================================================
 define([
-    'require',
-    'jquery',
     'base/js/namespace',
     'base/js/events',
     'vp_base/js/loadVisualpython',
     'vp_base/js/com/com_const'
-], function (requirejs, $, Jupyter, events, loadVisualpython, com_const) {
+], function (Jupyter, events, loadVisualpython, com_const) {
     "use strict";
 
     //========================================================================
@@ -50,21 +48,21 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = requirejs.toUrl(connectorAddress + com_const.STYLE_PATH + 'main.css');
+        link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'main.css');
         document.getElementsByTagName("head")[0].appendChild(link);
 
         // root css
         link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = requirejs.toUrl(connectorAddress + com_const.STYLE_PATH + 'root.css');
+        link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'root.css');
         document.getElementsByTagName("head")[0].appendChild(link);
 
         // common component css
         link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = requirejs.toUrl(connectorAddress + com_const.STYLE_PATH + 'component/common.css');
+        link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'component/common.css');
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
