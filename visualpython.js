@@ -14,7 +14,7 @@
 //============================================================================
 require.config({
     paths: { 
-         'vp_base': '../nbextensions/visualpython'
+        'vp_base': '../nbextensions/visualpython'
     }
 });
 
@@ -26,86 +26,80 @@ define([
     'jquery',
     'base/js/namespace',
     'base/js/events',
-    'vp_base/src/vp',
-    'vp_base/src/common/constant'
-], function (requirejs, $, Jupyter, events, vp, vpConst) {
+    'vp_base/js/loadVisualpython',
+    'vp_base/js/com/com_const'
+], function (requirejs, $, Jupyter, events, loadVisualpython, com_const) {
     "use strict";
 
     //========================================================================
-    // Global variable
+    // Define Variable
     //========================================================================
-    // constant
+    // Constant
     const origin = window.location.origin;
-    const connectorAddress = `${origin}` + vpConst.PATH_SEPARATOR + vpConst.BASE_PATH;
-
-    // import
-    var IPython = Jupyter;
-    var mode = 'dev';
+    const connectorAddress = `${origin}` + com_const.PATH_SEPARATOR + com_const.BASE_PATH;
 
     //========================================================================
-    // Function
+    // Internal call function
     //========================================================================
-    /**
-     * Load extenstion
-     */
-    var load_ipython_extension = function () {
-        load_css();
-
-        // Wait for the jupyter notebook to be fully loaded
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // This tests if the notebook is fully loaded
-            console.log("[vp] Notebook fully loaded -- vp initialized ")
-            vp_init();
-        } else {
-            console.log("[vp] Waiting for notebook availability")
-            events.on("notebook_loaded.Notebook", function () {
-                console.log("[vp] vp initialized (via notebook_loaded)")
-                vp_init();
-            })
-        }
-    };
-
     /**
      * Load main style
      */
-    var load_css = function () {
+    var _load_css = function () {
+
+        // main css
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = requirejs.toUrl(connectorAddress + vpConst.STYLE_PATH + vpConst.MAIN_CSS_URL);
+        link.href = requirejs.toUrl(connectorAddress + com_const.STYLE_PATH + 'main.css');
         document.getElementsByTagName("head")[0].appendChild(link);
 
-        // root variables css
+        // root css
         link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = requirejs.toUrl(connectorAddress + vpConst.STYLE_PATH + 'root.css');
+        link.href = requirejs.toUrl(connectorAddress + com_const.STYLE_PATH + 'root.css');
         document.getElementsByTagName("head")[0].appendChild(link);
 
         // common component css
         link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = requirejs.toUrl(connectorAddress + vpConst.STYLE_PATH + 'component/common.css');
+        link.href = requirejs.toUrl(connectorAddress + com_const.STYLE_PATH + 'component/common.css');
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
     /**
      * Initialize Visual Python
      */
-    var vp_init = function () {
-        if (mode === 'new') {
-            IPython.notebook.config.loaded.then(function() {
-                var vp_new = requirejs(['../new/vp']);
-                var cfg = vp_new.readConfig();
-                vp_new.vpInit(cfg);
-            });
+    var _init_vp = function () {
+        // Read configuration, then call Initialize Visual Python
+        Jupyter.notebook.config.loaded.then( function () {
+            var cfg = loadVisualpython.readConfig();
+            loadVisualpython.initVisualpython(cfg);
+        });
+    };
+
+    //========================================================================
+    // External call function
+    //========================================================================
+    /**
+     * Load jupyter extenstion
+     */
+    var load_ipython_extension = function () {
+
+        _load_css();
+
+        // Wait for the jupyter notebook to be fully loaded
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            // This tests if the notebook is fully loaded
+            console.log("[vp] Notebook fully loaded -- vp initialized ")
+            _init_vp();
         } else {
-            // Read configuration, then call vp
-            IPython.notebook.config.loaded.then(function () {
-                var cfg = vp.readConfig();
-                vp.vpInit(cfg);
-            });
+            console.log("[vp] Waiting for notebook availability")
+            events.on("notebook_loaded.Notebook", function () {
+                console.log("[vp] Visual Python initialized (via notebook_loaded)")
+                _init_vp();
+            })
         }
     };
 
