@@ -22,12 +22,12 @@ require.config({
 // Load extension
 //============================================================================
 define([
-    'base/js/namespace',
-    'base/js/events',
-    'vp_base/js/loadVisualpython',
-    'vp_base/js/com/com_const'
-], function (Jupyter, events, loadVisualpython, com_const) {
-    "use strict";
+    //'base/js/namespace',
+    //'base/js/events',
+    'vp_base/js/com/com_const',
+    'vp_base/js/loadVisualpython'
+], function (/*Jupyter,*/ /*events,*/ com_const, loadVisualpython) {
+    'use strict';
 
     //========================================================================
     // Define Variable
@@ -45,25 +45,25 @@ define([
     var _load_css = function () {
 
         // main css
-        var link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
+        var link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel  = 'stylesheet';
         link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'main.css');
-        document.getElementsByTagName("head")[0].appendChild(link);
+        document.getElementsByTagName('head')[0].appendChild(link);
 
         // root css
-        link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
+        link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel  = 'stylesheet';
         link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'root.css');
-        document.getElementsByTagName("head")[0].appendChild(link);
+        document.getElementsByTagName('head')[0].appendChild(link);
 
         // common component css
-        link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
+        link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel  = 'stylesheet';
         link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'component/common.css');
-        document.getElementsByTagName("head")[0].appendChild(link);
+        document.getElementsByTagName('head')[0].appendChild(link);
     };
 
     /**
@@ -90,12 +90,12 @@ define([
         // Wait for the jupyter notebook to be fully loaded
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // This tests if the notebook is fully loaded
-            console.log("[vp] Notebook fully loaded -- vp initialized ")
+            console.log('[vp] Notebook fully loaded -- vp initialized ')
             _init_vp();
         } else {
-            console.log("[vp] Waiting for notebook availability")
-            events.on("notebook_loaded.Notebook", function () {
-                console.log("[vp] Visual Python initialized (via notebook_loaded)")
+            console.log('[vp] Waiting for notebook availability')
+            events.on('notebook_loaded.Notebook', function () {
+                console.log('[vp] Visual Python initialized (via notebook_loaded)')
                 _init_vp();
             })
         }
