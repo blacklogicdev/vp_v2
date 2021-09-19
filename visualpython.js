@@ -30,7 +30,7 @@ define([
     'use strict';
 
     //========================================================================
-    // Define Variable
+    // Define variable
     //========================================================================
     // Constant
     const origin = window.location.origin;

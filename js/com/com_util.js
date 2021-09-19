@@ -14,12 +14,12 @@
 //============================================================================
 define([
     'vp_base/js/com/com_const',
-    'vp_base/js/com/com_MakeString'
-], function (com_const, com_MakeString) {
+    'vp_base/js/com/com_String'
+], function (com_const, com_String) {
     'use strict'
 
     //========================================================================
-    // Define Variable
+    // Define variable
     //========================================================================
     let isAPIListRunCode = true;
 
@@ -114,7 +114,7 @@ define([
      * @returns wraped selecotr 
      */
     var wrapSelector = function(selector = "") {
-        var sbSelector = new com_MakeString();
+        var sbSelector = new com_String();
         var cnt = arguments.length;
         // 추가 제한자가 없는 경우
         if (cnt < 2) {
