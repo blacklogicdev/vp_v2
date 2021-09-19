@@ -1,7 +1,7 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : com_MakeString.js
+ *    File Name       : com_String.js
  *    Author          : Black Logic
  *    Note            : [CLASS] Make string
  *    License         : GPLv3 (GNU General Public License v3.0)
@@ -13,13 +13,13 @@
 // [CLASS] Make string
 //============================================================================
 define ([
-], function() {
+], function () {
     'use strict';
 
     //========================================================================
-    // [CLASS] com_MakeString
+    // [CLASS] com_String
     //========================================================================
-    class com_MakeString {
+    class com_String {
 
         // constructor
         constructor() {
@@ -77,7 +77,7 @@ define ([
         }
     }
 
-    return com_MakeString;
+    return com_String;
 
 }); /* function, define */
 

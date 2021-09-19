@@ -25,13 +25,13 @@
 )([
     'vp_base/js/com/com_const',
     'vp_base/js/com/com_util',
-    'vp_base/js/com/com_MakeString',
+    'vp_base/js/com/com_String',
     'vp_base/src/container/vpContainer'
-], function (com_const, com_util, com_MakeString, vpContainer) {
+], function (com_const, com_util, com_String, vpContainer) {
     'use strict';
 
     //========================================================================
-    // Define Variable
+    // Define variable
     //========================================================================
     var Jupyter;
     var events;
@@ -137,7 +137,7 @@
     function _adjustAdditionalStyle(cfg) {
         var sheet = document.createElement('style');
         
-        var sbStyle = new com_MakeString();
+        var sbStyle = new com_String();
         sbStyle.appendFormatLine('#vpBtnToggle li > span:hover { background-color: {0}; }', cfg.colors.hover_highlight);
         sbStyle.appendFormatLine('.vp-item-highlight-select {background-color: {0}; }', cfg.colors.selected_highlight);
         sbStyle.appendFormatLine('.vp-item-highlight-execute {background-color: {0}; }', cfg.colors.running_highlight);
