@@ -14,7 +14,7 @@
 //============================================================================
 define([
 ], function () {
-    "use strict";
+    'use strict';
 
     /**
      * 1. Load Metadata from selected cell
