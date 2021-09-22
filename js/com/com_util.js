@@ -66,10 +66,10 @@ define([
 
         $(destSelector).load(loadURL, function (response, status, xhr) {
             // 로딩 에러시 처리
-            if (status === "error") {
+            if (status === 'error') {
                 // TODO: 에러 처리 방법 정의 필요. 알람은 개발 편의를 위해.
-                alert(xhr.status + " " + xhr.statusText);
-                console.warn("[vp] Unexcepted error occurred during load option page." + xhr.status + " " + xhr.statusText);
+                alert(xhr.status + ' ' + xhr.statusText);
+                console.warn('[vp] Unexcepted error occurred during load option page.' + xhr.status + ' ' + xhr.statusText);
             } else {
                 // callback 이 함수이면 실행
                 if (typeof(callback) === 'function')
@@ -93,11 +93,11 @@ define([
      * @param {String} url style url
      */
     var loadCss = function(url) {
-        var link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
+        var link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
         link.href = require.toUrl(url);
-        document.getElementsByTagName("head")[0].appendChild(link);
+        document.getElementsByTagName('head')[0].appendChild(link);
     }
 
     /**
@@ -105,7 +105,7 @@ define([
      * @returns vp top container selector
      */
     var getVPContainer = function() {
-        return "#" + com_const.VP_CONTAINER_ID;
+        return '#' + com_const.VP_CONTAINER_ID;
     }
 
     /**
@@ -113,16 +113,16 @@ define([
      * @param {String} selector 제한할 대상 선택자. 복수 매개 시 순서대로 제한됨
      * @returns wraped selecotr 
      */
-    var wrapSelector = function(selector = "") {
+    var wrapSelector = function(selector = '') {
         var sbSelector = new com_String();
         var cnt = arguments.length;
         // 추가 제한자가 없는 경우
         if (cnt < 2) {
-            sbSelector.appendFormat("{0} {1}", getVPContainer(), selector);
+            sbSelector.appendFormat('{0} {1}', getVPContainer(), selector);
         } else {
-            sbSelector.appendFormat("{0}", getVPContainer());
+            sbSelector.appendFormat('{0}', getVPContainer());
             for (var idx = 0; idx < cnt; idx++) {
-                sbSelector.appendFormat(" {0}", arguments[idx]);
+                sbSelector.appendFormat(' {0}', arguments[idx]);
             }
         }
         // console.log('wrapSelector', sbSelector.toString());
@@ -155,7 +155,7 @@ define([
 
         var str = arguments[0];
         for (var idx = 1; idx < cnt; idx++)
-            str = str.replace("{" + (idx - 1) + "}", arguments[idx]);
+            str = str.replace('{' + (idx - 1) + '}', arguments[idx]);
         
         return str;
     }
@@ -196,9 +196,9 @@ define([
     var renderAlertModal = function(titleStr) {
         if (isAPIListRunCode == true) {
             // load css
-            loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + "component/alertModal.css");
+            loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/alertModal.css');
             // set html url
-            var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + "component/alertModal.html";
+            var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/alertModal.html';
             // load alertModal html
             $(`<div id="vp_alertModal"></div>`)
                 .load(loadURL, function() {
@@ -210,10 +210,10 @@ define([
                     $('.vp-alertModal-yes').click( function() {
                         $('body').find('#vp_alertModal').remove();
                         // 종료후 head 태그에 import된 alertModal.css와 alertModal.html을 삭제함
-                        removeHeadScript("alertModal");
+                        removeHeadScript('alertModal');
                     });   
             })
-            .appendTo("body");
+            .appendTo('body');
         }
     }
 
@@ -223,14 +223,14 @@ define([
      */
     var renderLoadingBar = function() {
         // load css
-        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + "component/loadingBar.css");
+        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/loadingBar.css');
         // set html url
-        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + "component/loadingBar.html";
+        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/loadingBar.html';
         // load renderLoadingBar html 
         $(`<div id="vp_loadingBar"></div>`)
             .load(loadURL, function() {
         })
-        .appendTo(".fileNavigationPage-directory-container");
+        .appendTo('.fileNavigationPage-directory-container');
     }
 
     /**
@@ -239,19 +239,19 @@ define([
      * @param {string} titleStr 
      */
     var renderSuccessMessage = function(titleStr) {
-        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + "component/successMessage.css");
-        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + "component/successMessage.html";
+        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/successMessage.css');
+        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/successMessage.html';
         $(`<div id="vp_successMessage"></div>`)
             .load(loadURL, function() {
                 $('.vp-successMessage').append(`<div>${titleStr}</div>`);
                 // 한 번 비동기 실행 다음 3초 후  종료
                 setTimeout( function() {
-                    $("#vp_successMessage").remove();
+                    $('#vp_successMessage').remove();
                     // 종료후 head 태그에 import된 successMessage.css와 successMessage.html을 삭제함
-                    removeHeadScript("successMessage");
+                    removeHeadScript('successMessage');
                 }, 3000);
             })
-        .appendTo("#header");
+        .appendTo('#header');
     }
 
     /**
@@ -259,13 +259,13 @@ define([
      */
     var renderYesOrNoModal = function(callback) {
         // load css
-        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + "component/yesOrNoModal.css");
+        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/yesOrNoModal.css');
         // set html url
-        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + "component/yesOrNoModal.html";
+        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/yesOrNoModal.html';
         // load alertModal html
         $(`<div id="vp_yesOrNoModal"></div>`)
             .load(loadURL, callback)
-        .appendTo(".FileNavigationPage-inner");
+        .appendTo('.FileNavigationPage-inner');
     }
 
     /**
@@ -318,20 +318,20 @@ define([
             var targetCell = Jupyter.notebook.insert_cell_below(type);
             
             // 코드타입인 경우 시그니쳐 추가.
-            if (type == "code") {
-                // command = vpCommon.formatString("{0}\n{1}", com_const.PREFIX_CODE_SIGNATURE, command);
-                command = formatString("{0}", command);
+            if (type == 'code') {
+                // command = vpCommon.formatString('{0}\n{1}', com_const.PREFIX_CODE_SIGNATURE, command);
+                command = formatString('{0}', command);
             }
             targetCell.set_text(command);
             Jupyter.notebook.select_next();
             // this.metaSave(); 각 함수에서 호출하도록 변경.
             if (exec) {
                 switch (type) {
-                    case "markdown":
+                    case 'markdown':
                         targetCell.render();
                         break;
                         
-                    case "code":
+                    case 'code':
                     default:
                         targetCell.execute();
                 }
@@ -343,7 +343,7 @@ define([
         Jupyter.notebook.scroll_to_cell(Jupyter.notebook.get_selected_index());
         
         if (executed) {
-            renderSuccessMessage("Your code has been executed");
+            renderSuccessMessage('Your code has been executed');
         }
     }
 

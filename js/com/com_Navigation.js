@@ -561,7 +561,6 @@ define([
                 var slicedCurrentDirStr = currentDirStr.slice(1, currentDirStr.length - 1);
                 slicedCurrentDirStr = slicedCurrentDirStr.replace(/\\/g, `/`);
 
-                //** slicedCurrentDirStr = slicedCurrentDirStr.replaceAll("//","/"); 이 기능을 아래 logic으로 대체 */
                 var cursor = 0;
                 while (slicedCurrentDirStr[cursor] !== undefined) {
                     if (slicedCurrentDirStr[cursor] === '/' && slicedCurrentDirStr[cursor + 1] === '/') {
