@@ -14,7 +14,25 @@
 //============================================================================
 require.config({
     paths: { 
-        'vp_base': '../nbextensions/visualpython'
+        'vp_base': '../nbextensions/visualpython',
+        'css'       : '../nbextensions/visualpython/lib/require/css.min'
+    },
+    config: {
+        text: {
+            // allow CORS        
+            useXhr: function(url, protocol, hostname, port) {
+                // console.log('allow xhr');
+                return true;
+            },
+            onXhr: function(xhr, url) {
+                // console.log(xhr);
+            }
+        }
+    },
+    map: {
+        '*': {
+            css :  '../nbextensions/visualpython/lib/require/css.min'
+        }
     }
 });
 
@@ -22,11 +40,11 @@ require.config({
 // Load extension
 //============================================================================
 define([
-    //'base/js/namespace',
-    //'base/js/events',
+    'text',
+    'css', 
     'vp_base/js/com/com_const',
     'vp_base/js/loadVisualpython'
-], function (/*Jupyter,*/ /*events,*/ com_const, loadVisualpython) {
+], function (text, css, com_const, loadVisualpython) {
     'use strict';
 
     //========================================================================
@@ -39,33 +57,6 @@ define([
     //========================================================================
     // Internal call function
     //========================================================================
-    /**
-     * Load main style
-     */
-    var _load_css = function () {
-
-        // main css
-        var link = document.createElement('link');
-        link.type = 'text/css';
-        link.rel  = 'stylesheet';
-        link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'main.css');
-        document.getElementsByTagName('head')[0].appendChild(link);
-
-        // root css
-        link = document.createElement('link');
-        link.type = 'text/css';
-        link.rel  = 'stylesheet';
-        link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'root.css');
-        document.getElementsByTagName('head')[0].appendChild(link);
-
-        // common component css
-        link = document.createElement('link');
-        link.type = 'text/css';
-        link.rel  = 'stylesheet';
-        link.href = require.toUrl(connectorAddress + com_const.STYLE_PATH + 'component/common.css');
-        document.getElementsByTagName('head')[0].appendChild(link);
-    };
-
     /**
      * Initialize Visual Python
      */
@@ -84,8 +75,6 @@ define([
      * Load jupyter extenstion
      */
     var load_ipython_extension = function () {
-
-        _load_css();
 
         // Wait for the jupyter notebook to be fully loaded
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {

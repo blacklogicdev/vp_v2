@@ -1,0 +1,190 @@
+/*
+ *    Project Name    : Visual Python
+ *    Description     : GUI-based Python code generator
+ *    File Name       : root.css
+ *    Author          : Black Logic
+ *    Note            : stylesheet for initializing global style variables
+ *                      usage) background: var(--declared-variable-name);
+ *    License         : GNU GPLv3 with Visual Python special exception
+ *    Date            : 2021. 09. 13
+ *    Change Date     :
+ */
+:root {
+    --border-gray-color: #E4E4E4;
+    --grid-line-color: #E4E4E4;
+    --light-gray-color: #F5F5F5;
+    --highlight-color: #F6AD55;
+    --gray-color: #C4C4C4;
+    --font-hightlight: #F38504;
+    --font-primary: #696969;
+    --logo-url: url(../../visualpython/img/logo.png);
+}
+/* Font */
+/* Logo */
+@font-face {
+	font-family: Foglihten;
+	src: url(../fonts/Foglihten-068.otf) format("opentype");
+	font-style: normal;
+	font-weight: 500;
+}
+/* Headlines, Body, Componenets */
+@font-face {
+	font-family: AppleSDGothicNeo;
+	src: url(../fonts/AppleSDGothicNeoM.ttf) format("truetype");
+}
+/* Codes */
+@font-face {
+	font-family: Consola;
+	src: url(../fonts/consola.ttf) format("truetype");
+}
+/* font style */
+.vp-primary {
+    color: var(--font-hightlight);
+}
+/* Body */
+body {
+    overflow: hidden;
+}
+/* Jupyter Toolbar Icon */
+/* com_Const.TOOLBAR_BTN_INFO.ID */
+#vpBtnToggle i {
+	background-image: url(../../visualpython/img/icon.png);
+    background-size: contain;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+}
+/* width style*/
+.wp100 {
+    width: 100%;
+}
+/* common component style */
+.vp-input {
+    font-size: 14px;
+    line-height: 16px;
+    height: 30px;
+    padding: 3px 7px;
+    color: var(--font-primary);
+    background: #FFFFFF;
+    outline-color: var(--highlight-color);
+    border: 0.25px solid var(--border-gray-color);
+    box-sizing: border-box;
+}
+
+.vp-select {
+    height: 30px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 5px 16px 3px 9px;
+    background: url(../../visualpython/img/unfold_more.svg), #F5F5F5;
+    background-position: 97% 50%;
+    background-size: 11px 11px;
+    background-repeat: no-repeat;
+    outline: none;
+    border: 0.25px solid var(--border-gray-color);
+    border-radius: 0px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Buttons */
+.vp-button {
+    width: 80px;
+    height: 30px;
+    background: #FFFFFF;
+    border: 0.25px solid #E4E4E4;
+    box-sizing: border-box;
+    box-shadow: 0.5px 0.5px 0.5px rgb(0 0 0 / 10%);
+    border-radius: 2px;
+    line-height: 30px;
+    font-size: 14px;
+    text-align: center;
+    color: #696969;
+    cursor: pointer;
+    /* No-selection allowed for buttons */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
+}
+.vp-button:hover {
+    background: #F8F8F8;
+}
+.vp-button.cancel {
+    background: #E5E5E5;
+    border: 0px;
+}
+.vp-button.cancel:hover {
+    background: #DEDEDE;
+}
+.vp-button.add {
+    background: #FFFFFF;
+}
+.vp-button.add:hover {
+    background: #F8F8F8;
+}
+.vp-button.activated {
+    background: #F38504;
+    border: 0px;
+    color: #FFFFFF;
+}
+.vp-button.activated:hover {
+    background: #EF6B10;
+}
+.vp-button.disabled,
+.vp-button.disabled:hover,
+.vp-button:disabled,
+.vp-button:disabled:hover {
+    background: #E5E5E5;
+    border: 0px;
+    border: 0.25px solid #E4E4E4;
+    color: #696969;
+    cursor: not-allowed;
+}
+
+/* Scrollbar */
+.vp-scrollbar {
+    overflow-y: auto;
+    --webkit-mask-position: left top;
+}
+.vp-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+} 
+.vp-scrollbar::-webkit-scrollbar-thumb {
+    border: 0.3px solid #C4C4C4;
+    background: #C4C4C4;
+}
+
+/* Accordian Box */
+.vp-accordian.close + .vp-accordian-box {
+    display: none !important;
+}
+.vp-accordian.open + .vp-accordian-box {
+    display: block !important;
+}
+
+/* cursor */
+.vp-cursor {
+    cursor: pointer;
+}
+
+/* No-selection */
+.vp-no-selection {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
+}

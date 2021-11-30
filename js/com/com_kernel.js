@@ -1,110 +1,72 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : com_kernel.js
+ *    File Name       : com_Kernel.js
  *    Author          : Black Logic
- *    Note            : Kernel API function
- *    License         : GPLv3 (GNU General Public License v3.0)
- *    Date            : 2021. 08. 14
+ *    Note            : Interface between vp and jupyter
+ *    License         : GNU GPLv3 with Visual Python special exception
+ *    Date            : 2021. 09. 16
  *    Change Date     :
  */
-
-//============================================================================
-// Kernel API function
-//============================================================================
 define([
-    'vp_base/js/com/com_util',
-    'vp_base/js/com/com_String'
-], function (com_util, com_String) {
-    'use strict'
+    './com_Config'
+], function(com_Config) {
 
-    //========================================================================
-    // External call function
-    //========================================================================
     /**
-     * Execute python kernel
-     * @param {*} command 
-     * @param {*} callback 
-     * @param {*} isSilent 
+     * Kernel interface class
      */
-     var executePython = function (command, callback, isSilent = false) {
-        Jupyter.notebook.kernel.execute(
-            command,
-            {
-                iopub: {
-                    output: function (msg) {
-                        if (msg.content) {
-                            if (msg.content['name'] == 'stderr') {
-                                ;
-                            } else {
-                                var result = '';
-                                var type = '';
-                                if (msg.content['text']) {
-                                    result = String(msg.content['text']);
-                                    type = 'text';
-                                } else if (msg.content.data) {
-                                    if (msg.content.data['text/plain']) {
-                                        result = String(msg.content.data['text/plain']);
-                                        type = 'text/plain';
-                                    } else if (msg.content.data['text/html']) {
-                                        result = String(msg.content.data['text/html']);
-                                        type = 'text/html';
-                                    }
-                                }
-                                callback(result, type);
-                            }
-                        }
-                    }
+    class Kernel {
+        /** constructor */
+        constructor() {
+            this.data = [
+                { varName: 'df1', varType: 'DataFrame' },
+                { varName: 'df2', varType: 'DataFrame' },
+                { varName: 'df3', varType: 'DataFrame' },
+                { varName: 's1', varType: 'Series' },
+                { varName: 's2', varType: 'Series' },
+                { varName: 's3', varType: 'Series' },
+                { varName: 'l1', varType: 'List' },
+                { varName: 'l2', varType: 'List' },
+                { varName: 'l3', varType: 'List' }
+            ]
+
+            this.config = {
+                'vpcfg': {
+
+                },
+                'vpudf': {
+
                 }
-            },
-            { silent: isSilent }
-        );
-    };
-
-    /**
-     * Search variable list
-     */
-    var searchVarList = function(types, callback) {
-        // types에 맞는 변수목록 조회하는 명령문 구성
-        var cmdSB = new com_String();
-        if (types && types.length > 0) {
-            cmdSB.appendFormat('_vp_print(_vp_get_variables_list({0}))', JSON.stringify(types));
-        } else {
-            cmdSB.appendFormat('_vp_print(_vp_get_variables_list({0}))', 'None');
+            }
         }
 
-        executePython(cmdSB.toString(), function(result) {
-            callback(result);
-        });
+        //====================================================================
+        // Executing command api
+        //====================================================================
+        execute(command, callback) {
+            
+        }
+
+        getDataList(dataTypeList) {
+            return this.data;
+        }
+
+        //====================================================================
+        // Configuration api
+        //====================================================================
+        loadConfig() {
+
+        }
+
+        getConfig() {
+
+        }
+
+        setConfig() {
+
+        }
+
     }
 
-    /**
-     * Get column list
-     */
-    var getColumnList = function(dataframe, callback) {
-        executePython(
-            com_util.formatString('_vp_print(_vp_get_columns_list({0}))', dataframe)
-            , function(result) {
-                callback(result);
-        });
-    }
-
-    /**
-     * Get profiling list
-     */
-    var getProfilingList = function(callback) {
-        executePython('_vp_print(_vp_get_profiling_list())', function(result) {
-            callback(result);
-        });
-    }
-
-    return {
-        executePython: executePython,
-        searchVarList: searchVarList,
-        getColumnList: getColumnList,
-        getProfilingList: getProfilingList
-    }
-
-}); /* function, define */
-
-/* End of file */
+    return Kernel;
+});

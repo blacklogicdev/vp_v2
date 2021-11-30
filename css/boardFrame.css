@@ -1,0 +1,88 @@
+/*
+ *    Project Name    : Visual Python
+ *    Description     : GUI-based Python code generator
+ *    File Name       : boardFrame.css
+ *    Author          : Black Logic
+ *    Note            : stylesheet for boardFrame.html
+ *    License         : GNU GPLv3 with Visual Python special exception
+ *    Date            : 2021. 09. 13
+ *    Change Date     :
+ */
+/* frame parts */
+.vp-board-frame {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    
+    border-left: 1px solid var(--border-gray-color);
+    box-sizing: border-box;
+}
+.vp-board-header {
+    box-sizing: border-box;
+    width: 100%;
+    height: 50px;
+    text-align: right;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--border-gray-color);
+}
+.vp-board-title {
+    width: 100%; 
+    height: 50px; 
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    z-index: 10;
+    border-bottom: 0.25px solid var(--border-gray-color);
+    box-sizing: border-box;
+}
+.vp-board-title input {
+    font-family: AppleSDGothicNeo;
+    font-weight: 500;
+    font-size: 16px !important;
+    width: calc(100% - 50px);
+    margin: 10px;
+    border: 0.5px solid white;
+}
+.vp-board-title input:focus {
+    transition: 0.7s;
+    border: 0.5px solid var(--highlight-color) !important;
+    color: var(--font-hightlight);
+}
+.vp-board-title input::selection {
+	background-color: #FDEFDD;
+}
+.vp-board-header-button {
+    cursor: pointer;
+    right: 10px;
+    top: 13px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background: url(../../visualpython/img/hamburger.svg) center center no-repeat transparent;
+    z-index: 10;
+}
+.vp-board-body {
+    width: 100%;
+    height: calc(100% - 100px);
+    padding: 5px;
+    box-sizing: border-box;
+    position: relative;
+    color: #000;
+    background-size: 5px 5px;
+    background-image: repeating-linear-gradient( to right, var(--grid-line-color) 0, var(--grid-line-color) 0.25px, transparent 1px, transparent 50px ), repeating-linear-gradient( to bottom, var(--grid-line-color) 0, var(--grid-line-color) 0.25px, transparent 1px, transparent 50px );
+    background-color: white;
+}
+.vp-board-footer {
+    width: 100%;
+    height: 50px;
+    border-top: 1px solid var(--border-gray-color);
+    line-height: 50px;
+}
+.vp-board-footer-buttons {
+    position: absolute;
+    right: 15px;
+    z-index: 2;
+}
