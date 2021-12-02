@@ -91,8 +91,8 @@ define([
          * @param {*} inplace overwrite under $target
          */
         render(inplace=false) {
-            vpLog.display(VP_LOG_TYPE.DEVELOP, 'rendering Component', this);
             this.$pageDom = $(this.template());
+            this.$pageDom.addClass(this.uuid);
 
             let $page = this.$target.find('.' + this.uuid);
             if ($page.length > 0) {

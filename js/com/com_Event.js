@@ -23,6 +23,8 @@ define([], function() {
         constructor(mainFrame) {
             this.mainFrame = mainFrame;
 
+            var that = this;
+
             this._globalEvent = [
                 { 
                     method: 'click', 
@@ -43,13 +45,14 @@ define([], function() {
                     }
                 },
                 {
-                    method: 'openpage',
+                    method: 'open_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         var target = evt.currentTarget;
-                        var { menutItem, menuIype, menuState } = evt;
+                        // openType: newBlock/openBlock/... / menuItem: menu id / menuState: saved state
+                        var { openType, menuId, menuState } = evt;
                         
-                        
+                        that.mainFrame.openPopup(openType, menuId, menuState);
 
                     }
                 }

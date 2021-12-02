@@ -48,12 +48,16 @@ define([
         //========================================================================
         constructor($target, state, prop={}) {
             super($target, state, prop);
-            this.xmlLibraries = undefined;
         }
 
         //========================================================================
         // Internal call function
         //========================================================================
+        _init() {
+            // get json library list
+            this.menuLibraries = this.getMenuLibraries();
+        }
+        
         /**
          * Bind events on menuFrame
          */
@@ -145,14 +149,36 @@ define([
          * Get menu object
          * @returns library object
          */
-        getMenus() {
+        getMenuLibraries() {
             var libraries = JSON.parse(librariesJson);
-
+            if (!libraries || !libraries.library) {
+                vpLog.display(VP_LOG_TYPE.ERROR, 'vp menus are not avilable!');
+                return {};
+            }
+            vpLog.display(VP_LOG_TYPE.LOG, 'vp menus version : ', libraries.library.version);
             if (libraries && libraries.library) {
-                return libraries.library;
+                return libraries.library.item;
             }
 
             return {};
+        }
+        
+        getMenuLibrary(menuId, libraries=this.menuLibraries) {
+            for (var i=0; i < libraries.length; i++) {
+                var item = libraries[i];
+                if (item) {
+                    if (item.id === menuId) {
+                        return item;
+                    }
+                    if (item.type === 'package') {
+                        var result = this.getMenuLibrary(menuId, item.item);
+                        if (result) {
+                            return result;
+                        }
+                    }
+                }
+            }
+            return null;
         }
         
         template() {
@@ -179,20 +205,16 @@ define([
         }   
 
         render() {
+            super.render(true);
             var that = this;
 
-            this.$target.append(this.template());
             this._bindResizable();
 
             // render menuItem
-            // get xml library list
-            var menus = this.getMenus();
-            vpLog.display(VP_LOG_TYPE.LOG, 'vp menus version : ', menus.version);
+            var menuLibraries = this.menuLibraries;
+            vpLog.display(VP_LOG_TYPE.DEVELOP, menuLibraries);
 
-            var menuItems = menus.item;
-            vpLog.display(VP_LOG_TYPE.DEVELOP, menuItems);
-
-            menuItems && menuItems.forEach(item => {
+            menuLibraries && menuLibraries.forEach(item => {
                 if (item.type == 'package') {
                     // packages : MenuGroup
                     var menuGroup = new MenuGroup($('#vp_menuBody'), item);
@@ -201,8 +223,6 @@ define([
                     }
                 }
             });
-
-
         }
     }
 

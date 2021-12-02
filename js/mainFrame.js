@@ -181,6 +181,33 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp toggled');
         }
 
+        /**
+         * Open menu as popup
+         * @param {*} openType 
+         * @param {*} menuId 
+         * @param {*} menuState 
+         */
+        openPopup(openType, menuId, menuState) {
+            // get specific menu configuration
+            let menuConfig = this.menuFrame.getMenuLibrary(menuId);
+            if (!menuConfig) {
+                vpLog.display(VP_LOG_TYPE.ERROR, 'Menu is not found (menu id: '+menuId+')');
+                return;
+            }
+            // open component
+            require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
+                // pass configuration inside state
+                let state = {
+                    ...menuState,
+                    config: menuConfig
+                }
+                let option = new OptionComponent(state);
+                option.open();
+            }, function (err) {
+                vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found (menu id: '+menuId+')');
+            });
+        }
+
         get menuFrame() {
             return this._menuFrame;
         }

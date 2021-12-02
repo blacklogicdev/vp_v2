@@ -48,15 +48,17 @@ define([
         }
 
         _bindEvent() {
+            var that = this;
             this.$target.on('click', function(evt) {
-                // TEST: target id click event
-                if (evt.target.id == 'sampleId') {
-                    
-                }
-
-                // TEST: target class click event
-                if ($(evt.target).hasClass('sample-class')) {
-                    
+                var target = evt.target;
+                // click event
+                if ($(target).hasClass(that.uuid)) {
+                    $('#vp_wrapper').trigger({
+                        type: 'open_option_page', 
+                        openType: '',
+                        menuId: that.state.id,
+                        menuState: {}
+                    });
                 }
             });
         }

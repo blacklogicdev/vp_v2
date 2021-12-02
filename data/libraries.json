@@ -39,7 +39,7 @@
                         "tag"  : "IMPORT,APPS",
                         "path" : "visualpython - apps - import",
                         "desc" : "Import",
-                        "file" : "apps/Import.js",
+                        "file" : "m_apps/Import.js",
                         "apps" : {
                             "color": 1,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_import.svg"
@@ -53,7 +53,7 @@
                         "tag"  : "FILE,APPS",
                         "path" : "visualpython - apps - file",
                         "desc" : "File",
-                        "file" : "apps/File.js",
+                        "file" : "m_apps/File.js",
                         "apps" : {
                             "color": 1,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_file.svg"
@@ -67,7 +67,7 @@
                         "tag"  : "VARIABLE,APPS",
                         "path" : "visualpython - apps - variable",
                         "desc" : "Variable",
-                        "file" : "apps/Variable.js",
+                        "file" : "m_apps/Variable.js",
                         "apps" : {
                             "color": 1,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_variable.svg"
@@ -81,7 +81,7 @@
                         "tag"  : "SNIPPETS,APPS",
                         "path" : "visualpython - apps - snippets",
                         "desc" : "Snippets",
-                        "file" : "apps/Snippets.js",
+                        "file" : "m_apps/Snippets.js",
                         "apps" : {
                             "color": 1,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_snippets.svg"
@@ -95,7 +95,7 @@
                         "tag"  : "FRAME,APPS",
                         "path" : "visualpython - apps - frame",
                         "desc" : "Frame",
-                        "file" : "apps/Frame.js",
+                        "file" : "m_apps/Frame.js",
                         "apps" : {
                             "color": 2,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_frame.svg"
@@ -109,7 +109,7 @@
                         "tag"  : "SUBSET,APPS",
                         "path" : "visualpython - apps - subset",
                         "desc" : "Subset",
-                        "file" : "apps/Subset.js",
+                        "file" : "m_apps/Subset.js",
                         "apps" : {
                             "color": 2,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_subset.svg"
@@ -123,7 +123,7 @@
                         "tag"  : "INSTANCE,APPS",
                         "path" : "visualpython - apps - instance",
                         "desc" : "Instance",
-                        "file" : "apps/Instance.js",
+                        "file" : "m_apps/Instance.js",
                         "apps" : {
                             "color": 2,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_instance.svg"
@@ -137,7 +137,7 @@
                         "tag"  : "GROUPBY,APPS",
                         "path" : "visualpython - apps - groupby",
                         "desc" : "Groupby",
-                        "file" : "apps/Groupby.js",
+                        "file" : "m_apps/Groupby.js",
                         "apps" : {
                             "color": 2,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_groupby.svg"
@@ -151,7 +151,7 @@
                         "tag"  : "BIND,APPS",
                         "path" : "visualpython - apps - bind",
                         "desc" : "Concat & Merge",
-                        "file" : "apps/Bind.js",
+                        "file" : "m_apps/Bind.js",
                         "apps" : {
                             "color": 3,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_bind.svg"
@@ -165,7 +165,7 @@
                         "tag"  : "RESHAPE,APPS",
                         "path" : "visualpython - apps - reshape",
                         "desc" : "Reshape",
-                        "file" : "apps/Reshape.js",
+                        "file" : "m_apps/Reshape.js",
                         "apps" : {
                             "color": 3,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_reshape.svg"
@@ -179,7 +179,7 @@
                         "tag"  : "CHART,APPS",
                         "path" : "visualpython - apps - chart",
                         "desc" : "Chart",
-                        "file" : "apps/Chart.js",
+                        "file" : "m_apps/Chart.js",
                         "apps" : {
                             "color": 3,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_chart.svg"
@@ -193,7 +193,7 @@
                         "tag"  : "MARKDOWN,APPS",
                         "path" : "visualpython - apps - markdown",
                         "desc" : "Markdown",
-                        "file" : "apps/Markdown.js",
+                        "file" : "m_apps/Markdown.js",
                         "apps" : {
                             "color": 3,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_markdown.svg"
@@ -207,7 +207,7 @@
                         "tag"  : "PDF,PYMUPDF,APPS",
                         "path" : "visualpython - apps - pdf",
                         "desc" : "PDF",
-                        "file" : "apps/PDF.js",
+                        "file" : "m_apps/PDF.js",
                         "apps" : {
                             "color": 4,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_pymupdf.svg"
@@ -221,10 +221,24 @@
                         "tag"  : "PROFILING,PANDAS PROFILING,APPS",
                         "path" : "visualpython - apps - profiling",
                         "desc" : "Pandas Profiling",
-                        "file" : "apps/Profiling.js",
+                        "file" : "m_apps/Profiling.js",
                         "apps" : {
                             "color": 4,
                             "icon": "../../nbextensions/visualpython/img/apps/apps_profiling.svg"
+                        }
+                    },
+                    {
+                        "id"   : "apps_sample",
+                        "type" : "function",
+                        "level": 1,
+                        "name" : "Sample",
+                        "tag"  : "SAMPLE,APPS",
+                        "path" : "visualpython - apps - sample",
+                        "desc" : "Sample app for testing",
+                        "file" : "m_apps/SampleApp",
+                        "apps" : {
+                            "color": 4,
+                            "icon": "../../nbextensions/visualpython/img/apps/apps_white.svg"
                         }
                     }
                 ]
@@ -253,7 +267,7 @@
                                 "tag"  : "CLASS,LOGIC",
                                 "path" : "visualpython - logic - define - class",
                                 "desc" : "Define class",
-                                "file" : "logic/class.js"
+                                "file" : "m_logic/class.js"
                             },
                             {
                                 "id"   : "lgDef_",
@@ -263,7 +277,7 @@
                                 "tag"  : "DEF,FUNCTION,LOGIC",
                                 "path" : "visualpython - logic - define - function",
                                 "desc" : "Define function",
-                                "file" : "logic/def.js"
+                                "file" : "m_logic/def.js"
                             }
                         ]
                     },
@@ -283,7 +297,7 @@
                                 "tag"  : "FOR LOOP,LOGIC",
                                 "path" : "visualpython - logic - control - for",
                                 "desc" : "for loop",
-                                "file" : "logic/for.js"
+                                "file" : "m_logic/for.js"
                             },
                             {
                                 "id"   : "lgCtrl_while",
@@ -293,7 +307,7 @@
                                 "tag"  : "WHILE LOOP,LOGIC",
                                 "path" : "visualpython - logic - control - while",
                                 "desc" : "while loop",
-                                "file" : "logic/while.js"
+                                "file" : "m_logic/while.js"
                             },
                             {
                                 "id"   : "lgCtrl_if",
@@ -303,7 +317,7 @@
                                 "tag"  : "IF,LOGIC",
                                 "path" : "visualpython - logic - control - if",
                                 "desc" : "if",
-                                "file" : "logic/if.js"
+                                "file" : "m_logic/if.js"
                             },
                             {
                                 "id"   : "lgCtrl_try",
@@ -313,7 +327,7 @@
                                 "tag"  : "TRY CATCH EXCEPT,FINALLY,EXCEPTION,HANDLE ERROR,LOGIC",
                                 "path" : "visualpython - logic - control - try",
                                 "desc" : "try except",
-                                "file" : "logic/try.js"
+                                "file" : "m_logic/try.js"
                             },
                             {
                                 "id"   : "lgCtrl_return",
@@ -323,7 +337,7 @@
                                 "tag"  : "RETURN,LOGIC",
                                 "path" : "visualpython - logic - control - return",
                                 "desc" : "return variables",
-                                "file" : "logic/return.js"
+                                "file" : "m_logic/return.js"
                             },
                             {
                                 "id"   : "lgCtrl_continue",
@@ -333,7 +347,7 @@
                                 "tag"  : "CONTINUE,LOGIC",
                                 "path" : "visualpython - logic - control - continue",
                                 "desc" : "continue on loop",
-                                "file" : "logic/continue.js"
+                                "file" : "m_logic/continue.js"
                             },
                             {
                                 "id"   : "lgCtrl_break",
@@ -343,7 +357,7 @@
                                 "tag"  : "BREAK,LOGIC",
                                 "path" : "visualpython - logic - control - break",
                                 "desc" : "break on loop",
-                                "file" : "logic/break.js"
+                                "file" : "m_logic/break.js"
                             },
                             {
                                 "id"   : "lgCtrl_pass",
@@ -353,7 +367,7 @@
                                 "tag"  : "PASS,LOGIC",
                                 "path" : "visualpython - logic - control - pass",
                                 "desc" : "pass",
-                                "file" : "logic/pass.js"
+                                "file" : "m_logic/pass.js"
                             }
                         ]
                     },
@@ -373,7 +387,7 @@
                                 "tag"  : "LAMBDA,EXECUTE,LOGIC",
                                 "path" : "visualpython - logic - execute - lambda",
                                 "desc" : "lambda",
-                                "file" : "logic/lambda.js"
+                                "file" : "m_logic/lambda.js"
                             },
                             {
                                 "id"   : "lgExe_code",
@@ -383,7 +397,7 @@
                                 "tag"  : "CODE,EDITOR,LOGIC",
                                 "path" : "visualpython - logic - execute - code",
                                 "desc" : "code editor",
-                                "file" : "logic/code.js"
+                                "file" : "m_logic/code.js"
                             },
                             {
                                 "id"   : "lgExe_print",
@@ -393,7 +407,7 @@
                                 "tag"  : "PRINT,LOGIC",
                                 "path" : "visualpython - logic - execute - print",
                                 "desc" : "print",
-                                "file" : "logic/print.js"
+                                "file" : "m_logic/print.js"
                             },
                             {
                                 "id"   : "lgExe_comment",
@@ -403,7 +417,7 @@
                                 "tag"  : "COMMENT,LOGIC",
                                 "path" : "visualpython - logic - execute - comment",
                                 "desc" : "comment",
-                                "file" : "logic/comment.js"
+                                "file" : "m_logic/comment.js"
                             }
                         ]
                     }
@@ -433,7 +447,7 @@
                                 "tag"  : "IMPORT,APPS",
                                 "path" : "visualpython - apps - import",
                                 "desc" : "Import",
-                                "file" : "apps/Import.js"
+                                "file" : "m_apps/Import.js"
                             }
                         ]
                     },
@@ -666,7 +680,7 @@
                                 "tag"  : "PANDAS PLOT,PANDAS",
                                 "path" : "visualpython - library - pandas - plot",
                                 "desc" : "Pandas Plot",
-                                "file" : "pandas/plot.js"
+                                "file" : "m_pandas/plot.js"
                             },
                             {
                                 "id"   : "pdPkg_inputOutput",
@@ -684,7 +698,7 @@
                                         "tag"  : "SAMPLE FILE,LOAD SAMPLE DATASET",
                                         "path" : "visualpython - library - pandas - input output - sample file",
                                         "desc" : "Load sample data file",
-                                        "file" : "pandas/sampleFile.js"
+                                        "file" : "m_pandas/sampleFile.js"
                                     },
                                     {
                                         "id"   : "pdIo_readFile",
@@ -694,7 +708,7 @@
                                         "tag"  : "READ FILE,CSV,EXCEL,PICKLE,JSON",
                                         "path" : "visualpython - library - pandas - input output - read file",
                                         "desc" : "Read file",
-                                        "file" : "pandas/readFile.js"
+                                        "file" : "m_pandas/readFile.js"
                                     },
                                     {
                                         "id"   : "pdIo_toFile",
@@ -704,7 +718,7 @@
                                         "tag"  : "WRITE FILE,CSV,EXCEL,PICKLE,JSON",
                                         "path" : "visualpython - library - pandas - input output - write file",
                                         "desc" : "Write file",
-                                        "file" : "pandas/toFile.js"
+                                        "file" : "m_pandas/toFile.js"
                                     }
                                 ]
                             },
