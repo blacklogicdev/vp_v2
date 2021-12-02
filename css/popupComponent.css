@@ -13,7 +13,7 @@
     position: absolute;
     top: 120px;
     right: 30px;
-    min-width: 400px;
+    min-width: 200px;
     min-height: 400px;
     width: 400px;
     height: 400px;
@@ -28,6 +28,9 @@
     background: var(--light-gray-color);
     border-bottom: 1px solid var(--border-gray-color);
 }
+.vp-popup-header.focused {
+    background-color: #F38504;
+}
 .vp-popup-title {
     line-height: 30px;
     width: calc(100% - 30px);
@@ -36,6 +39,17 @@
     font-size: 16px;
     font-weight: 700;
     color: var(--font-primary);
+    cursor: pointer;
+}
+.vp-popup-toggle {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    top: 4px;
+    right: 23px;
+    z-index: 3;
+    line-height: 20px;
+    text-align: center;
     cursor: pointer;
 }
 .vp-popup-close {

@@ -29,6 +29,11 @@ define([
         VP_CONTAINER_ID
     } = com_Const;
 
+    const MIN_WIDTH = 30;
+    const MIN_HEIGHT = 30;
+    const WIDTH = 400;
+    const HEIGHT = 400;
+
     //========================================================================
     // Declare class
     //========================================================================
@@ -69,6 +74,10 @@ define([
                     // close popup
                     that.close();
                 }
+                // toggle operation
+                if ($(that._wrapSelector('.vp-popup-toggle')).get(0) == target) {
+                    that.toggle();
+                }
             });
         }
 
@@ -76,6 +85,10 @@ define([
             $('.' + this.uuid).draggable({
                 handle: '.vp-popup-title'
             });
+        }
+
+        _unbindResizable() {
+            $('.' + this.uuid).resizable('disable');
         }
 
         _bindResizable() {
@@ -106,7 +119,22 @@ define([
          * minimize and maximize
          */
         toggle() {
-
+            let isOpen = $(this._wrapSelector('.vp-popup-toggle')).hasClass('vp-open');
+            if (isOpen) {
+                // hide
+                $(this._wrapSelector('.vp-popup-body')).hide();
+                $(this._wrapSelector('.vp-popup-footer')).hide();
+                $(this._wrapSelector()).css({'height': '30px', 'min-height': '30px'});
+                $(this._wrapSelector('.vp-popup-toggle')).removeClass('vp-open');
+                $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
+            } else {
+                // show
+                $(this._wrapSelector('.vp-popup-body')).show();
+                $(this._wrapSelector('.vp-popup-footer')).show();
+                $(this._wrapSelector()).css({'height': HEIGHT+'px', 'min-height': MIN_HEIGHT+'px'});
+                $(this._wrapSelector('.vp-popup-toggle')).addClass('vp-open');
+                $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_down_fill_dark.svg');
+            }
         }
 
         /**
