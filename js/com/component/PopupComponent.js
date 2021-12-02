@@ -37,9 +37,10 @@ define([
      */
     class PopupComponent extends Component {
         constructor(state={}, prop={}) {
-            super($('body'), state, prop);
+            super($('#site'), state, prop);
             
             this._bindDraggable();
+            this._bindResizable();
         }
 
         _wrapSelector(selector='') {
@@ -75,6 +76,10 @@ define([
             $('.' + this.uuid).draggable({
                 handle: '.vp-popup-title'
             });
+        }
+
+        _bindResizable() {
+            $('.' + this.uuid).resizable();
         }
 
         template() { 
