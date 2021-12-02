@@ -166,10 +166,10 @@ body {
 }
 
 /* Accordian Box */
-.vp-accordian.close + .vp-accordian-box {
+.vp-accordian.vp-close + .vp-accordian-box {
     display: none !important;
 }
-.vp-accordian.open + .vp-accordian-box {
+.vp-accordian.vp-open + .vp-accordian-box {
     display: block !important;
 }
 

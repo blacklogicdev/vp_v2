@@ -28,15 +28,15 @@ define([], function() {
                     operation: (evt) => {
                         var target = evt.currentTarget;
                         var bodyTag = $(target).parent().find('.vp-accordian-box');
-                        if ($(target).hasClass('open')) {
+                        if ($(target).hasClass('vp-open')) {
                             // open -> close
-                            $(target).removeClass('open');
-                            $(target).addClass('close');
+                            $(target).removeClass('vp-open');
+                            $(target).addClass('vp-close');
 
                         } else {
                             // close -> open
-                            $(target).removeClass('close');
-                            $(target).addClass('open');
+                            $(target).removeClass('vp-close');
+                            $(target).addClass('vp-open');
                         }
                     }
                 }

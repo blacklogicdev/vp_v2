@@ -68,7 +68,7 @@ define([
                 // render normal group
                 page.appendFormatLine('<div class="{0} {1}" data-category="{2}" title="{3}">'
                                     , 'vp-menugroup vp-no-selection vp-accordian'
-                                    , open && open==true?'open':'close', id, desc);
+                                    , open && open==true?'vp-open':'vp-close', id, desc);
                 page.appendFormatLine('<span class="{0}"></span>', 'vp-indicator');
                 page.appendFormatLine('<span>{0}</span>', name)
                 page.appendLine('</div>');

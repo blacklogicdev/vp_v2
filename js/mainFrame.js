@@ -56,12 +56,14 @@ define([
 
         // window resize event
         $(window).resize(function(evt){
-            let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
             let jupyterHeadHeight = $('#' + JUPYTER_HEADER_ID).height();
             let jupyterBodyHeight = $('#' + JUPYTER_NOTEBOOK_ID).height();
+            
+            let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
+            let vpHeight = $(window).height() - jupyterHeadHeight;
 
+            $('#vp_wrapper').css( { height: vpHeight + 'px' });
             _resizeNotebook(vpWidth);
-            $('#vp_wrapper').css( { height: jupyterBodyHeight + 'px' });
             // $('#vp_menuFrame').height(vpHeight);
         });
 

@@ -44,6 +44,7 @@ define([
             // save propagation from parent
             this.prop = prop;
 
+            this._init();
             this._bindEvent();
             this.render();
         }
@@ -64,18 +65,49 @@ define([
             return sbSelector.toString();
         }
 
+        _init() {
+            /** Implementation needed */
+        }
+
+        _unbindEvent() {
+            /** Implementation needed */
+        }
+
         _bindEvent() {
             /** Implementation needed */
         }
 
+        /**
+         * Generate template using states and return
+         * @returns template DOM
+         */
         template() { 
             /** Implementation needed */
             return '';
         }
 
-        render() {
+        /**
+         * Render component under $target
+         * @param {*} inplace overwrite under $target
+         */
+        render(inplace=false) {
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'rendering Component', this);
             this.$pageDom = $(this.template());
-            this.$target.append(this.$pageDom);
+
+            let $page = this.$target.find('.' + this.uuid);
+            if ($page.length > 0) {
+                // if exists, replace it
+                $page.replaceWith(this.$pageDom);
+            } else {
+                // if not exists...
+                if (inplace) {
+                    // replace under $target
+                    this.$target.html(this.$pageDom);
+                } else {
+                    // append under $target
+                    this.$target.append(this.$pageDom);
+                }
+            }
         }
     }
 
