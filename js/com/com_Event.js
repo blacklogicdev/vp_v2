@@ -55,6 +55,20 @@ define([], function() {
                         that.mainFrame.openPopup(openType, menuId, menuState);
 
                     }
+                },
+                {
+                    method: 'disable_vp_hotkey',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        // TODO: disable vp hotkey
+                    }
+                },
+                {
+                    method: 'enable_vp_hotkey',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        // TODO: enable vp hotkey
+                    }
                 }
             ]
 

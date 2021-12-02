@@ -29,8 +29,14 @@ define([
             super($target, state);
         }
 
+        /**
+         * Get menu item block's background color
+         * @param {*} isApps 
+         * @returns 
+         */
         _getColorClass(isApps=false) {
             if (isApps) {
+                // For Apps menu item
                 var color = this.state.apps.color;
                 switch(color) {
                     case 0:
@@ -52,7 +58,8 @@ define([
             this.$target.on('click', function(evt) {
                 var target = evt.target;
                 // click event
-                if ($(target).hasClass(that.uuid)) {
+                // if ($(target).hasClass(that.uuid)) {
+                if ($(that._wrapSelector()).find(target).length > 0) {
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page', 
                         openType: '',
