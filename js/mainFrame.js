@@ -1,7 +1,7 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : mainFrame.js
+ *    File Name       : MainFrame.js
  *    Author          : Black Logic
  *    Note            : Render and load main frame
  *    License         : GNU GPLv3 with Visual Python special exception
@@ -24,13 +24,6 @@ define([
     './board/BoardFrame'
 ], function(vpHtml, vpCss, com_Config, com_Const, com_Event, MenuFrame, BoardFrame) {
 	'use strict';
-    //========================================================================
-    // Define Variable
-    //========================================================================
-    var pageDom = '';
-    var menuFrame;
-    var boardFrame;
-    var events;
 
     // visualpython minimum width
     const { 
@@ -45,143 +38,161 @@ define([
         JUPYTER_NOTEBOOK_ID,
         JUPYTER_HEADER_ID
     } = com_Const;
-	
-    //========================================================================
-    // Internal call function
-    //========================================================================
-	/**
-     * Bind event for inner components under vp_wrapper
-     */
-     var _bindEvent = function() {
 
-        // window resize event
-        $(window).resize(function(evt){
-            let jupyterHeadHeight = $('#' + JUPYTER_HEADER_ID).height();
-            let jupyterBodyHeight = $('#' + JUPYTER_NOTEBOOK_ID).height();
-            
-            let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
-            let vpHeight = $(window).height() - jupyterHeadHeight;
+    class MainFrame {
+        constructor() {
+            this.$pageDom = null;
+            this._menuFrame = null;
+            this._boardFrame = null;
+            this._events = null;
+        }
+        //========================================================================
+        // Internal call function
+        //========================================================================
+        /**
+         * Bind event for inner components under vp_wrapper
+         */
+        _bindEvent() {
+            var that = this;
 
-            $('#vp_wrapper').css( { height: vpHeight + 'px' });
-            _resizeNotebook(vpWidth);
-            // $('#vp_menuFrame').height(vpHeight);
-        });
-
-        events = new com_Event();
-    }
-
-    /**
-     * Bind $.resizable event
-     * // TODO: get a param to re-position vp_wrapper to the left or right
-     */
-    var _bindResizable = function() {
-        // get visualpython minimum width
-        // resizable setting
-        // $('#vp_wrapper').resizable('disable');
-        $('#vp_wrapper').resizable({
-            // alsoResize: '#vp_menuFrame',
-            helper: 'vp-wrapper-resizer',
-            handles: 'w',
-            // resizeHeight: false,
-            minWidth: VP_MIN_WIDTH,
-            // maxWidth: 0,
-            start: function(event, ui) {
+            // window resize event
+            $(window).resize(function(evt){
+                let jupyterHeadHeight = $('#' + JUPYTER_HEADER_ID).height();
+                let jupyterBodyHeight = $('#' + JUPYTER_NOTEBOOK_ID).height();
                 
-            },
-            resize: function(event, ui) {
-                // resize #vp_wrapper with currentWidth and resize jupyter area
-                var currentWidth = ui.size.width;
-                _resizeVp(currentWidth);
-            },
-            stop: function(event, ui) {
-                $('#vp_wrapper').css({'left': ''});
-            },
-        });  
-    }
+                let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
+                let vpHeight = $(window).height() - jupyterHeadHeight;
 
-    var _resizeVp = function(currentWidth) {
-        // calculate inner frame width
-        var menuWidth = $('#vp_menuFrame').width();
-        var boardWidth = 0;
-        var showBoard = $('#vp_boardFrame').is(':visible');
-        if (showBoard) {
-            boardWidth = currentWidth - menuWidth - MENU_BOARD_SPACING;
-            if (boardWidth < BOARD_MIN_WIDTH + MENU_BOARD_SPACING) {
-                menuWidth -= (BOARD_MIN_WIDTH - boardWidth);
-                boardWidth = BOARD_MIN_WIDTH;
+                $('#vp_wrapper').css( { height: vpHeight + 'px' });
+                that._resizeNotebook(vpWidth);
+                // $('#vp_menuFrame').height(vpHeight);
+            });
+
+            this._events = new com_Event(this);
+        }
+
+        /**
+         * Bind $.resizable event
+         * // TODO: get a param to re-position vp_wrapper to the left or right
+         */
+        _bindResizable() {
+            var that = this;
+
+            // get visualpython minimum width
+            // resizable setting
+            // $('#vp_wrapper').resizable('disable');
+            $('#vp_wrapper').resizable({
+                // alsoResize: '#vp_menuFrame',
+                helper: 'vp-wrapper-resizer',
+                handles: 'w',
+                // resizeHeight: false,
+                minWidth: VP_MIN_WIDTH,
+                // maxWidth: 0,
+                start: function(event, ui) {
+                    
+                },
+                resize: function(event, ui) {
+                    // resize #vp_wrapper with currentWidth and resize jupyter area
+                    var currentWidth = ui.size.width;
+                    that._resizeVp(currentWidth);
+                },
+                stop: function(event, ui) {
+                    $('#vp_wrapper').css({'left': ''});
+                },
+            });  
+        }
+
+        _resizeVp(currentWidth) {
+            // calculate inner frame width
+            var menuWidth = $('#vp_menuFrame').width();
+            var boardWidth = 0;
+            var showBoard = $('#vp_boardFrame').is(':visible');
+            if (showBoard) {
+                boardWidth = currentWidth - menuWidth - MENU_BOARD_SPACING;
+                if (boardWidth < BOARD_MIN_WIDTH + MENU_BOARD_SPACING) {
+                    menuWidth -= (BOARD_MIN_WIDTH - boardWidth);
+                    boardWidth = BOARD_MIN_WIDTH;
+                }
+            } else {
+                // resize menuWidth if board is hidden
+                menuWidth = currentWidth - MENU_BOARD_SPACING;
             }
-        } else {
-            // resize menuWidth if board is hidden
-            menuWidth = currentWidth - MENU_BOARD_SPACING;
+            $('#vp_menuFrame').width(menuWidth);
+            $('#vp_boardFrame').width(boardWidth);
+
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'resizing wrapper to ', currentWidth, 'with', menuWidth, boardWidth);
+
+            $('#vp_wrapper').width(currentWidth);
+            this._resizeNotebook(currentWidth);
         }
-        $('#vp_menuFrame').width(menuWidth);
-        $('#vp_boardFrame').width(boardWidth);
 
-        vpLog.display(VP_LOG_TYPE.DEVELOP, 'resizing wrapper to ', currentWidth, 'with', menuWidth, boardWidth);
+        /**
+         * Resize jupyternotebook
+         */
+        _resizeNotebook(vpWidth) {
+            let baseWidth = $(window).width();
 
-        $('#vp_wrapper').width(currentWidth);
-        _resizeNotebook(currentWidth);
-    }
-
-    /**
-     * Resize jupyternotebook
-     */
-     var _resizeNotebook = function(vpWidth) {
-        let baseWidth = $(window).width();
-
-        // manual padding between notebook and visualpython area
-        const DIV_PADDING = 2;
-        // if vp area is available, add padding
-        if (vpWidth > 0) {
-            vpWidth += DIV_PADDING;
+            // manual padding between notebook and visualpython area
+            const DIV_PADDING = 2;
+            // if vp area is available, add padding
+            if (vpWidth > 0) {
+                vpWidth += DIV_PADDING;
+            }
+            // calculate notebook resizing width
+            let nbWidth = baseWidth - vpWidth;
+            let nbContainerWidth = nbWidth - 60;
+            // apply resized width
+            $('#' + JUPYTER_NOTEBOOK_ID).css({ 'width': nbWidth + 'px' });
+            $('#notebook-container').css({ 'width': nbContainerWidth + 'px' });
         }
-        // calculate notebook resizing width
-        let nbWidth = baseWidth - vpWidth;
-        let nbContainerWidth = nbWidth - 60;
-        // apply resized width
-        $('#' + JUPYTER_NOTEBOOK_ID).css({ 'width': nbWidth + 'px' });
-        $('#notebook-container').css({ 'width': nbContainerWidth + 'px' });
+
+        //========================================================================
+        // External call function
+        //========================================================================
+        /**
+         * Load main frame
+         */
+        loadMainFrame() {
+            // load vp_wrapper into jupyter base
+            this.$pageDom = $(vpHtml);
+            $(this.$pageDom).prependTo(document.body);
+
+            // resize jupyterNotebook area
+            let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
+            this._resizeNotebook(vpWidth);
+            
+            // load menu & board
+            this._menuFrame = new MenuFrame($('#vp_wrapper'), {});
+            this._boardFrame = new BoardFrame($('#vp_wrapper'));
+            
+            // bind event
+            this._bindEvent();
+            this._bindResizable();
+
+            return this.$pageDom;
+        }
+
+        toggleVp() {
+            $('#vp_wrapper').toggle();
+
+            let vpWidth = $('#vp_wrapper')[0].clientWidth;
+            this._resizeNotebook(vpWidth);
+
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp toggled');
+        }
+
+        get menuFrame() {
+            return this._menuFrame;
+        }
+
+        get boardFrame() {
+            return this._boardFrame;
+        }
     }
+	
+    
 
-    //========================================================================
-    // External call function
-    //========================================================================
-    /**
-     * Load main frame
-     */
-	var loadMainFrame = function() {
-        // load vp_wrapper into jupyter base
-        pageDom = $(vpHtml);
-        $(pageDom).prependTo(document.body);
-
-        // resize jupyterNotebook area
-        let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
-        _resizeNotebook(vpWidth);
-        
-        // load menu & board
-        menuFrame = new MenuFrame($('#vp_wrapper'), {});
-        boardFrame = new BoardFrame($('#vp_wrapper'));
-        
-        // bind event
-        _bindEvent();
-        _bindResizable();
-
-        return pageDom;
-    }
-
-    var toggleVp = function() {
-        $('#vp_wrapper').toggle();
-
-        let vpWidth = $('#vp_wrapper')[0].clientWidth;
-        _resizeNotebook(vpWidth);
-
-        vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp toggled');
-    }
-
-    return {
-        loadMainFrame: loadMainFrame,
-        toggleVp: toggleVp
-    };
+    return MainFrame;
 });
 
 /* End of file */

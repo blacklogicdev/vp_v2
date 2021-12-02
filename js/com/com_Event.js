@@ -20,7 +20,9 @@ define([], function() {
     //========================================================================
     class Event {
 
-        constructor() {
+        constructor(mainFrame) {
+            this.mainFrame = mainFrame;
+
             this._globalEvent = [
                 { 
                     method: 'click', 
@@ -38,6 +40,17 @@ define([], function() {
                             $(target).removeClass('vp-close');
                             $(target).addClass('vp-open');
                         }
+                    }
+                },
+                {
+                    method: 'openpage',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        var target = evt.currentTarget;
+                        var { menutItem, menuIype, menuState } = evt;
+                        
+                        
+
                     }
                 }
             ]

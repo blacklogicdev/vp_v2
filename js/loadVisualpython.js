@@ -30,8 +30,8 @@
     'vp_base/js/com/com_Log',
     'vp_base/js/com/com_Kernel',
     'vp_base/js/com/com_KernelJupyter',
-    'vp_base/js/mainFrame'
-], function (rootCss, com_Const, com_util, com_Config, com_Log, com_Kernel, com_KernelJupyter, mainFrame) {
+    'vp_base/js/MainFrame'
+], function (rootCss, com_Const, com_util, com_Config, com_Log, com_Kernel, com_KernelJupyter, MainFrame) {
     'use strict';
 
     //========================================================================
@@ -44,6 +44,7 @@
     var defaultConfig;
     var metadataSettings;
     var vpPosition;
+    var vpFrame;
     
     //========================================================================
     // Require: Jupyter & events
@@ -166,7 +167,7 @@
                     , 'handler': function () {
                         // Extension 버튼 클릭 시 실행
                         // _toggleVp(cfg);
-                        mainFrame.toggleVp();
+                        vpFrame.toggleVp();
                     }
                 }, com_Const.TOOLBAR_BTN_INFO.NAME, com_Const.TOOLBAR_BTN_INFO.PREFIX)
             ])).find('.btn').attr('id', com_Const.TOOLBAR_BTN_INFO.ID).addClass(com_Const.TOOLBAR_BTN_INFO.ICON_CONTAINER);
@@ -182,7 +183,8 @@
         if (!liveNotebook)
             cfg = $.extend(true, {}, defaultConfig, cfg);
 
-        var mainFrameDom = mainFrame.loadMainFrame();
+        vpFrame = new MainFrame();
+        vpFrame.loadMainFrame();
 
         // TODO: hotkey control -> Implement under InputComponent or Event class
         // hotkey 제어 input text 인 경우 포커스를 가지면 핫키 막고 잃으면 핫키 허용
