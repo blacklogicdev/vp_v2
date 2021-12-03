@@ -235,29 +235,25 @@
 
     var _setGlobalVariables = function() {
         /**
-             * visualpython log util
-             * - use it instead of console.log
-             * ex) vpLog.display(VP_LOG_TYPE.LOG, 'log text');
-             */
-         window.vpLog = new com_Log();
-         /**
-          * visualpython log util types
-          * DEVELOP, LOG, ERROR
-          */
-         window.VP_LOG_TYPE = com_Log.LOG_TYPE;
-         /**
-          * visualpython config util
-          */
-         window.vpConfig = new com_Config();
-         window.VP_MODE_TYPE = com_Config.MODE_TYPE;
-         /**
-          * visualpython kernel
-          */
-         if (vpConfig.serverMode == VP_MODE_TYPE.DEVELOP) {
-             window.vpKernel = new com_Kernel();
-         } else {
-             window.vpKernel = new com_KernelJupyter();
-         }
+         * visualpython log util
+         * - use it instead of console.log
+         * ex) vpLog.display(VP_LOG_TYPE.LOG, 'log text');
+         */
+        window.vpLog = new com_Log();
+        /**
+         * visualpython log util types
+         * DEVELOP, LOG, ERROR
+         */
+        window.VP_LOG_TYPE = com_Log.LOG_TYPE;
+        /**
+         * visualpython config util
+         */
+        window.vpConfig = new com_Config();
+        window.VP_MODE_TYPE = com_Config.MODE_TYPE;
+        /**
+         * visualpython kernel
+         */
+        window.vpKernel = new com_Kernel();
     }
 
     //========================================================================
