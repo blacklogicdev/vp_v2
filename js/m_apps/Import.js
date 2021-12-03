@@ -1,7 +1,7 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : SampleApp.js
+ *    File Name       : Import.js
  *    Author          : Black Logic
  *    Note            : Sample app
  *    License         : GNU GPLv3 with Visual Python special exception
@@ -10,7 +10,7 @@
  */
 
 //============================================================================
-// [CLASS] SampleApp
+// [CLASS] Import
 //============================================================================
 define([
     'vp_base/js/com/com_util',
@@ -20,9 +20,9 @@ define([
 ], function(com_util, com_Const, com_String, PopupComponent) {
 
     /**
-     * SampleApp
+     * Import
      */
-    class SampleApp extends PopupComponent {
+    class Import extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -41,5 +41,5 @@ define([
 
     }
 
-    return SampleApp;
+    return Import;
 });
