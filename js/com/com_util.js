@@ -13,9 +13,9 @@
 // Common utility function
 //============================================================================
 define([
-    'vp_base/js/com/com_const',
+    'vp_base/js/com/com_Const',
     'vp_base/js/com/com_String'
-], function (com_const, com_String) {
+], function (com_Const, com_String) {
     'use strict'
 
     //========================================================================
@@ -59,7 +59,7 @@ define([
         var loadURL;
         // prefix로 풀경로를 지정하지 않은 경우
         if (prefix === undefined || prefix === null) {
-            loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + url;
+            loadURL = com_Const.SOURCE_PATH + url;
         } else {
             loadURL = prefix + url;
         }
@@ -105,7 +105,7 @@ define([
      * @returns vp top container selector
      */
     var getVPContainer = function() {
-        return '#' + com_const.VP_CONTAINER_ID;
+        return '#' + com_Const.VP_CONTAINER_ID;
     }
 
     /**
@@ -196,9 +196,9 @@ define([
     var renderAlertModal = function(titleStr) {
         if (isAPIListRunCode == true) {
             // load css
-            loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/alertModal.css');
+            loadCss( com_Const.STYLE_PATH + 'component/alertModal.css');
             // set html url
-            var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/alertModal.html';
+            var loadURL = com_Const.SOURCE_PATH + 'component/alertModal.html';
             // load alertModal html
             $(`<div id="vp_alertModal"></div>`)
                 .load(loadURL, function() {
@@ -223,9 +223,9 @@ define([
      */
     var renderLoadingBar = function() {
         // load css
-        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/loadingBar.css');
+        loadCss( com_Const.STYLE_PATH + 'component/loadingBar.css');
         // set html url
-        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/loadingBar.html';
+        var loadURL = com_Const.SOURCE_PATH + 'component/loadingBar.html';
         // load renderLoadingBar html 
         $(`<div id="vp_loadingBar"></div>`)
             .load(loadURL, function() {
@@ -239,8 +239,8 @@ define([
      * @param {string} titleStr 
      */
     var renderSuccessMessage = function(titleStr) {
-        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/successMessage.css');
-        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/successMessage.html';
+        loadCss( com_Const.STYLE_PATH + 'component/successMessage.css');
+        var loadURL = com_Const.SOURCE_PATH + 'component/successMessage.html';
         $(`<div id="vp_successMessage"></div>`)
             .load(loadURL, function() {
                 $('.vp-successMessage').append(`<div>${titleStr}</div>`);
@@ -259,9 +259,9 @@ define([
      */
     var renderYesOrNoModal = function(callback) {
         // load css
-        loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'component/yesOrNoModal.css');
+        loadCss( com_Const.STYLE_PATH + 'component/yesOrNoModal.css');
         // set html url
-        var loadURL = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/yesOrNoModal.html';
+        var loadURL = com_Const.SOURCE_PATH + 'component/yesOrNoModal.html';
         // load alertModal html
         $(`<div id="vp_yesOrNoModal"></div>`)
             .load(loadURL, callback)
@@ -319,7 +319,7 @@ define([
             
             // 코드타입인 경우 시그니쳐 추가.
             if (type == 'code') {
-                // command = vpCommon.formatString('{0}\n{1}', com_const.PREFIX_CODE_SIGNATURE, command);
+                // command = vpCommon.formatString('{0}\n{1}', com_Const.PREFIX_CODE_SIGNATURE, command);
                 command = formatString('{0}', command);
             }
             targetCell.set_text(command);

@@ -13,12 +13,12 @@
 // [CLASS] File navigation
 //============================================================================
 define([
-    'vp_base/js/com/com_const',
+    'vp_base/js/com/com_Const',
     'vp_base/js/com/com_util',
     'vp_base/js/com/com_String',
     'vp_base/js/com/com_kernel',
     'vp_base/js/com/com_makeDom'
-], function(com_const, com_util, com_String, com_kernel, com_makeDom) {
+], function(com_Const, com_util, com_String, com_kernel, com_makeDom) {
     'use strict'
     
     //========================================================================
@@ -125,8 +125,8 @@ define([
         async init() {
             var that = this;
 
-            var loadURLstyle = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH;
-            var loadURLhtml = Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.SOURCE_PATH + 'component/fileNavigation/index.html';
+            var loadURLstyle = com_Const.STYLE_PATH;
+            var loadURLhtml = com_Const.SOURCE_PATH + 'component/fileNavigation/index.html';
 
             com_util.loadCss(loadURLstyle + 'component/fileNavigation.css');
 

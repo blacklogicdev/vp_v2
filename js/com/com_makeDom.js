@@ -13,9 +13,9 @@
 // Make DOM data
 //============================================================================
 define([
-    'vp_base/js/com/com_const',
+    'vp_base/js/com/com_Const',
     'vp_base/js/com/com_util'
-], function (com_const, com_util) {
+], function (com_Const, com_util) {
     'use strict'
 
     //========================================================================
@@ -272,7 +272,7 @@ define([
      */
     var renderCustomConfirmModal = function(option, confirmFunction, cancelFunction) {
         // load css
-        com_util.loadCss( Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'common/customConfirm.css' );
+        com_util.loadCss( com_Const.STYLE_PATH + 'common/customConfirm.css' );
         var title = `Would you like to choose?`;
         var confirm =  `Yes`;
         var cancel = `No`;

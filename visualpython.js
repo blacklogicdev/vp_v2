@@ -42,9 +42,9 @@ require.config({
 define([
     'text',
     'css', 
-    'vp_base/js/com/com_const',
+    'vp_base/js/com/com_Const',
     'vp_base/js/loadVisualpython'
-], function (text, css, com_const, loadVisualpython) {
+], function (text, css, com_Const, loadVisualpython) {
     'use strict';
 
     //========================================================================
@@ -52,7 +52,7 @@ define([
     //========================================================================
     // Constant
     const origin = window.location.origin;
-    const connectorAddress = `${origin}` + com_const.PATH_SEPARATOR + com_const.BASE_PATH;
+    const connectorAddress = `${origin}` + com_Const.PATH_SEPARATOR + com_Const.BASE_PATH;
 
     //========================================================================
     // Internal call function

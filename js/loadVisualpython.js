@@ -211,29 +211,26 @@
     };
 
     /**
-     * 사용할 파이썬 코드를 함수로 구성해 초기에만 한 번 실행함
+     * Declare background vp functions
      */
     var _readKernelFunction = function() {
-        // FIXME: 여러 개 파일 받아올 것도 고려해야 함
-
         var libraryList = [ 
-            'functions/printCommand.py',
-            'functions/fileNaviCommand.py',
-            'functions/pandasCommand.py',
-            'functions/variableCommand.py'
+            'printCommand.py',
+            'fileNaviCommand.py',
+            'pandasCommand.py',
+            'variableCommand.py'
         ];
-        // TODO: fix paths
-        // libraryList.forEach(libName => {
-        //     var libPath = Jupyter.notebook.base_url + com_Const.BASE_PATH + 'src/api/' + libName
-        //     $.get(libPath).done(function(data) {
-        //         var code_init = data;
-        //         Jupyter.notebook.kernel.execute(code_init, { iopub: { output: function(data) {
-        //             console.log('visualpython - loaded library', data);
-        //         } } }, { silent: false });
-        //     }).fail(function() {
-        //         console.log('visualpython - failed to load getPath library');
-        //     });
-        // })
+        libraryList.forEach(libName => {
+            var libPath = com_Const.PYTHON_PATH + libName
+            $.get(libPath).done(function(data) {
+                var code_init = data;
+                Jupyter.notebook.kernel.execute(code_init, { iopub: { output: function(data) {
+                    console.log('visualpython - loaded library', data);
+                } } }, { silent: false });
+            }).fail(function() {
+                console.log('visualpython - failed to load getPath library');
+            });
+        })
     }
 
     var _setGlobalVariables = function() {
