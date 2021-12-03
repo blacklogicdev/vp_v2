@@ -68,13 +68,13 @@ define([
             var that = this;
             this.$target.on('click', function(evt) {
                 var target = evt.target;
-                // close operation
+                // Close popup event
                 if ($(that._wrapSelector('.vp-popup-close')).get(0) == target 
                 || $(that._wrapSelector('.vp-popup-cancel-button')).get(0) == target) {
                     // close popup
                     that.close();
                 }
-                // toggle operation
+                // Toggle operation (minimize)
                 if ($(that._wrapSelector('.vp-popup-toggle')).get(0) == target) {
                     that.toggle();
                 }
@@ -82,24 +82,30 @@ define([
         }
 
         _bindDraggable() {
-            $('.' + this.uuid).draggable({
+            $(this._wrapSelector()).draggable({
                 handle: '.vp-popup-title'
             });
         }
 
         _unbindResizable() {
-            $('.' + this.uuid).resizable('disable');
+            $(this._wrapSelector()).resizable('disable');
         }
 
         _bindResizable() {
-            $('.' + this.uuid).resizable();
+            $(this._wrapSelector()).resizable();
+        }
+
+        templateForBody() {
+            /** Implementation needed */
+            return '';
         }
 
         template() { 
-            /** Implementation needed */
             this.$pageDom = $(popupComponentHtml);
             // set title
             this.$pageDom.find('.vp-popup-title').text(this.state.config.name);
+            // set body
+            this.$pageDom.find('.vp-popup-body').html(this.templateForBody());
             return this.$pageDom;
         }
 
@@ -112,28 +118,23 @@ define([
          */
         open() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
-            $('.' + this.uuid).show();
+            $(this._wrapSelector()).show();
         }
 
         /**
          * minimize and maximize
          */
         toggle() {
-            let isOpen = $(this._wrapSelector('.vp-popup-toggle')).hasClass('vp-open');
-            if (isOpen) {
-                // hide
-                $(this._wrapSelector('.vp-popup-body')).hide();
-                $(this._wrapSelector('.vp-popup-footer')).hide();
-                $(this._wrapSelector()).css({'height': '30px', 'min-height': '30px'});
-                $(this._wrapSelector('.vp-popup-toggle')).removeClass('vp-open');
-                $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
-            } else {
+            let $this = $(this._wrapSelector());
+            let isClosed = $this.hasClass('vp-close');
+            if (isClosed) {
                 // show
-                $(this._wrapSelector('.vp-popup-body')).show();
-                $(this._wrapSelector('.vp-popup-footer')).show();
-                $(this._wrapSelector()).css({'height': HEIGHT+'px', 'min-height': MIN_HEIGHT+'px'});
-                $(this._wrapSelector('.vp-popup-toggle')).addClass('vp-open');
+                $this.removeClass('vp-close');
                 $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_down_fill_dark.svg');
+            } else {
+                // hide
+                $this.addClass('vp-close');
+                $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
             }
         }
 
@@ -144,7 +145,7 @@ define([
          */
         close() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'close popup', this);
-            $('.' + this.uuid).remove();
+            $(this._wrapSelector()).remove();
         }
     }
 

@@ -22,6 +22,16 @@
     box-shadow: 2px 2px 1px rgb(0 0 0 / 10%);
     z-index: 200;
 }
+.vp-popup-frame.vp-close {
+    height: 30px !important;
+    min-height: 30px !important;
+}
+.vp-popup-frame.vp-close > .vp-popup-body {
+    display: none;
+}
+.vp-popup-frame.vp-close > .vp-popup-footer {
+    display: none;
+}
 .vp-popup-header {
     position: relative;
     height: 30px;
