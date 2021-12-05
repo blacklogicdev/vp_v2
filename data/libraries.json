@@ -20,7 +20,7 @@
                 "tag"  : "PIP,INSTALL,UPDATE,PYTHON INSTALL PACKAGE",
                 "path" : "visualpython - pip",
                 "desc" : "Settings for visual python",
-                "file" : "file_io/settings"
+                "file" : "file_io/pip"
             },
             {
                 "id"   : "pkg_apps",
@@ -42,7 +42,7 @@
                         "file" : "m_apps/Import",
                         "apps" : {
                             "color": 1,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_import.svg"
+                            "icon": "apps/apps_import.svg"
                         }
                     },
                     {
@@ -56,7 +56,7 @@
                         "file" : "m_apps/File",
                         "apps" : {
                             "color": 1,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_file.svg"
+                            "icon": "apps/apps_file.svg"
                         }
                     },
                     {
@@ -70,7 +70,7 @@
                         "file" : "m_apps/Variable",
                         "apps" : {
                             "color": 1,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_variable.svg"
+                            "icon": "apps/apps_variable.svg"
                         }
                     },
                     {
@@ -84,7 +84,7 @@
                         "file" : "m_apps/Snippets",
                         "apps" : {
                             "color": 1,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_snippets.svg"
+                            "icon": "apps/apps_snippets.svg"
                         }
                     },
                     {
@@ -98,7 +98,7 @@
                         "file" : "m_apps/Frame",
                         "apps" : {
                             "color": 2,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_frame.svg"
+                            "icon": "apps/apps_frame.svg"
                         }
                     },
                     {
@@ -112,7 +112,7 @@
                         "file" : "m_apps/Subset",
                         "apps" : {
                             "color": 2,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_subset.svg"
+                            "icon": "apps/apps_subset.svg"
                         }
                     },
                     {
@@ -126,7 +126,7 @@
                         "file" : "m_apps/Instance",
                         "apps" : {
                             "color": 2,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_instance.svg"
+                            "icon": "apps/apps_instance.svg"
                         }
                     },
                     {
@@ -140,7 +140,7 @@
                         "file" : "m_apps/Groupby",
                         "apps" : {
                             "color": 2,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_groupby.svg"
+                            "icon": "apps/apps_groupby.svg"
                         }
                     },
                     {
@@ -154,7 +154,7 @@
                         "file" : "m_apps/Bind",
                         "apps" : {
                             "color": 3,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_bind.svg"
+                            "icon": "apps/apps_bind.svg"
                         }
                     },
                     {
@@ -168,7 +168,7 @@
                         "file" : "m_apps/Reshape",
                         "apps" : {
                             "color": 3,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_reshape.svg"
+                            "icon": "apps/apps_reshape.svg"
                         }
                     },
                     {
@@ -182,7 +182,7 @@
                         "file" : "m_apps/Chart",
                         "apps" : {
                             "color": 3,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_chart.svg"
+                            "icon": "apps/apps_chart.svg"
                         }
                     },
                     {
@@ -196,7 +196,7 @@
                         "file" : "m_apps/Markdown",
                         "apps" : {
                             "color": 3,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_markdown.svg"
+                            "icon": "apps/apps_markdown.svg"
                         }
                     },
                     {
@@ -210,7 +210,7 @@
                         "file" : "m_apps/PDF",
                         "apps" : {
                             "color": 4,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_pymupdf.svg"
+                            "icon": "apps/apps_pymupdf.svg"
                         }
                     },
                     {
@@ -224,7 +224,7 @@
                         "file" : "m_apps/Profiling",
                         "apps" : {
                             "color": 4,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_profiling.svg"
+                            "icon": "apps/apps_profiling.svg"
                         }
                     },
                     {
@@ -238,7 +238,7 @@
                         "file" : "m_apps/SampleApp",
                         "apps" : {
                             "color": 4,
-                            "icon": "../../nbextensions/visualpython/img/apps/apps_white.svg"
+                            "icon": "apps/apps_white.svg"
                         }
                     }
                 ]
