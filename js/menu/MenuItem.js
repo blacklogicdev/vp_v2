@@ -59,7 +59,7 @@ define([
                 var target = evt.target;
                 // click event
                 // if ($(target).hasClass(that.uuid)) {
-                if ($(that._wrapSelector()).find(target).length > 0) {
+                if ($(that.wrapSelector()).find(target).length > 0) {
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page', 
                         openType: '',

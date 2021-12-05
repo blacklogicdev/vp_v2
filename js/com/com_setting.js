@@ -60,13 +60,13 @@ define([
     // settings option list
     var settings_options = {
         'code_insert_position': [
-            { text: '선택한 셀 아래에 추가', value: 'below'},
-            { text: '선택한 셀 위에 추가', value: 'above'},
-            { text: '선택한 셀에 덮어쓰기', value: 'overwrite'}
+            { text: 'Add cell below', value: 'below'},
+            { text: 'Add cell above', value: 'above'},
+            { text: 'Overwrite cell', value: 'overwrite'}
         ],
         'api_list_sort_by': [
-            { text: '사용 빈도', value: 'frequency'},
-            { text: '알파벳 순', value: 'alphabet'}
+            { text: 'Frequency', value: 'frequency'},
+            { text: 'Alphabet', value: 'alphabet'}
         ]
     }
 

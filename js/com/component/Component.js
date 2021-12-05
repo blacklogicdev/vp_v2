@@ -45,11 +45,11 @@ define([
             this.prop = prop;
 
             this._init();
-            this._bindEvent();
             this.render();
+            this._bindEvent();
         }
 
-        _wrapSelector(selector='') {
+        wrapSelector(selector='') {
             var sbSelector = new com_String();
             var cnt = arguments.length;
             if (cnt < 2) {
