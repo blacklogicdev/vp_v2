@@ -47,6 +47,11 @@ define([
         }
 
         _init() {
+            this.config = {
+                codeview: true, 
+                dataview: true
+            };
+
             this.cmReadonlyConfig = {
                 mode: {
                     name: 'python',
@@ -181,8 +186,19 @@ define([
             return this.$pageDom;
         }
 
+        /**
+         * Render page
+         * @param {Object} config configure whether to use buttons or not 
+         */
         render() {
             super.render();
+
+            if (!this.config.codeview) {
+                $(this.wrapSelector('.vp-popup-button[data-type="code"]')).hide();
+            }   
+            if (!this.config.dataview) {
+                $(this.wrapSelector('.vp-popup-button[data-type="data"]')).hide();
+            }
         }
 
         generateCode() {
