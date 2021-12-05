@@ -31,12 +31,23 @@ define([
         _bindEvent() {
             super._bindEvent();
             /** Implement binding events */
+            var that = this;
+            this.$target.on('click', function(evt) {
+                var target = evt.target;
+                if ($(that.wrapSelector()).find(target).length > 0) {
+                    // Sample : getDataList from Kernel
+                    vpKernel.getDataList().then(function(result, type) {
+                        vpLog.display(VP_LOG_TYPE.DEVELOP, result);
+                    }).catch(function(err) {
+                        vpLog.display(VP_LOG_TYPE.DEVELOP, err);
+                    });
+                }
+            });
         }
 
-        template() {
-            var page = super.template();
+        templateForBody() {
             /** Implement generating template */
-            return page;
+            return 'This is sample.';
         }
 
     }

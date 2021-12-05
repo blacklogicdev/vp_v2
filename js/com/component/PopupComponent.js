@@ -18,21 +18,19 @@ define([
     '../com_util',
     '../com_Const',
     '../com_String',
-    './Component'
-], function(popupComponentHtml, popupComponentCss, com_util, com_Const, com_String, Component) {
+    '../com_interface',
+    './Component',
+
+    /** codemirror */
+    'codemirror/lib/codemirror',
+    'codemirror/mode/python/python',
+    'notebook/js/codemirror-ipython',
+    'codemirror/addon/display/placeholder',
+    'codemirror/addon/display/autorefresh'
+], function(popupComponentHtml, popupComponentCss
+    , com_util, com_Const, com_String, com_interface, Component, codemirror
+) {
     'use strict';
-
-    //========================================================================
-    // Declare variables
-    //========================================================================
-    const {
-        VP_CONTAINER_ID
-    } = com_Const;
-
-    const MIN_WIDTH = 30;
-    const MIN_HEIGHT = 30;
-    const WIDTH = 400;
-    const HEIGHT = 400;
 
     //========================================================================
     // Declare class
@@ -48,7 +46,28 @@ define([
             this._bindResizable();
         }
 
-        _wrapSelector(selector='') {
+        _init() {
+            this.cmReadonlyConfig = {
+                mode: {
+                    name: 'python',
+                    version: 3,
+                    singleLineStringErrors: false
+                },  // text-cell(markdown cell) set to 'htmlmixed'
+                height: '100%',
+                width: '100%',
+                indentUnit: 4,
+                matchBrackets: true,
+                readOnly: true,
+                autoRefresh: true,
+                theme: "ipython",
+                extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
+                scrollbarStyle: "null"
+            };
+
+            this.cmCodeview = null;
+        }
+
+        wrapSelector(selector='') {
             var sbSelector = new com_String();
             var cnt = arguments.length;
             if (cnt < 2) {
@@ -66,33 +85,86 @@ define([
 
         _bindEvent() {
             var that = this;
-            this.$target.on('click', function(evt) {
-                var target = evt.target;
-                // Close popup event
-                if ($(that._wrapSelector('.vp-popup-close')).get(0) == target 
-                || $(that._wrapSelector('.vp-popup-cancel-button')).get(0) == target) {
-                    // close popup
-                    that.close();
+            // Close popup event
+            $(this.wrapSelector('.vp-popup-close')).on('click', function() {
+                that.close();
+            });
+            // Toggle operation (minimize)
+            $(this.wrapSelector('.vp-popup-toggle')).on('click', function() {
+                that.toggle();
+            });
+            // Focus recognization
+            $(this.wrapSelector()).on('click', function() {
+                $('#vp_wrapper').trigger({
+                    type: 'focus_option_page',
+                    component: that
+                });
+            });
+
+            // Click buttons
+            $(this.wrapSelector('.vp-popup-button')).on('click', function(evt) {
+                var btnType = $(this).data('type');
+                switch(btnType) {
+                    case 'code':
+                        that.openView('code');
+                        evt.stopPropagation();
+                        break;
+                    case 'data':
+                        that.openView('data');
+                        evt.stopPropagation();
+                        break;
+                    case 'cancel':
+                        that.close();
+                        break;
+                    case 'run':
+                        com_interface.insertCell('code', that.generateCode());
+                        break;
+                    case 'show-detail':
+                        $(that.wrapSelector('.vp-popup-run-detailbox')).show();
+                        evt.stopPropagation();
+                        break;
                 }
-                // Toggle operation (minimize)
-                if ($(that._wrapSelector('.vp-popup-toggle')).get(0) == target) {
-                    that.toggle();
+            });
+            // Click detail buttons
+            $(this.wrapSelector('.vp-popup-detail-button')).on('click', function(evt) {
+                var btnType = $(this).data('type');
+                switch(btnType) {
+                    case 'apply':
+                        //TODO: apply to board (use com_Event)
+                        console.log('apply to board');
+                        break;
+                    case 'add':
+                        com_interface.insertCell('code', that.generateCode(), false);
+                        break;
                 }
             });
         }
 
         _bindDraggable() {
-            $(this._wrapSelector()).draggable({
-                handle: '.vp-popup-title'
+            var that = this;
+            $(this.wrapSelector()).draggable({
+                handle: '.vp-popup-title',
+                containment: 'body',
+                start: function(evt, ui) {
+                    // check focused
+                    $('#vp_wrapper').trigger({
+                        type: 'focus_option_page',
+                        component: that
+                    });
+                }
             });
         }
 
         _unbindResizable() {
-            $(this._wrapSelector()).resizable('disable');
+            $(this.wrapSelector()).resizable('disable');
         }
 
         _bindResizable() {
-            $(this._wrapSelector()).resizable();
+            $(this.wrapSelector()).resizable();
+        }
+
+        _renderView() {
+
         }
 
         templateForBody() {
@@ -113,28 +185,41 @@ define([
             super.render();
         }
 
+        generateCode() {
+            /** Implementation needed */
+            return '';
+        }
+
         /**
          * Open popup
          */
         open() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
-            $(this._wrapSelector()).show();
+            $(this.wrapSelector()).show();
+
+            if (!this.cmCodeview) {
+                // codemirror setting
+                this.cmCodeview = codemirror.fromTextArea(
+                    $(this.wrapSelector('.vp-popup-codeview-box textarea'))[0], this.cmReadonlyConfig);
+            } else {
+                this.cmCodeview.refresh();
+            }
         }
 
         /**
          * minimize and maximize
          */
         toggle() {
-            let $this = $(this._wrapSelector());
+            let $this = $(this.wrapSelector());
             let isClosed = $this.hasClass('vp-close');
             if (isClosed) {
                 // show
                 $this.removeClass('vp-close');
-                $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_down_fill_dark.svg');
+                $(this.wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_down_fill_dark.svg');
             } else {
                 // hide
                 $this.addClass('vp-close');
-                $(this._wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
+                $(this.wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
             }
         }
 
@@ -145,7 +230,33 @@ define([
          */
         close() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'close popup', this);
-            $(this._wrapSelector()).remove();
+            $(this.wrapSelector()).remove();
+        }
+
+        /**
+         * Open view
+         * @param {*} viewType code / data
+         */
+        openView(viewType) {
+            if (viewType == 'code') {
+                var code = this.generateCode();
+                this.cmCodeview.setValue(code);
+                this.cmCodeview.save();
+                
+                var that = this;
+                setTimeout(function() {
+                    that.cmCodeview.refresh();
+                }, 1);
+            } else {
+                // TODO: dataview
+
+            }
+
+            $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).show();
+        }
+
+        closeView(viewType) {
+            $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).hide();
         }
     }
 

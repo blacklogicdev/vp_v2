@@ -13,7 +13,7 @@
     position: absolute;
     top: 120px;
     right: 30px;
-    min-width: 200px;
+    min-width: 400px;
     min-height: 400px;
     width: 400px;
     height: 400px;
@@ -23,8 +23,13 @@
     z-index: 200;
 }
 .vp-popup-frame.vp-close {
+    width: 200px !important;
+    min-width: 200px !important;
     height: 30px !important;
     min-height: 30px !important;
+}
+.vp-popup-frame.vp-close .ui-resizable-handle {
+    display: none;
 }
 .vp-popup-frame.vp-close > .vp-popup-body {
     display: none;
@@ -38,9 +43,6 @@
     background: var(--light-gray-color);
     border-bottom: 1px solid var(--border-gray-color);
 }
-.vp-popup-header.focused {
-    background-color: #F38504;
-}
 .vp-popup-title {
     line-height: 30px;
     width: calc(100% - 30px);
@@ -50,6 +52,9 @@
     font-weight: 700;
     color: var(--font-primary);
     cursor: pointer;
+}
+.vp-popup-frame.vp-focused .vp-popup-title {
+    color: var(--font-hightlight);
 }
 .vp-popup-toggle {
     position: absolute;
@@ -108,17 +113,17 @@
     position: relative;
     height: 50px;
 }
-.vp-popup-codeview-button {
+.vp-popup-button[data-type="code"] {
     position: absolute;
     left: 15px;
     top: 9px;
 }
-.vp-popup-dataview-button {
+.vp-popup-button[data-type="data"] {
     position: absolute;
     left: 102px;
     top: 9px;
 }
-.vp-popup-cancel-button {
+.vp-popup-button[data-type="cancel"] {
     position: absolute;
     top: 9px;
     right: 106px;
@@ -132,13 +137,13 @@
     background: #F38504;
     border-radius: 2px;
 }
-.vp-popup-run-button {
+.vp-popup-button[data-type="run"] {
     display: inline-block;
     width: 60px;
     border-radius: 2px 0px 0px 2px;
     border-right: 0.25px solid white !important;
 }
-.vp-popup-detail-button {
+.vp-popup-button[data-type="show-detail"] {
     display: inline-block;
     width: 20px;
     height: 28px;
@@ -155,10 +160,10 @@
     text-align: center;
     line-height: 30px;
 }
-.vp-popup-apply-detailitem {
+.vp-popup-detail-button {
     color: var(--font-primary);
 }
-.vp-popup-apply-detailitem:hover {
+.vp-popup-detail-button:hover {
     color: var(--font-hightlight);
     background: var(--light-gray-color);
 }
