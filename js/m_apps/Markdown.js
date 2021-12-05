@@ -40,7 +40,7 @@ define([
         }
 
         generateCode() {
-            return 'test import';
+            return "print('sample code')";
         }
 
     }
