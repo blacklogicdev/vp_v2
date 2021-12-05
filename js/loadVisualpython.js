@@ -29,9 +29,8 @@
     'vp_base/js/com/com_Config',
     'vp_base/js/com/com_Log',
     'vp_base/js/com/com_Kernel',
-    'vp_base/js/com/com_KernelJupyter',
     'vp_base/js/MainFrame'
-], function (rootCss, com_Const, com_util, com_Config, com_Log, com_Kernel, com_KernelJupyter, MainFrame) {
+], function (rootCss, com_Const, com_util, com_Config, com_Log, com_Kernel, MainFrame) {
     'use strict';
 
     //========================================================================
