@@ -13,12 +13,9 @@
 // [CLASS] Subset
 //============================================================================
 define([
-    'vp_base/js/com/com_util',
-    'vp_base/js/com/com_Const',
     'vp_base/js/com/com_String',
-    'vp_base/js/com/com_setting',
     'vp_base/js/com/component/PopupComponent'
-], function(com_util, com_Const, com_String, com_setting, PopupComponent) {
+], function(com_String, PopupComponent) {
 
     /**
      * Subset
@@ -28,18 +25,6 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
-            
-            this.packageList = [
-                { library: 'numpy',     alias:'np'}
-                , { library: 'pandas',  alias:'pd'}
-                , { 
-                    library: 'matplotlib.pyplot', alias:'plt' 
-                    , include: [
-                        '%matplotlib inline'
-                    ]
-                }
-                , { library: 'seaborn', alias:'sns'}
-            ];
         }
 
         _bindEvent() {
