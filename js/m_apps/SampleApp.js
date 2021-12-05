@@ -50,6 +50,10 @@ define([
             return 'This is sample.';
         }
 
+        generateCode() {
+            return "print('sample code')";
+        }
+
     }
 
     return SampleApp;
