@@ -203,7 +203,13 @@ define([
                     config: menuConfig
                 }
                 let option = new OptionComponent(state);
+                // TODO: check if option is component class
                 option.open();
+                $('#vp_wrapper').trigger({
+                    type: 'focus_option_page',
+                    component: option
+                });
+
             }, function (err) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found (menu id: '+menuId+')');
             });
