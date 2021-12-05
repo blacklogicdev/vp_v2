@@ -1,16 +1,16 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : Import.js
+ *    File Name       : Groupby.js
  *    Author          : Black Logic
- *    Note            : Apps > Import
+ *    Note            : Apps > Groupby
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] Import
+// [CLASS] Groupby
 //============================================================================
 define([
     'vp_base/js/com/com_util',
@@ -21,9 +21,9 @@ define([
 ], function(com_util, com_Const, com_String, com_setting, PopupComponent) {
 
     /**
-     * Import
+     * Groupby
      */
-    class Import extends PopupComponent {
+    class Groupby extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -60,5 +60,5 @@ define([
 
     }
 
-    return Import;
+    return Groupby;
 });

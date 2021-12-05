@@ -1,16 +1,16 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : Import.js
+ *    File Name       : Frame.js
  *    Author          : Black Logic
- *    Note            : Apps > Import
+ *    Note            : Apps > Frame
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] Import
+// [CLASS] Frame
 //============================================================================
 define([
     'vp_base/js/com/com_util',
@@ -21,9 +21,9 @@ define([
 ], function(com_util, com_Const, com_String, com_setting, PopupComponent) {
 
     /**
-     * Import
+     * Frame
      */
-    class Import extends PopupComponent {
+    class Frame extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -60,5 +60,5 @@ define([
 
     }
 
-    return Import;
+    return Frame;
 });
