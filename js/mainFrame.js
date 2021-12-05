@@ -45,6 +45,7 @@ define([
             this._menuFrame = null;
             this._boardFrame = null;
             this._events = null;
+            this._focusedPage = null;
         }
         //========================================================================
         // Internal call function
@@ -208,12 +209,36 @@ define([
             });
         }
 
+        closePopup(component) {
+            component.close();
+        }
+
+        setFocusedPage(focusedPage) {
+            this.focusedPage = focusedPage;
+            // remove other focused classes
+            $('.vp-popup-frame').removeClass('vp-focused');
+            $('.vp-popup-frame').css({ 'z-index': 200 });
+            if (focusedPage) {
+                // check focused page
+                $(this.focusedPage.wrapSelector()).addClass('vp-focused');
+                $(this.focusedPage.wrapSelector()).css({ 'z-index': 205 }); // move forward
+            }
+        }
+
         get menuFrame() {
             return this._menuFrame;
         }
 
         get boardFrame() {
             return this._boardFrame;
+        }
+
+        get focusedPage() {
+            return this._focusedPage;
+        }
+
+        set focusedPage(component) {
+            this._focusedPage = component;
         }
     }
 	

@@ -22,16 +22,51 @@ define([], function() {
 
         constructor(mainFrame) {
             this.mainFrame = mainFrame;
+            this.useHotkey = true;
 
             var that = this;
 
+            /** GLOBAL keyBoardManager */
+            this._keyManager = {
+                keyCode : {
+                    ctrlKey: 17,
+                    cmdKey: 91,
+                    shiftKey: 16,
+                    altKey: 18,
+                    enter: 13,
+                    escKey: 27,
+                    vKey: 86,
+                    cKey: 67
+                },
+                keyCheck : {
+                    ctrlKey: false,
+                    shiftKey: false
+                }
+            };
+
             this._globalEvent = [
+                {
+                    method: 'click focus',
+                    selector: document,
+                    operation: (evt) => {
+                        var target = evt.target;
+                        // Focus recognization
+                        // blurred on popup frame
+                        if ($('.vp-popup-frame').has(target).length <= 0) {
+                            $('#vp_wrapper').trigger({
+                                type: 'blur_option_page'
+                            });
+                        }
+                        if (!$(target).hasClass('vp-close-on-blur')) {
+                            $('.vp-close-on-blur').hide();
+                        }
+                    }
+                },
                 { 
                     method: 'click', 
                     selector: '.vp-accordian', 
                     operation: (evt) => {
-                        var target = evt.currentTarget;
-                        var bodyTag = $(target).parent().find('.vp-accordian-box');
+                        var target = evt.target;
                         if ($(target).hasClass('vp-open')) {
                             // open -> close
                             $(target).removeClass('vp-open');
@@ -48,30 +83,69 @@ define([], function() {
                     method: 'open_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
-                        var target = evt.currentTarget;
                         // openType: newBlock/openBlock/... / menuItem: menu id / menuState: saved state
                         var { openType, menuId, menuState } = evt;
-                        
                         that.mainFrame.openPopup(openType, menuId, menuState);
-
+                    }
+                },
+                {
+                    method: 'focus_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        var { component } = evt;
+                        that.mainFrame.setFocusedPage(component);
+                    }
+                },
+                {
+                    method: 'blur_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        that.mainFrame.setFocusedPage(null);
+                    }
+                },
+                {
+                    method: 'close_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        var { component } = evt;
+                        that.mainFrame.closePopup(component);
                     }
                 },
                 {
                     method: 'disable_vp_hotkey',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
-                        // TODO: disable vp hotkey
+                        // disable vp hotkey
+                        that.disableHotkey();
                     }
                 },
                 {
                     method: 'enable_vp_hotkey',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
-                        // TODO: enable vp hotkey
+                        // enable vp hotkey
+                        that.enableHotkey();
                     }
                 }
             ]
 
+            this._keyEvent = [
+                {
+                    method: 'keyup',
+                    selector: document,
+                    operation: (evt) => {
+                        if (evt.keyCode == this._keyManager.keyCode.escKey) {
+                            // close popup on esc
+                            $('#vp_wrapper').trigger({
+                                type: 'close_option_page',
+                                component: that.mainFrame.focusedPage
+                            });
+                        }
+                    }
+                }
+            ]
+
+            this._loadKeyEvent();
             this._loadGlobalEvent();
         }
 
@@ -81,6 +155,22 @@ define([], function() {
                 let { method, selector, operation } = event;
                 $(document).on(method, selector, operation);
             });
+        }
+
+        _loadKeyEvent() {
+            var keyEvent = this._keyEvent;
+            keyEvent.forEach(event => {
+                let { method, selector, operation } = event;
+                $(document).on(method, operation);
+            });
+        }   
+
+        enableHotkey() {
+            this.useHotkey = true;
+        }
+
+        disableHotkey() {
+            this.useHotkey = false;
         }
     }
 
