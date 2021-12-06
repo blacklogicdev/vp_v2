@@ -64,9 +64,8 @@ define([
                 let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
                 let vpHeight = $(window).height() - jupyterHeadHeight;
 
-                $('#vp_wrapper').css( { height: vpHeight + 'px' });
+                // $('#vp_wrapper').css( { height: vpHeight + 'px' });
                 that._resizeNotebook(vpWidth);
-                // $('#vp_menuFrame').height(vpHeight);
             });
 
             this._events = new com_Event(this);
@@ -98,7 +97,7 @@ define([
                     that._resizeVp(currentWidth);
                 },
                 stop: function(event, ui) {
-                    $('#vp_wrapper').css({'left': ''});
+                    $('#vp_wrapper').css({'left': '', 'height': ''});
                 },
             });  
         }
@@ -111,7 +110,7 @@ define([
             if (showBoard) {
                 boardWidth = currentWidth - menuWidth - MENU_BOARD_SPACING;
                 if (boardWidth < BOARD_MIN_WIDTH + MENU_BOARD_SPACING) {
-                    menuWidth -= (BOARD_MIN_WIDTH - boardWidth);
+                    menuWidth -= (BOARD_MIN_WIDTH + MENU_BOARD_SPACING - boardWidth);
                     boardWidth = BOARD_MIN_WIDTH;
                 }
             } else {

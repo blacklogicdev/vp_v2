@@ -121,13 +121,16 @@ define([
     
                         // check board minimum width
                         if (newBoardWidth < BOARD_MIN_WIDTH + MENU_BOARD_SPACING) {
-                            currentWidth -= (BOARD_MIN_WIDTH - newBoardWidth);
+                            currentWidth -= (BOARD_MIN_WIDTH + MENU_BOARD_SPACING - newBoardWidth);
+                            if (currentWidth < MENU_MIN_WIDTH) {
+                                currentWidth = MENU_MIN_WIDTH;
+                            }
                             newBoardWidth = BOARD_MIN_WIDTH;
                             // change maxWidth
                             // $('#vp_menuFrame').resizable('option', 'maxWidth', currentWidth);
                             ui.size.width = currentWidth;
                         } 
-                    }
+                    } 
                     // resize menu frame with current resized width
                     $('#vp_menuFrame').width(currentWidth);
                     // resize board frame with left space

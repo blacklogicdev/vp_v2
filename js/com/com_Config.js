@@ -142,10 +142,10 @@ define([], function() {
      * Frame size settings
      */
     Config.JUPYTER_HEADER_SPACING = 110;
-    Config.VP_MIN_WIDTH = 400;
-    Config.MENU_MIN_WIDTH = 200;
-    Config.BOARD_MIN_WIDTH = 200;
+    Config.MENU_MIN_WIDTH = 263;
+    Config.BOARD_MIN_WIDTH = 263;
     Config.MENU_BOARD_SPACING = 5;
+    Config.VP_MIN_WIDTH = 531; // = MENU_MIN_WIDTH + BOARD_MIN_WIDTH + MENU_BOARD_SPACING
 
     return Config;
 });
