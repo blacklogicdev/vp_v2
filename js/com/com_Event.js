@@ -66,7 +66,7 @@ define([], function() {
                     method: 'click', 
                     selector: '.vp-accordian', 
                     operation: (evt) => {
-                        var target = evt.target;
+                        var target = evt.currentTarget;
                         if ($(target).hasClass('vp-open')) {
                             // open -> close
                             $(target).removeClass('vp-open');

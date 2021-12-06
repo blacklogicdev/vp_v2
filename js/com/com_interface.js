@@ -9,8 +9,9 @@
  *    Change Date     :
  */
 define([
-
-], function() {
+    './com_util',
+    './com_String'
+], function(com_util, com_String) {
 
     var getSelectedCell = function() {
         return Jupyter.notebook.get_selected_index();
@@ -20,9 +21,16 @@ define([
         var selectedIndex = getSelectedCell();
         var targetCell = Jupyter.notebook.insert_cell_below(type, selectedIndex);
 
+        // TODO: apply to board (use com_Event)
+        var appliedBlock = null;
+        var appliedBlockIndex = 0;
+
+        // TODO: render success message ref: renderSuccessMessage();
+
         // Add signature
         if (type == 'code') {
             // TODO:
+            command = com_util.formatString('# VisualPython [{0}]\n', appliedBlockIndex) + command
         }
         targetCell.set_text(command);
         Jupyter.notebook.select_next();
@@ -39,10 +47,7 @@ define([
         }
         // move to executed cell
         Jupyter.notebook.scroll_to_cell(Jupyter.notebook.get_selected_index());
-
-        // TODO: apply to board (use com_Event)
-
-        // TODO: render success message ref: renderSuccessMessage();
+        
     }
 
     return {
