@@ -70,8 +70,6 @@ define([
             };
 
             this.cmCodeview = null;
-
-            vpLog.display(VP_LOG_TYPE.DEVELOP, this);
         }
 
         wrapSelector(selector='') {
