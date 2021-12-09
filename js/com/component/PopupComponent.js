@@ -70,6 +70,8 @@ define([
             };
 
             this.cmCodeview = null;
+
+            vpLog.display(VP_LOG_TYPE.DEVELOP, this);
         }
 
         wrapSelector(selector='') {
@@ -92,11 +94,17 @@ define([
             var that = this;
             // Close popup event
             $(this.wrapSelector('.vp-popup-close')).on('click', function() {
-                that.close();
+                $('#vp_wrapper').trigger({
+                    type: 'close_option_page',
+                    component: that
+                });
             });
             // Toggle operation (minimize)
-            $(this.wrapSelector('.vp-popup-toggle')).on('click', function() {
-                that.toggle();
+            $(this.wrapSelector('.vp-popup-toggle')).on('click', function(evt) {
+                // that.toggle();
+                that.hide();
+                that.taskItem.blurItem();
+                evt.stopPropagation();
             });
             // Focus recognization
             $(this.wrapSelector()).on('click', function() {
@@ -119,7 +127,10 @@ define([
                         evt.stopPropagation();
                         break;
                     case 'cancel':
-                        that.close();
+                        $('#vp_wrapper').trigger({
+                            type: 'close_option_page',
+                            component: that
+                        });
                         break;
                     case 'run':
                         com_interface.insertCell('code', that.generateCode());
@@ -222,6 +233,10 @@ define([
             }
         }
 
+        isHidden() {
+            return !$(this.wrapSelector()).is(':visible');
+        }
+
         /**
          * minimize and maximize
          */
@@ -237,6 +252,10 @@ define([
                 $this.addClass('vp-close');
                 $(this.wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
             }
+        }
+
+        hide() {
+            $(this.wrapSelector()).hide();
         }
 
         /**
@@ -273,6 +292,10 @@ define([
 
         closeView(viewType) {
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).hide();
+        }
+
+        setTaskItem(taskItem) {
+            this.taskItem = taskItem;
         }
     }
 

@@ -23,9 +23,10 @@ define([
     'text!../../data/libraries.json',
 
     './MenuGroup',
-    './MenuItem'
+    './MenuItem',
+    './TaskBar'
 ], function(menuFrameHtml, menuFrameCss, com_Config, com_Const, Component, librariesJson, 
-            MenuGroup, MenuItem) {
+            MenuGroup, MenuItem, TaskBar) {
 	'use strict';
     //========================================================================
     // Define Variable
@@ -210,6 +211,10 @@ define([
             });
         }   
 
+        renderTaskBar(taskList) {
+            this.taskBar = new TaskBar($(this.wrapSelector('#vp_menuFooter')), { taskList: taskList });
+        }
+
         render() {
             super.render(true);
             var that = this;
@@ -229,6 +234,9 @@ define([
                     }
                 }
             });
+
+            // render taskBar
+            this.renderTaskBar([]);
         }
     }
 

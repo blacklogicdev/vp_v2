@@ -27,6 +27,7 @@ define([
         ERROR   : -1,
         DEVELOP : 0,
         LOG     : 1,
+        WARN    : 4
     }
     /**
      * Log label
@@ -36,6 +37,7 @@ define([
         [_LOG_TYPE.LOG]      : 'VP_Log',
 
         [_LOG_TYPE.ERROR]    : 'VP_ERROR',
+        [_LOG_TYPE.WARN]     : 'VP_WARN'
     }
 
     //========================================================================

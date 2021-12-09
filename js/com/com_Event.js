@@ -89,11 +89,19 @@ define([], function() {
                     }
                 },
                 {
+                    method: 'close_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        var { component } = evt;
+                        that.mainFrame.closePopup(component);
+                    }
+                },
+                {
                     method: 'focus_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         var { component } = evt;
-                        that.mainFrame.setFocusedPage(component);
+                        that.mainFrame.focusPopup(component);
                     }
                 },
                 {

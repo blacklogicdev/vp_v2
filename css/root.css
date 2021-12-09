@@ -165,6 +165,22 @@ body {
     background: #C4C4C4;
 }
 
+/* Scrollbar horizontal */
+.vp-scrollbar-horizontal {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    --webkit-mask-position: left top;
+}
+.vp-scrollbar-horizontal::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+} 
+.vp-scrollbar-horizontal::-webkit-scrollbar-thumb {
+    border: 0.3px solid #C4C4C4;
+    background: #C4C4C4;
+}
+
 /* Accordian Box */
 .vp-accordian.vp-close + .vp-accordian-box {
     display: none !important;

@@ -35,7 +35,7 @@ define([
     class Component {
         constructor($target, state, prop={}) {
             // get uuid
-            this.uuid = com_util.getUUID();
+            this._uuid = com_util.getUUID();
             // target, pageDom query objects
             this.$target = $target;
             this.$pageDom = '';
@@ -108,6 +108,10 @@ define([
                     this.$target.append(this.$pageDom);
                 }
             }
+        }
+
+        get uuid() {
+            return this._uuid;
         }
     }
 

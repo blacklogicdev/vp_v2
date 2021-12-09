@@ -182,3 +182,44 @@
     color: #FFFFFF;
     font-size: 11px;
 }
+
+/* Task Bar */
+.vp-menu-task-bar {
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    padding: 10px;
+}
+/* Task Item */
+.vp-menu-task-item {
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 15px;
+    background: var(--border-gray-color);
+    margin-left: 5px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+.vp-menu-task-item.vp-focus{
+    background: var(--font-hightlight);
+    color: white;
+}
+.vp-menu-task-item img {
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    top: 2px;
+}
+.vp-menu-task-item span {
+    display: inline-block;
+    width: calc(100% - 5px);
+    line-height: 30px;
+    padding-left: 30px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+}

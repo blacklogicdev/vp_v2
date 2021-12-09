@@ -46,6 +46,9 @@ define([
             this._boardFrame = null;
             this._events = null;
             this._focusedPage = null;
+            
+            // Task bar options list
+            this._taskList = [];
         }
         //========================================================================
         // Internal call function
@@ -188,6 +191,7 @@ define([
          * @param {*} menuState 
          */
         openPopup(openType, menuId, menuState) {
+            let that = this;
             // get specific menu configuration
             let menuConfig = this.menuFrame.getMenuLibrary(menuId);
             if (!menuConfig) {
@@ -204,18 +208,43 @@ define([
                 let option = new OptionComponent(state);
                 // TODO: check if option is component class
                 option.open();
+                // add to task list
+                that.addTask(option);
+                
                 $('#vp_wrapper').trigger({
                     type: 'focus_option_page',
                     component: option
                 });
 
             }, function (err) {
-                vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found (menu id: '+menuId+')');
+                vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
+            });
+        }
+
+        focusPopup(component) {
+            // hide other tasks
+            this.hideAllTask();
+
+            // open it and focus it
+            component.open();
+            this.setFocusedPage(component);
+        }
+
+        hideAllTask() {
+            let taskList = this.taskList;
+            taskList.forEach(task => {
+                task.hide();
             });
         }
 
         closePopup(component) {
-            component.close();
+            if (component) {
+                this.removeTask(component);
+                component.close();
+                // remove from task list
+            } else {
+                vpLog.display(VP_LOG_TYPE.WARN, 'Component to close is not available.');
+            }
         }
 
         setFocusedPage(focusedPage) {
@@ -244,6 +273,31 @@ define([
 
         set focusedPage(component) {
             this._focusedPage = component;
+        }
+
+        get taskList() {
+            return this._taskList;
+        }
+
+        addTask(option) {
+            this._taskList.push(option);
+
+            // render task bar
+            this.menuFrame.renderTaskBar(this._taskList);
+            // focus added task
+
+        }
+
+        removeTask(option) {
+            const itemToRemove = this._taskList.find(function(item) { return item.uuid === option.uuid })
+            const itemIdx = this._taskList.indexOf(itemToRemove);
+            if (itemIdx > -1) {
+                this._taskList.splice(itemIdx, 1);
+                // render task bar
+                this.menuFrame.renderTaskBar(this._taskList);     
+            } else {
+                vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
+            }
         }
     }
 	
