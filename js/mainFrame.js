@@ -221,22 +221,33 @@ define([
             });
         }
 
+        /**
+         * Focus on PopupComponent
+         * @param {PopupComponent} component 
+         */
         focusPopup(component) {
             // hide other tasks
-            this.hideAllTask();
+            this.hideAllPopup();
 
             // open it and focus it
             component.open();
             this.setFocusedPage(component);
         }
 
-        hideAllTask() {
+        /**
+         * Hide all PopupComponent
+         */
+        hideAllPopup() {
             let taskList = this.taskList;
             taskList.forEach(task => {
                 task.hide();
             });
         }
 
+        /**
+         * Close PopupComponent (removed)
+         * @param {PopupComponent} component 
+         */
         closePopup(component) {
             if (component) {
                 this.removeTask(component);
@@ -247,6 +258,10 @@ define([
             }
         }
 
+        /**
+         * Focus popup page using its object
+         * @param {PopupComponent} focusedPage 
+         */
         setFocusedPage(focusedPage) {
             this.focusedPage = focusedPage;
             // remove other focused classes
@@ -259,6 +274,38 @@ define([
             }
         }
 
+        /**
+         * Add task to task list and render TaskBar
+         * @param {PopupComponent} option 
+         */
+        addTask(option) {
+            this._taskList.push(option);
+
+            // render task bar
+            this.menuFrame.renderTaskBar(this._taskList);
+            // focus added task
+
+        }
+
+        /**
+         * Remove task from task list and render TaskBar
+         * @param {PopupComponent} option 
+         */
+        removeTask(option) {
+            const itemToRemove = this._taskList.find(function(item) { return item.uuid === option.uuid })
+            const itemIdx = this._taskList.indexOf(itemToRemove);
+            if (itemIdx > -1) {
+                this._taskList.splice(itemIdx, 1);
+                // render task bar
+                this.menuFrame.renderTaskBar(this._taskList);     
+            } else {
+                vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
+            }
+        }
+
+        //========================================================================
+        // Getter Setter
+        //========================================================================
         get menuFrame() {
             return this._menuFrame;
         }
@@ -279,26 +326,7 @@ define([
             return this._taskList;
         }
 
-        addTask(option) {
-            this._taskList.push(option);
-
-            // render task bar
-            this.menuFrame.renderTaskBar(this._taskList);
-            // focus added task
-
-        }
-
-        removeTask(option) {
-            const itemToRemove = this._taskList.find(function(item) { return item.uuid === option.uuid })
-            const itemIdx = this._taskList.indexOf(itemToRemove);
-            if (itemIdx > -1) {
-                this._taskList.splice(itemIdx, 1);
-                // render task bar
-                this.menuFrame.renderTaskBar(this._taskList);     
-            } else {
-                vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
-            }
-        }
+        
     }
 	
     
