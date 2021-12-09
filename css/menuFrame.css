@@ -207,11 +207,16 @@
     background: var(--font-hightlight);
     color: white;
 }
-.vp-menu-task-item img {
+.vp-menu-task-item:hover img.vp-menu-task-remove,
+.vp-menu-task-item img.vp-menu-task-icon {
     display: inline-block;
     position: absolute;
     left: 10px;
     top: 2px;
+}
+.vp-menu-task-item img.vp-menu-task-remove,
+.vp-menu-task-item:hover img.vp-menu-task-icon {
+    display: none;
 }
 .vp-menu-task-item span {
     display: inline-block;
