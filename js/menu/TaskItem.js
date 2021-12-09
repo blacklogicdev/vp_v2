@@ -32,6 +32,7 @@ define([
         
         _bindEvent() {
             let that = this;
+            // click event - emphasize TaskItem & open/hide PopupComponent
             $(this.wrapSelector()).on('click', function(evt) {
                 let isOpen = $(that.wrapSelector()).hasClass('vp-focus');
                 if (isOpen) {

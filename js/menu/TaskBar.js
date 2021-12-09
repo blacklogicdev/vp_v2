@@ -28,6 +28,7 @@ define([
 
         _bindEvent() {
             let that = this;
+            // Mousewheel horizontal scrolling event
             $(this.wrapSelector()).on('mousewheel', function(evt) {
                 evt = window.event || evt;
                 var delta = Math.max(-1, Math.min(1, (evt.wheelDelta || -evt.detail)));
