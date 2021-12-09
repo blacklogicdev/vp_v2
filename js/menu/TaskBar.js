@@ -28,8 +28,12 @@ define([
 
         _bindEvent() {
             let that = this;
-
-
+            $(this.wrapSelector()).on('mousewheel', function(evt) {
+                evt = window.event || evt;
+                var delta = Math.max(-1, Math.min(1, (evt.wheelDelta || -evt.detail)));
+                this.scrollLeft -= (delta * 30); // scroll speed : 30
+                evt.preventDefault();
+            });
         }
 
         template() {
