@@ -159,19 +159,19 @@
     padding: 12px 0px;
     cursor: pointer;
 }
-.vp-menuitem.apps.item1 {
+.vp-menuitem.apps.vp-color-apps1 {
     background: #F9B52A;
 }
-.vp-menuitem.apps.item2 {
+.vp-menuitem.apps.vp-color-apps2 {
     background: #EF8F3C;
 }
-.vp-menuitem.apps.item3 {
+.vp-menuitem.apps.vp-color-apps3 {
     background: #EB773C;
 }
-.vp-menuitem.apps.item4 {
+.vp-menuitem.apps.vp-color-apps4 {
     background: #E56139;
 }
-.vp-menuitem.apps.preparing {
+.vp-menuitem.apps.vp-color-preparing {
     background: var(--gray-color);
 }
 .vp-menuitem.apps img {

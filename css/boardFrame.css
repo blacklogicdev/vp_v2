@@ -147,3 +147,8 @@
     line-height: 24px;
     background-color: #E5E5E5;
 }
+
+/* block color labeling */
+.vp-block.apps .vp-block-header {
+    background: var(--highlight-color);
+}

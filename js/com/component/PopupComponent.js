@@ -49,6 +49,7 @@ define([
         _init() {
             this.id = this.state.config.id;
             this.name = this.state.config.name;
+            this.path = this.state.config.path;
 
 
             this.config = {
@@ -95,11 +96,17 @@ define([
         _bindEvent() {
             var that = this;
             // Close popup event
-            $(this.wrapSelector('.vp-popup-close')).on('click', function() {
-                $('#vp_wrapper').trigger({
-                    type: 'close_option_page',
-                    component: that
-                });
+            $(this.wrapSelector('.vp-popup-close')).on('click', function(evt) {
+                if (that.getTaskType() === 'task') {
+                    $('#vp_wrapper').trigger({
+                        type: 'close_option_page',
+                        component: that
+                    });
+                } else {
+                    // if it's block, just hide it
+                    that.hide();
+                    evt.stopPropagation();
+                }
             });
             // Toggle operation (minimize)
             $(this.wrapSelector('.vp-popup-toggle')).on('click', function(evt) {
@@ -128,10 +135,16 @@ define([
                         evt.stopPropagation();
                         break;
                     case 'cancel':
-                        $('#vp_wrapper').trigger({
-                            type: 'close_option_page',
-                            component: that
-                        });
+                        if (that.getTaskType() === 'task') {
+                            $('#vp_wrapper').trigger({
+                                type: 'close_option_page',
+                                component: that
+                            });
+                        } else {
+                            // if it's block, just hide it
+                            that.hide();
+                            evt.stopPropagation();
+                        }
                         break;
                     case 'run':
                         $('#vp_wrapper').trigger({

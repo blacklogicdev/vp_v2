@@ -27,6 +27,20 @@ define([
             super($target, state, prop);
         }
 
+        _getMenuGroupRootType() {
+            // ex) visualpython - apps - frame
+            let path = this.state.task.path;
+            let pathList = path.split(' - ');
+            return pathList[1];
+        }
+
+        _getMenuGroupType() {
+            // ex) visualpython - apps - frame
+            let path = this.state.task.path;
+            let pathList = path.split(' - ');
+            return pathList.slice(1, pathList.length - 1).join('-');
+        }
+
         _init() {
             // temporary state
             this.tmpState = {
@@ -65,7 +79,7 @@ define([
          * Generate template
          */
         template() {
-            return Block.getTemplate(this.state.task.name, this.tmpState.depth, this.tmpState.blockNumber);
+            return Block.getTemplate(this._getMenuGroupRootType(), this.state.task.name, this.tmpState.depth, this.tmpState.blockNumber);
         }
 
         render() {
@@ -104,9 +118,9 @@ define([
         }
     }
 
-    Block.getTemplate = function(header, depth=0, index=0) {
+    Block.getTemplate = function(blockType, header, depth=0, index=0) {
         var page = new com_String();
-        page.appendLine('<div class="vp-block vp-block-group">');
+        page.appendFormatLine('<div class="vp-block vp-block-group {0}">', blockType);
         page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
         page.appendFormatLine('<div class="vp-block-left-holder"></div>');
         page.appendFormatLine('<div class="vp-block-depth-info">{0}</div>', depth);

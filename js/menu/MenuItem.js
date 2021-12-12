@@ -32,6 +32,20 @@ define([
             this._bindDraggable();
         }
 
+        _getMenuGroupRootType() {
+            // ex) visualpython - apps - frame
+            let path = this.state.path;
+            let pathList = path.split(' - ');
+            return pathList[1];
+        }
+
+        _getMenuGroupType() {
+            // ex) visualpython - apps - frame
+            let path = this.state.path;
+            let pathList = path.split(' - ');
+            return pathList.slice(1, pathList.length - 1).join('-');
+        }
+
         /**
          * Get menu item block's background color
          * @param {*} isApps 
@@ -43,16 +57,17 @@ define([
                 var color = this.state.apps.color;
                 switch(color) {
                     case 0:
-                        return 'preparing';
+                        return 'vp-color-preparing';
                     case 1:
                     case 2:
                     case 3:
                     case 4:
-                        return 'item' + color;
+                        return 'vp-color-apps' + color;
                 }
             } else {
                 // return color class
-                return '';
+                // FIXME: set detailed labels
+                return 'vp-' + this._getMenuGroupRootType();
             }
         }
 
@@ -78,7 +93,8 @@ define([
                 cursor: 'pointer',
                 connectToSortable: '.vp-board-body',
                 helper: function() {
-                    return Block.getTemplate(that.state.name);
+                    let isApps = that.state.apps != undefined;
+                    return Block.getTemplate(that._getColorClass(isApps), that.state.name);
                 },
                 start: function(event, ui) {
 
