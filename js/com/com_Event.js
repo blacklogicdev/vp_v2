@@ -115,6 +115,7 @@ define([], function() {
                     method: 'blur_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
+                        var { component } = evt;
                         that.mainFrame.blurPopup(component);
                     }
                 },
