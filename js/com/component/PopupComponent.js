@@ -134,6 +134,13 @@ define([
                         });
                         break;
                     case 'run':
+                        $('#vp_wrapper').trigger({
+                            type: 'open_option_page', 
+                            blockType: 'block',
+                            menuId: that.state.id,
+                            menuState: {},
+                            background: true
+                        });
                         com_interface.insertCell('code', that.generateCode());
                         break;
                     case 'show-detail':
@@ -148,8 +155,13 @@ define([
                 switch(btnType) {
                     case 'apply':
                         //TODO: apply to board (use com_Event)
-                        console.log('apply to board');
-                        break;
+                        $('#vp_wrapper').trigger({
+                            type: 'open_option_page', 
+                            blockType: 'block',
+                            menuId: that.state.id,
+                            menuState: {},
+                            background: true
+                        });
                     case 'add':
                         com_interface.insertCell('code', that.generateCode(), false);
                         break;
@@ -299,6 +311,20 @@ define([
 
         setTaskItem(taskItem) {
             this.taskItem = taskItem;
+        }
+
+        getTaskType() {
+            if (this.taskItem.constructor.name == 'Block') {
+                return 'block';
+            }
+            if (this.taskItem.constructor.name == 'Block') {
+                return 'task';
+            }
+            return null;
+        }
+
+        removeBlock() {
+            this.taskItem.removeItem();
         }
     }
 

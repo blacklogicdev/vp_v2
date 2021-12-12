@@ -14,8 +14,10 @@
 //============================================================================
 define([
     'text!../../html/boardFrame.html!strip',
-    'css!../../css/boardFrame.css'
-], function(boardFrameHtml, boardFrameCss) {
+    'css!../../css/boardFrame.css',
+    '../com/component/Component',
+    './Block'
+], function(boardFrameHtml, boardFrameCss, Component, Block) {
 	'use strict';
     //========================================================================
     // Define Variable
@@ -25,18 +27,20 @@ define([
     /**
      * BoardFrame
      */
-     class BoardFrame {
+     class BoardFrame extends Component{
         //========================================================================
         // Constructor
         //========================================================================
-        constructor($target) {
-            this.$target = $target;
-            this.$pageDom = null;
+        constructor($target, state, prop) {
+            super($target, state, prop);
+            
+            this._bindSortable();
+        }
 
-            // block list
-            this.blockList = [];
-            // group block list
-            this.groupBlockList = [];
+        //========================================================================
+        // Internal call function
+        //========================================================================
+        _init() {
             // selected block
             this.selectedBlock = null;
 
@@ -52,26 +56,34 @@ define([
                     end: 0
                 }
             }
-
-            this._bindEvent();
-            this.render();
         }
 
-        //========================================================================
-        // Internal call function
-        //========================================================================
         _bindEvent() {
-            this.$target.on('click', function(evt) {
-                // TEST: target id click event
-                if (evt.target.id == 'sampleId') {
-                    
-                }
+            
+        }
 
-                // TEST: target class click event
-                if ($(evt.target).hasClass('sample-class')) {
-                    
+        _bindSortable() {
+            let that = this;
+            let parent = this.prop.parent;
+            let position = -1;
+            $('.vp-board-body').sortable({
+                items: '> .vp-block',
+                axis: 'y',
+                scroll: true,
+                start: function(evt, ui) {
+                    position = ui.item.index();
+                },
+                stop: function(evt, ui) {
+                    var spos = position;
+                    var epos = ui.item.index();
+
+                    // move list element
+                    parent.moveBlock(spos, epos);
+                    // render block information
+                    that.renderInfo();
                 }
             });
+            $('.vp-board-body').disableSelection();
         }
 
         //========================================================================
@@ -90,13 +102,19 @@ define([
          */
         render() {
             this.$target.append(this.template());
+
+            // render taskBar
+            this.renderBlockList([]);
         }
 
         /**
          * Render block list
          */
-        renderBlockList() {
-
+        renderBlockList(blockList) {
+            $('.vp-board-body').html('');
+            blockList && blockList.forEach(task => {
+                let block = new Block($('.vp-board-body'), { task: task });
+            });
         }
 
         /**
@@ -106,14 +124,28 @@ define([
             
         }
 
+        renderInfo() {
+            let num = 1;
+            $('.vp-block').each(function(i, block) {
+                let numInfo = $(block).find('.vp-block-num-info');
+                $(numInfo).html(num++);
+            });
+        }
+
         //========================================================================
         // Block control
         //========================================================================
-        createBlock() {
-            
+        createBlock(component, state) {
+            let prop = {
+                addBlock: this.addBlock
+            }
+            let createdBlock = new Block($(this.wrapSelector('.vp-board-body'), state, prop));
+            component.setTaskItem(createdBlock);
+
+            return createdBlock;
         }
 
-        addBlock(block, isGroup, position) {
+        addBlock(block, position, isGroup) {
 
         }
 

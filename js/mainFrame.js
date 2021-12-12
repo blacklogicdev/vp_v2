@@ -45,10 +45,12 @@ define([
             this._menuFrame = null;
             this._boardFrame = null;
             this._events = null;
+            this._nowTask = null;
             this._focusedPage = null;
             
             // Task bar options list
             this._taskList = [];
+            this._blockList = [];
         }
         //========================================================================
         // Internal call function
@@ -166,7 +168,7 @@ define([
             
             // load menu & board
             this._menuFrame = new MenuFrame($('#vp_wrapper'), {});
-            this._boardFrame = new BoardFrame($('#vp_wrapper'));
+            this._boardFrame = new BoardFrame($('#vp_wrapper'), {}, { parent: this });
             
             // bind event
             this._bindEvent();
@@ -187,13 +189,14 @@ define([
         //========================================================================
         // Child components control function
         //========================================================================
+
         /**
          * Open menu as popup
-         * @param {*} openType 
-         * @param {*} menuId 
-         * @param {*} menuState 
+         * @param {String} blockType task, block (task:TaskBlock / block:Block)
+         * @param {String} menuId com_library
+         * @param {Object} menuState { ...states to load }
          */
-        openPopup(openType, menuId, menuState) {
+        openPopup(blockType, menuId, menuState, background=false) {
             let that = this;
             // get specific menu configuration
             let menuConfig = this.menuFrame.getMenuLibrary(menuId);
@@ -209,15 +212,21 @@ define([
                     config: menuConfig
                 }
                 let option = new OptionComponent(state);
-                // add to task list
-                that.addTask(option);
+                if (blockType === 'block') {
+                    // add to block list
+                    that.addBlock(option);
+                } else {
+                    // add to task list
+                    that.addTask(option);
+                }
                 // TODO: check if option is component class
-                option.open();
+                if (!background) {
+                    $('#vp_wrapper').trigger({
+                        type: 'focus_option_page',
+                        component: option
+                    });
+                }
                 
-                $('#vp_wrapper').trigger({
-                    type: 'focus_option_page',
-                    component: option
-                });
 
             }, function (err) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
@@ -233,13 +242,17 @@ define([
             this.hideAllPopup();
 
             // open it and focus it
+            this._nowTask = component;
             component.open();
             this.setFocusedPage(component);
         }
 
-        blurPopup(component) {
-            // hide it and blur it
-            component.hide();
+        blurPopup() {
+            let component = this._nowTask;
+            if (component) {
+                // hide it and blur it
+                component.hide();
+            }
             this.setFocusedPage(null);
         }
 
@@ -259,7 +272,13 @@ define([
          */
         closePopup(component) {
             if (component) {
-                this.removeTask(component);
+                if (component.getTaskType() === 'block') {
+                    // block
+                    this.removeBlock(component);
+                } else {
+                    // task
+                    this.removeTask(component);
+                }
                 component.close();
                 // remove from task list
             } else {
@@ -284,11 +303,56 @@ define([
         }
 
         checkDuplicatedTask(menuId) {
+            // find on task list
             let dupTask = this._taskList.filter(t => menuId === t.id);
             if (dupTask.length > 0) {
                 return dupTask[0];
             }
+            // find on block list
+            dupTask = this._blockList.filter(t => menuId === t.id);
+            if (dupTask.length > 0) {
+                return dupTask[0];
+            }
+            // not available
             return null;
+        }
+
+        addBlock(option) {
+            this._blockList.push(option);
+
+            // render board frame
+            this.boardFrame.renderBlockList(this._blockList);
+        }
+
+        /**
+         * Remove block from block list and render BoardBody
+         * @param {PopupComponent} option 
+         */
+        removeBlock(option) {
+            const taskToRemove = this._blockList.find(function(item) { return item.uuid === option.uuid });
+            const taskIdx = this._blockList.indexOf(taskToRemove);
+            if (taskIdx > -1) {
+                taskToRemove.removeBlock();
+                this._blockList.splice(taskIdx, 1);
+                // render block list  
+                this.boardFrame.renderBlockList(this._blockList);
+            } else {
+                vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
+            }
+        }
+
+        /**
+         * Change position of task in  blockList
+         * @param {int} startIdx 
+         * @param {int} endIdx 
+         */
+        moveBlock(startIdx, endIdx) {
+            if (startIdx == endIdx) {
+                return;
+            }
+            var element = this._blockList[startIdx];
+            this._blockList.splice(startIdx, 1);
+            this._blockList.splice(endIdx, 0, element);
         }
 
         /**
@@ -309,12 +373,13 @@ define([
          * @param {PopupComponent} option 
          */
         removeTask(option) {
-            const itemToRemove = this._taskList.find(function(item) { return item.uuid === option.uuid })
-            const itemIdx = this._taskList.indexOf(itemToRemove);
-            if (itemIdx > -1) {
-                this._taskList.splice(itemIdx, 1);
+            const taskToRemove = this._taskList.find(function(item) { return item.uuid === option.uuid });
+            const taskIdx = this._taskList.indexOf(taskToRemove);
+            if (taskIdx > -1) {
+                taskToRemove.removeBlock();
+                this._taskList.splice(taskIdx, 1);
                 // render task bar
-                this.menuFrame.renderTaskBar(this._taskList);     
+                this.menuFrame.renderTaskBar(this._taskList);
             } else {
                 vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
             }

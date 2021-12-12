@@ -39,8 +39,7 @@ define([
                     // hide task if it's already opened
                     // open task
                     $('#vp_wrapper').trigger({
-                        type: 'blur_option_page',
-                        component: that.state.task
+                        type: 'blur_option_page'
                     });
                 } else {
                     // open task
@@ -108,6 +107,10 @@ define([
         blurItem() {
             // hide task if it's already opened
             $(this.wrapSelector()).removeClass('vp-focus');
+        }
+
+        removeItem() {
+            $(this.wrapSelector()).remove();
         }
     }
 

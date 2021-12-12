@@ -83,15 +83,15 @@ define([], function() {
                     method: 'open_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
-                        // openType: newBlock/openBlock/... / menuItem: menu id / menuState: saved state
-                        var { openType, menuId, menuState } = evt;
+                        // blockType: newBlock/openBlock/... / menuItem: menu id / menuState: saved state
+                        // TODO: rearrange mechanism
+                        var { blockType, menuId, menuState, background } = evt;
                         let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
-                        console.log(dupTask);
-                        if (dupTask) {
+                        if (!background && dupTask) {
                             // if duplicated, open its task
                             that.mainFrame.focusPopup(dupTask);
                         } else {
-                            that.mainFrame.openPopup(openType, menuId, menuState);
+                            that.mainFrame.openPopup(blockType, menuId, menuState, background);
                         }
                     }
                 },

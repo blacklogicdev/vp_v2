@@ -16,7 +16,8 @@ define([
     '../com/com_Config',
     '../com/com_String',
     '../com/component/Component',
-], function(com_Config, com_String, Component) {
+    '../board/Block'
+], function(com_Config, com_String, Component, Block) {
     'use strict';
     //========================================================================
     // Declare class
@@ -27,6 +28,8 @@ define([
     class MenuItem extends Component{
         constructor($target, state) {
             super($target, state);
+
+            this._bindDraggable();
         }
 
         /**
@@ -55,16 +58,41 @@ define([
 
         _bindEvent() {
             var that = this;
-            this.$target.on('click', function(evt) {
-                var target = evt.target;
+            $(this.wrapSelector()).on('click', function(evt) {
                 // click event
-                // if ($(target).hasClass(that.uuid)) {
-                if ($(that.wrapSelector()).find(target).length > 0) {
+                $('#vp_wrapper').trigger({
+                    type: 'open_option_page', 
+                    blockType: 'task',
+                    menuId: that.state.id,
+                    menuState: {}
+                });
+            });
+        }
+
+        _bindDraggable() {
+            var that = this;
+            $(this.wrapSelector()).draggable({
+                containment: '#vp_wrapper',
+                appendTo: '.vp-board-body',
+                revert: 'invalid',
+                cursor: 'pointer',
+                connectToSortable: '.vp-board-body',
+                helper: function() {
+                    return Block.getTemplate(that.state.name);
+                },
+                start: function(event, ui) {
+
+                },
+                drag: function(event, ui) {
+
+                },
+                stop: function(event, ui) {
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page', 
-                        openType: '',
+                        blockType: 'block',
                         menuId: that.state.id,
-                        menuState: {}
+                        menuState: {},
+                        background: true
                     });
                 }
             });
