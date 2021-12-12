@@ -13,8 +13,9 @@
 // [CLASS] Block
 //============================================================================
 define([
-    '../com/component/Component'
-], function(Component) {
+    '../com/component/Component',
+    '../com/com_String'
+], function(Component, com_String) {
 	'use strict';
 	
     /**
@@ -40,9 +41,18 @@ define([
             
         }
         /**
-         * Render block
+         * Generate template
          */
-        render() {
+        template() {
+            let { name, code, depth, index } = this.state;
+            var page = new com_String();
+            page.appendLine('<div class="vp-block">');
+            page.appendFormatLine('<div class="vp-block-header">{0}</div>', name);
+            page.appendFormatLine('<div class="vp-block-left-holder"></div>');
+            page.appendFormatLine('<div class="vp-block-depth-info">{0}</div>', depth);
+            page.appendFormatLine('<div class="vp-block-num-info">{0}</div>', index);
+            page.appendLine('</div>');
+            return page.toString();
         }
 
         //========================================================================
@@ -51,6 +61,7 @@ define([
         toJson() {
 
         }
+
         fromJson(jsonObject) {
 
         }

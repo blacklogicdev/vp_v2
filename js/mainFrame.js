@@ -184,6 +184,9 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp toggled');
         }
 
+        //========================================================================
+        // Child components control function
+        //========================================================================
         /**
          * Open menu as popup
          * @param {*} openType 
@@ -206,10 +209,10 @@ define([
                     config: menuConfig
                 }
                 let option = new OptionComponent(state);
-                // TODO: check if option is component class
-                option.open();
                 // add to task list
                 that.addTask(option);
+                // TODO: check if option is component class
+                option.open();
                 
                 $('#vp_wrapper').trigger({
                     type: 'focus_option_page',
@@ -232,6 +235,12 @@ define([
             // open it and focus it
             component.open();
             this.setFocusedPage(component);
+        }
+
+        blurPopup(component) {
+            // hide it and blur it
+            component.hide();
+            this.setFocusedPage(null);
         }
 
         /**
@@ -272,6 +281,14 @@ define([
                 $(this.focusedPage.wrapSelector()).addClass('vp-focused');
                 $(this.focusedPage.wrapSelector()).css({ 'z-index': 205 }); // move forward
             }
+        }
+
+        checkDuplicatedTask(menuId) {
+            let dupTask = this._taskList.filter(t => menuId === t.id);
+            if (dupTask.length > 0) {
+                return dupTask[0];
+            }
+            return null;
         }
 
         /**

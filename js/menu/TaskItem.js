@@ -37,13 +37,12 @@ define([
                 let isOpen = $(that.wrapSelector()).hasClass('vp-focus');
                 if (isOpen) {
                     // hide task if it's already opened
-                    that.blurItem();
-
-                    // hide task
-                    that.state.task.hide();
+                    // open task
+                    $('#vp_wrapper').trigger({
+                        type: 'blur_option_page',
+                        component: that.state.task
+                    });
                 } else {
-                    that.focusItem();
-    
                     // open task
                     $('#vp_wrapper').trigger({
                         type: 'focus_option_page',

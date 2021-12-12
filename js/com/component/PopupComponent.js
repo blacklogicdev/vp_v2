@@ -47,6 +47,10 @@ define([
         }
 
         _init() {
+            this.id = this.state.config.id;
+            this.name = this.state.config.name;
+
+
             this.config = {
                 codeview: true, 
                 dataview: true
@@ -101,7 +105,6 @@ define([
             $(this.wrapSelector('.vp-popup-toggle')).on('click', function(evt) {
                 // that.toggle();
                 that.hide();
-                that.taskItem.blurItem();
                 evt.stopPropagation();
             });
             // Focus recognization
@@ -220,6 +223,7 @@ define([
          */
         open() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
+            this.taskItem.focusItem();
             $(this.wrapSelector()).show();
 
             if (!this.cmCodeview) {
@@ -253,6 +257,7 @@ define([
         }
 
         hide() {
+            this.taskItem.blurItem();
             $(this.wrapSelector()).hide();
         }
 

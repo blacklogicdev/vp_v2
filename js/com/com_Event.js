@@ -85,7 +85,14 @@ define([], function() {
                     operation: (evt) => {
                         // openType: newBlock/openBlock/... / menuItem: menu id / menuState: saved state
                         var { openType, menuId, menuState } = evt;
-                        that.mainFrame.openPopup(openType, menuId, menuState);
+                        let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
+                        console.log(dupTask);
+                        if (dupTask) {
+                            // if duplicated, open its task
+                            that.mainFrame.focusPopup(dupTask);
+                        } else {
+                            that.mainFrame.openPopup(openType, menuId, menuState);
+                        }
                     }
                 },
                 {
@@ -108,7 +115,7 @@ define([], function() {
                     method: 'blur_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
-                        that.mainFrame.setFocusedPage(null);
+                        that.mainFrame.blurPopup(component);
                     }
                 },
                 {
