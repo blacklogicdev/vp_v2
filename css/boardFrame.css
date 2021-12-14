@@ -105,6 +105,9 @@
     cursor: pointer;
     font-family: Consolas;
 }
+.vp-block.vp-block-group {
+    margin-top: 15px;
+}
 .vp-block-header {
     height: 25px;
     width: calc(100% - 35px);
