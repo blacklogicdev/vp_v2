@@ -167,3 +167,24 @@
     color: var(--font-hightlight);
     background: var(--light-gray-color);
 }
+/* writable codemirror style*/
+/* Code Option Codemirror */
+.vp-popup-frame .CodeMirror.vp-writable-codemirror {
+    border: 1px solid silver; 
+}
+.vp-popup-frame .CodeMirror.vp-writable-codemirror .CodeMirror-empty { 
+    outline: 1px solid #c22; 
+}
+.vp-popup-frame .CodeMirror.vp-writable-codemirror .CodeMirror-empty.CodeMirror-focused { 
+    outline: none; 
+}
+.vp-popup-frame .CodeMirror.vp-writable-codemirror pre.CodeMirror-placeholder { 
+    color: #999; 
+}
+.vp-popup-frame .CodeMirror.vp-writable-codemirror .CodeMirror-scroll { 
+    min-height: 80px; 
+    max-height: 250px;
+}
+.vp-popup-frame .CodeMirror.vp-writable-codemirror .CodeMirror-linenumber {
+    padding: 1px 8px 0 5px;
+}

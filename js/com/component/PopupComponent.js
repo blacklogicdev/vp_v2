@@ -74,23 +74,62 @@ define([
                 scrollbarStyle: "null"
             };
 
+            this.cmPythonConfig = {
+                mode: {
+                    name: 'python',
+                    version: 3,
+                    singleLineStringErrors: false
+                },
+                height: '100%',
+                width: '100%',
+                indentUnit: 4,
+                lineNumbers: true,
+                matchBrackets: true,
+                autoRefresh: true,
+                theme: "ipython",
+                extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
+            }
+
             this.cmCodeview = null;
+
+            this.cmCodeList = [];
         }
 
-        wrapSelector(selector='') {
-            var sbSelector = new com_String();
-            var cnt = arguments.length;
-            if (cnt < 2) {
-                // if there's no more arguments
-                sbSelector.appendFormat(".{0} {1}", this.uuid, selector);
-            } else {
-                // if there's more arguments
-                sbSelector.appendFormat(".{0}", this.uuid);
-                for (var idx = 0; idx < cnt; idx++) {
-                    sbSelector.appendFormat(" {0}", arguments[idx]);
+        _addCodemirror(selector, readonly=false) {
+            this.cmCodeList.push({ selector: selector, readonly: readonly, cm: null });
+        }
+
+        /**
+         * bind codemirror
+         * @param {string} selector 
+         */
+        _bindCodemirror() {
+            for (let i = 0; i < this.cmCodeList.length; i++) {
+                let cmObj = this.cmCodeList[i];
+                let targetTag = $(cmObj.selector);
+                let cmConfig = cmObj.readonly? this.cmReadonlyConfig: this.cmPythonConfig;
+                if (targetTag && targetTag.length > 0) {
+                    let cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
+                    if (cmCode) {
+                        this.cmCodeList[i].cm = cmCode;
+                    }
+                    // add class on text area
+                    $(cmObj.selector + ' + .CodeMirror').addClass('vp-writable-codemirror');
+                    cmCode.on('focus', function() {
+                        // disable other shortcuts
+                        com_interface.disableOtherShortcut();
+                    });
+                    cmCode.on('blur', function(instance, evt) {
+                        // enable other shortcuts
+                        com_interface.enableOtherShortcut();
+                        // instance = codemirror
+                        // save its code to textarea component
+                        instance.save();
+                    });
+                } else { 
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to bind codemirror. (selector: '+cmObj.selector+')');
                 }
             }
-            return sbSelector.toString();
         }
 
         _bindEvent() {
@@ -209,6 +248,22 @@ define([
 
         }
 
+        wrapSelector(selector='') {
+            var sbSelector = new com_String();
+            var cnt = arguments.length;
+            if (cnt < 2) {
+                // if there's no more arguments
+                sbSelector.appendFormat(".{0} {1}", this.uuid, selector);
+            } else {
+                // if there's more arguments
+                sbSelector.appendFormat(".{0}", this.uuid);
+                for (var idx = 0; idx < cnt; idx++) {
+                    sbSelector.appendFormat(" {0}", arguments[idx]);
+                }
+            }
+            return sbSelector.toString();
+        }
+
         templateForBody() {
             /** Implementation needed */
             return '';
@@ -250,6 +305,7 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
             this.taskItem.focusItem();
             $(this.wrapSelector()).show();
+            this._bindCodemirror();
 
             if (!this.cmCodeview) {
                 // codemirror setting
