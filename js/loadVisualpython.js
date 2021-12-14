@@ -201,10 +201,10 @@
             Jupyter.notebook.keyboard_manager.enable();
         });
         // minju: textarea용 - hotkey 제어 textarea 인 경우 포커스를 가지면 핫키 막고 잃으면 핫키 허용
-        $(document).on('focus', com_util.wrapSelector('textarea'), function() {
+        $(document).on('focus', com_util.wrapSelector('textarea'+ ' .vp-popup-frame textarea'), function() {
             Jupyter.notebook.keyboard_manager.disable();
         });
-        $(document).on('blur', com_util.wrapSelector('textarea'), function() {
+        $(document).on('blur', com_util.wrapSelector('textarea') + ' .vp-popup-frame textarea', function() {
             Jupyter.notebook.keyboard_manager.enable();
         });
     };

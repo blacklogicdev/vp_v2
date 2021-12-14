@@ -49,8 +49,19 @@ define([
         Jupyter.notebook.scroll_to_cell(Jupyter.notebook.get_selected_index());
         
     }
+    
+    var enableOtherShortcut = function() {
+        Jupyter.notebook.keyboard_manager.enable();
+    }
 
+    var disableOtherShortcut = function() {
+        Jupyter.notebook.keyboard_manager.disable();
+    }
+    
     return {
-        insertCell: insertCell
+        insertCell: insertCell,
+        enableOtherShortcut: enableOtherShortcut,
+        disableOtherShortcut: disableOtherShortcut,
+
     };
 });
