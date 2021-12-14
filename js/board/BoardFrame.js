@@ -59,7 +59,29 @@ define([
         }
 
         _bindEvent() {
-            
+            let that = this;
+            $('.vp-board-footer-buttons button').on('click', function() {
+                let menu = $(this).data('menu');
+                if (menu === 'code') {
+                    // code
+                    $('#vp_wrapper').trigger({
+                        type: 'open_option_page',
+                        blockType: 'block',
+                        menuId: 'lgExe_code',
+                        menuState: {},
+                        background: true
+                    });
+                } else if (menu === 'text') {
+                    // text
+                    $('#vp_wrapper').trigger({
+                        type: 'open_option_page',
+                        blockType: 'block',
+                        menuId: 'apps_markdown',
+                        menuState: {},
+                        background: true
+                    });
+                }
+            });
         }
 
         _bindSortable() {
