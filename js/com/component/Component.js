@@ -110,6 +110,13 @@ define([
             }
         }
 
+        equals(component) {
+            if (!component) {
+                return false;
+            }
+            return component.uuid === this.uuid;
+        }
+
         get uuid() {
             return this._uuid;
         }

@@ -206,6 +206,10 @@ define([
             }
             // open component
             require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
+                if (!OptionComponent) {
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'Not implementd or available menu. (menu id: '+menuId+')');
+                    return;
+                }
                 // pass configuration inside state
                 let state = {
                     ...menuState,
@@ -219,7 +223,6 @@ define([
                     // add to task list
                     that.addTask(option);
                 }
-                // TODO: check if option is component class
                 if (!background) {
                     $('#vp_wrapper').trigger({
                         type: 'focus_option_page',
@@ -238,13 +241,15 @@ define([
          * @param {PopupComponent} component 
          */
         focusPopup(component) {
-            // hide other tasks
-            this.hideAllPopup();
-
-            // open it and focus it
-            this._nowTask = component;
-            component.open();
-            this.setFocusedPage(component);
+            if (!component.equals(this.focusedPage)) {
+                // hide other tasks
+                this.hideAllPopup();
+    
+                // open it and focus it
+                this._nowTask = component;
+                component.open();
+                this.setFocusedPage(component);
+            }
         }
 
         blurPopup() {
