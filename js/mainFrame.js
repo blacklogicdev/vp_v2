@@ -341,7 +341,7 @@ define([
         }
 
         addBlock(option, position=-1) {
-            if (!position || position < 0) {
+            if (position == undefined || position < 0) {
                 this._blockPopupList.push(option);
             } else {
                 this._blockPopupList.splice(position, 0, option);
