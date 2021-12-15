@@ -14,8 +14,8 @@
 //============================================================================
 require.config({
     paths: { 
-        'vp_base': '../nbextensions/visualpython',
-        'css'       : '../nbextensions/visualpython/lib/require/css.min'
+        'vp_base'   : '../nbextensions/visualpython',
+        'css'       : 'vp_base/lib/require/css.min'
     },
     config: {
         text: {
@@ -31,7 +31,7 @@ require.config({
     },
     map: {
         '*': {
-            css :  '../nbextensions/visualpython/lib/require/css.min'
+            css :  'vp_base/lib/require/css.min'
         }
     }
 });
@@ -40,11 +40,9 @@ require.config({
 // Load extension
 //============================================================================
 define([
-    'text',
-    'css', 
     'vp_base/js/com/com_Const',
     'vp_base/js/loadVisualpython'
-], function (text, css, com_Const, loadVisualpython) {
+], function (com_Const, loadVisualpython) {
     'use strict';
 
     //========================================================================
