@@ -43,6 +43,7 @@ define([
         _init() {
             // selected block
             this.selectedBlock = null;
+            this.blockList = [];
 
             // state
             this.state = {
@@ -65,7 +66,7 @@ define([
                 if (menu === 'code') {
                     // code
                     $('#vp_wrapper').trigger({
-                        type: 'open_option_page',
+                        type: 'create_option_page',
                         blockType: 'block',
                         menuId: 'lgExe_code',
                         menuState: {},
@@ -74,7 +75,7 @@ define([
                 } else if (menu === 'text') {
                     // text
                     $('#vp_wrapper').trigger({
-                        type: 'open_option_page',
+                        type: 'create_option_page',
                         blockType: 'block',
                         menuId: 'apps_markdown',
                         menuState: {},
@@ -92,6 +93,7 @@ define([
                 items: '> .vp-block',
                 axis: 'y',
                 scroll: true,
+                revert: false,
                 start: function(evt, ui) {
                     position = ui.item.index();
                 },
@@ -99,13 +101,14 @@ define([
                     var spos = position;
                     var epos = ui.item.index();
 
-                    // move list element
-                    parent.moveBlock(spos, epos);
-                    // render block information
-                    that.renderInfo();
+                    if (spos != epos && epos > -1) {
+                        // move list element
+                        parent.moveBlock(spos, epos);
+                        // render block information
+                        that.renderInfo();
+                    }
                 }
-            });
-            $('.vp-board-body').disableSelection();
+            }).disableSelection();
         }
 
         //========================================================================
@@ -123,7 +126,7 @@ define([
          * Render and load on parentDom, bind events
          */
         render() {
-            this.$target.append(this.template());
+            super.render();
 
             // render taskBar
             this.renderBlockList([]);
@@ -132,10 +135,13 @@ define([
         /**
          * Render block list
          */
-        renderBlockList(blockList) {
+        renderBlockList(blockPopupList) {
+            let that = this;
+            let parent = this.prop.parent;
             $('.vp-board-body').html('');
-            blockList && blockList.forEach(task => {
+            blockPopupList && blockPopupList.forEach(task => {
                 let block = new Block($('.vp-board-body'), { task: task });
+                that.blockList.push(block); 
             });
         }
 
@@ -143,12 +149,31 @@ define([
          * Reload block list on the board
          */
         reloadBlockList() {
-            
+            let that = this;
+            let parent = this.prop.parent;
+            let num = 1;
+            // init boardframe body
+            $(this.wrapSelector('.vp-board-body')).html('');
+            // render block list
+            parent.blockPopupList.forEach(popup => {
+                let taskItem = popup.taskItem;
+                // if it's already rendered and block
+                if (taskItem && taskItem instanceof Block) {
+                    if (taskItem.isGroup) {
+                        taskItem.setNumber(num++);
+                    }
+                    taskItem.render();
+                } else {
+                    let block = new Block($('.vp-board-body'), { task: popup, blockNumber: num++ });
+                    popup.setTaskItem(block);
+                    that.blockList.push(block);
+                }
+            })
         }
 
         renderInfo() {
             let num = 1;
-            $('.vp-block').each(function(i, block) {
+            $('.vp-block.vp-block-group').each(function(i, block) {
                 let numInfo = $(block).find('.vp-block-num-info');
                 $(numInfo).html(num++);
             });

@@ -41,9 +41,6 @@ define([
     class PopupComponent extends Component {
         constructor(state={}, prop={}) {
             super($('#site'), state, prop);
-            
-            this._bindDraggable();
-            this._bindResizable();
         }
 
         _init() {
@@ -104,31 +101,43 @@ define([
          * @param {string} selector 
          */
         _bindCodemirror() {
+            // codemirror editor (if available)
             for (let i = 0; i < this.cmCodeList.length; i++) {
                 let cmObj = this.cmCodeList[i];
-                let targetTag = $(cmObj.selector);
-                let cmConfig = cmObj.readonly? this.cmReadonlyConfig: this.cmPythonConfig;
-                if (targetTag && targetTag.length > 0) {
-                    let cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
-                    if (cmCode) {
-                        this.cmCodeList[i].cm = cmCode;
+                if (cmObj.cm == null) {
+                    let targetTag = $(cmObj.selector);
+                    let cmConfig = cmObj.readonly? this.cmReadonlyConfig: this.cmPythonConfig;
+                    if (targetTag && targetTag.length > 0) {
+                        let cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
+                        if (cmCode) {
+                            cmObj.cm = cmCode;
+                        }
+                        // add class on text area
+                        $(cmObj.selector + ' + .CodeMirror').addClass('vp-writable-codemirror');
+                        cmCode.on('focus', function() {
+                            // disable other shortcuts
+                            com_interface.disableOtherShortcut();
+                        });
+                        cmCode.on('blur', function(instance, evt) {
+                            // enable other shortcuts
+                            com_interface.enableOtherShortcut();
+                            // instance = codemirror
+                            // save its code to textarea component
+                            instance.save();
+                        });
+                    } else { 
+                        vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to bind codemirror. (selector: '+cmObj.selector+')');
                     }
-                    // add class on text area
-                    $(cmObj.selector + ' + .CodeMirror').addClass('vp-writable-codemirror');
-                    cmCode.on('focus', function() {
-                        // disable other shortcuts
-                        com_interface.disableOtherShortcut();
-                    });
-                    cmCode.on('blur', function(instance, evt) {
-                        // enable other shortcuts
-                        com_interface.enableOtherShortcut();
-                        // instance = codemirror
-                        // save its code to textarea component
-                        instance.save();
-                    });
-                } else { 
-                    vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to bind codemirror. (selector: '+cmObj.selector+')');
                 }
+            }
+
+            // code view
+            if (!this.cmCodeview) {
+                // codemirror setting
+                this.cmCodeview = codemirror.fromTextArea(
+                    $(this.wrapSelector('.vp-popup-codeview-box textarea'))[0], this.cmReadonlyConfig);
+            } else {
+                this.cmCodeview.refresh();
             }
         }
 
@@ -187,11 +196,9 @@ define([
                         break;
                     case 'run':
                         $('#vp_wrapper').trigger({
-                            type: 'open_option_page', 
+                            type: 'apply_option_page', 
                             blockType: 'block',
-                            menuId: that.state.id,
-                            menuState: {},
-                            background: true
+                            component: that
                         });
                         com_interface.insertCell('code', that.generateCode());
                         break;
@@ -206,15 +213,18 @@ define([
                 var btnType = $(this).data('type');
                 switch(btnType) {
                     case 'apply':
-                        //TODO: apply to board (use com_Event)
                         $('#vp_wrapper').trigger({
-                            type: 'open_option_page', 
+                            type: 'apply_option_page', 
                             blockType: 'block',
-                            menuId: that.state.id,
-                            menuState: {},
-                            background: true
+                            component: that
                         });
+                        break;
                     case 'add':
+                        $('#vp_wrapper').trigger({
+                            type: 'apply_option_page', 
+                            blockType: 'block',
+                            component: that
+                        });
                         com_interface.insertCell('code', that.generateCode(), false);
                         break;
                 }
@@ -282,8 +292,8 @@ define([
          * Render page
          * @param {Object} config configure whether to use buttons or not 
          */
-        render() {
-            super.render();
+        render(inplace=false) {
+            super.render(inplace);
 
             if (!this.config.codeview) {
                 $(this.wrapSelector('.vp-popup-button[data-type="code"]')).hide();
@@ -291,6 +301,9 @@ define([
             if (!this.config.dataview) {
                 $(this.wrapSelector('.vp-popup-button[data-type="data"]')).hide();
             }
+
+            this._bindDraggable();
+            this._bindResizable();
         }
 
         generateCode() {
@@ -300,20 +313,51 @@ define([
 
         /**
          * Open popup
+         * - show popup
+         * - focus popup
+         * - bind codemirror
          */
         open() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
+            this.show();
+            this.focus();
+            this._bindCodemirror();
+        }
+
+        /**
+         * Close popup
+         * - remove popup
+         * - unbind event
+         */
+        close() {
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'close popup', this);
+            this.hide();
+        }
+
+        remove() {
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'remove popup', this);
+            $(this.wrapSelector()).remove();
+        }
+
+        focus() {
+            $('.vp-popup-frame').removeClass('vp-focused');
+            $('.vp-popup-frame').css({ 'z-index': 200 });
+            $(this.wrapSelector()).addClass('vp-focused');
+            $(this.wrapSelector()).css({ 'z-index': 205 }); // move forward
+        }
+
+        blur() {
+            $(this.wrapSelector()).removeClass('vp-focused');
+        }
+
+        show() {
             this.taskItem.focusItem();
             $(this.wrapSelector()).show();
-            this._bindCodemirror();
+        }
 
-            if (!this.cmCodeview) {
-                // codemirror setting
-                this.cmCodeview = codemirror.fromTextArea(
-                    $(this.wrapSelector('.vp-popup-codeview-box textarea'))[0], this.cmReadonlyConfig);
-            } else {
-                this.cmCodeview.refresh();
-            }
+        hide() {
+            this.taskItem.blurItem();
+            $(this.wrapSelector()).hide();
         }
 
         isHidden() {
@@ -335,21 +379,6 @@ define([
                 $this.addClass('vp-close');
                 $(this.wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
             }
-        }
-
-        hide() {
-            this.taskItem.blurItem();
-            $(this.wrapSelector()).hide();
-        }
-
-        /**
-         * Close popup
-         * - remove popup
-         * - unbind event
-         */
-        close() {
-            vpLog.display(VP_LOG_TYPE.DEVELOP, 'close popup', this);
-            $(this.wrapSelector()).remove();
         }
 
         /**
@@ -386,7 +415,7 @@ define([
             if (this.taskItem.constructor.name == 'Block') {
                 return 'block';
             }
-            if (this.taskItem.constructor.name == 'Block') {
+            if (this.taskItem.constructor.name == 'Task') {
                 return 'task';
             }
             return null;

@@ -155,3 +155,6 @@
 .vp-block.apps .vp-block-header {
     background: var(--highlight-color);
 }
+.vp-block.apps.focused .vp-block-header {
+    background: var(--highlight-color);
+}

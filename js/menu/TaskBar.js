@@ -26,8 +26,17 @@ define([
      */
     class TaskBar extends Component{
 
+        _init() {
+            this._taskList = [];
+        }
+
         _bindEvent() {
             let that = this;
+            // TEST:
+            $(this.wrapSelector()).on('click', function() {
+                vpLog.display(VP_LOG_TYPE.DEVELOP, that.taskList);
+            });
+
             // Mousewheel horizontal scrolling event
             $(this.wrapSelector()).on('mousewheel', function(evt) {
                 evt = window.event || evt;
@@ -49,6 +58,21 @@ define([
                 let taskItem = new TaskItem($(this.wrapSelector()), { task: task });
             });
         }
+
+        //====================================================================
+        // Handling task list
+        //====================================================================
+        get taskList() {
+            return this._taskList;
+        }
+
+        addTaskBlock(popup) {
+            // create TaskItem and add it
+            let taskItem = new TaskItem($(this.wrapSelector()), { popup: popup });
+            this.taskList.push(taskItem);
+        }
+
+
     }
 
     return TaskBar;

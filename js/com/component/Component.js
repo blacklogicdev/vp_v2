@@ -46,7 +46,6 @@ define([
 
             this._init();
             this.render();
-            this._bindEvent();
         }
 
         wrapSelector(selector='') {
@@ -108,6 +107,8 @@ define([
                     this.$target.append(this.$pageDom);
                 }
             }
+
+            this._bindEvent();
         }
 
         equals(component) {

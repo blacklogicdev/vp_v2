@@ -43,10 +43,12 @@ define([
 
         _init() {
             // temporary state
-            this.tmpState = {
+            this.state = {
+                isGroup: true,
                 leftHolderHeight: 0,
                 depth: 0,
-                blockNumber: $('.vp-block.vp-block-group').length + 1
+                blockNumber: $('.vp-block.vp-block-group').length + 1,
+                ...this.state
             };
 
             // set block to component
@@ -57,17 +59,21 @@ define([
             let that = this;
             // click event - emphasize TaskItem & open/hide PopupComponent
             $(this.wrapSelector()).on('click', function(evt) {
-                let isOpen = $(that.wrapSelector()).hasClass('vp-focus');
+                let isSorting = $(this).hasClass('ui-sortable-helper');
+                if (isSorting) {
+                    return;
+                }
+                let isOpen = $(this).hasClass('vp-focus');
                 if (isOpen) {
                     // hide task if it's already opened
                     // open task
                     $('#vp_wrapper').trigger({
-                        type: 'blur_option_page'
+                        type: 'close_option_page'
                     });
                 } else {
                     // open task
                     $('#vp_wrapper').trigger({
-                        type: 'focus_option_page',
+                        type: 'open_option_page',
                         component: that.state.task
                     });
                 }
@@ -75,11 +81,15 @@ define([
             });
         }
 
+        checkTaskAvailable() {
+            return this.state.task != undefined;
+        }
+
         /**
          * Generate template
          */
         template() {
-            return Block.getTemplate(this._getMenuGroupRootType(), this.state.task.name, this.tmpState.depth, this.tmpState.blockNumber);
+            return Block.getTemplate(this._getMenuGroupRootType(), this.state.task.name, this.state.depth, this.state.blockNumber);
         }
 
         render() {
@@ -105,6 +115,33 @@ define([
         removeItem() {
             $(this.wrapSelector()).remove();
         }
+        //========================================================================
+        // Get Set methods
+        //========================================================================
+        get isGroup() {
+            return this.state.isGroup;
+        }
+        get blockNumber() {
+            return this.state.blockNumber;
+        }
+        /**
+          * @param {Boolean} isGroup
+          */
+        setGroup(isGroup) {
+            this.state.isGroup = isGroup;
+        }
+        /**
+          * @param {int} blockNumber
+          */
+        setNumber(blockNumber) {
+            this.state.blockNumber = blockNumber;
+        }
+        /**
+         * Set block as child block of given block
+         */
+        setChildBlock(block) {
+            this.state.depth = block.blockNumber + 1;
+        }
 
         //========================================================================
         // Block load/save
@@ -120,11 +157,11 @@ define([
 
     Block.getTemplate = function(blockType, header, depth=0, index=0) {
         var page = new com_String();
-        page.appendFormatLine('<div class="vp-block vp-block-group {0}">', blockType);
+        page.appendFormatLine('<div class="vp-block {0} {1}">', depth==0?'vp-block-group':'', blockType);
         page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
         page.appendFormatLine('<div class="vp-block-left-holder"></div>');
-        page.appendFormatLine('<div class="vp-block-depth-info">{0}</div>', depth);
-        page.appendFormatLine('<div class="vp-block-num-info">{0}</div>', index);
+        page.appendFormatLine('<div class="vp-block-depth-info" style="{0}">{1}</div>', '', depth);
+        page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', depth>0?'style="display=none;"':'', index);
         page.appendLine('</div>');
         return page.toString();
     }

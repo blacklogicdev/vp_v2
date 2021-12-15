@@ -39,12 +39,13 @@ define([
                     // hide task if it's already opened
                     // open task
                     $('#vp_wrapper').trigger({
-                        type: 'blur_option_page'
+                        type: 'close_option_page',
+                        component: that.state.task
                     });
                 } else {
                     // open task
                     $('#vp_wrapper').trigger({
-                        type: 'focus_option_page',
+                        type: 'open_option_page',
                         component: that.state.task
                     });
                 }
@@ -53,7 +54,7 @@ define([
             // remove click event
             $(this.wrapSelector('.vp-menu-task-remove')).on('click', function(evt) {
                 $('#vp_wrapper').trigger({
-                    type: 'close_option_page',
+                    type: 'remove_option_page',
                     component: that.state.task
                 });
             });

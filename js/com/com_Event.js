@@ -80,19 +80,27 @@ define([], function() {
                     }
                 },
                 {
+                    method: 'create_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        // blockType: block/task / menuItem: menu id / menuState: saved state
+                        // TODO: rearrange mechanism
+                        var { blockType, menuId, menuState, background, position } = evt;
+                        let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
+                        if (blockType == 'task' && dupTask) {
+                            // if duplicated, open its task
+                            that.mainFrame.openPopup(dupTask);
+                        } else {
+                            that.mainFrame.createPopup(blockType, menuId, menuState, background, position);
+                        }
+                    }
+                },
+                {
                     method: 'open_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
-                        // blockType: newBlock/openBlock/... / menuItem: menu id / menuState: saved state
-                        // TODO: rearrange mechanism
-                        var { blockType, menuId, menuState, background } = evt;
-                        let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
-                        if (!background && dupTask) {
-                            // if duplicated, open its task
-                            that.mainFrame.focusPopup(dupTask);
-                        } else {
-                            that.mainFrame.openPopup(blockType, menuId, menuState, background);
-                        }
+                        var { component } = evt;
+                        that.mainFrame.openPopup(component);
                     }
                 },
                 {
@@ -101,6 +109,14 @@ define([], function() {
                     operation: (evt) => {
                         var { component } = evt;
                         that.mainFrame.closePopup(component);
+                    }
+                },
+                {
+                    method: 'apply_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        var { component } = evt;
+                        that.mainFrame.applyPopup(component);
                     }
                 },
                 {
@@ -120,11 +136,11 @@ define([], function() {
                     }
                 },
                 {
-                    method: 'close_option_page',
+                    method: 'remove_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         var { component } = evt;
-                        that.mainFrame.closePopup(component);
+                        that.mainFrame.removePopup(component);
                     }
                 },
                 {

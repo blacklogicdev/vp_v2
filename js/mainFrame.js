@@ -20,9 +20,11 @@ define([
     './com/com_Config',
     './com/com_Const',
     './com/com_Event',
+    './com/component/PopupComponent',
     './menu/MenuFrame',
     './board/BoardFrame'
-], function(vpHtml, vpCss, com_Config, com_Const, com_Event, MenuFrame, BoardFrame) {
+], function(vpHtml, vpCss, com_Config, com_Const, com_Event, PopupComponent, 
+            MenuFrame, BoardFrame) {
 	'use strict';
 
     // visualpython minimum width
@@ -49,8 +51,8 @@ define([
             this._focusedPage = null;
             
             // Task bar options list
-            this._taskList = [];
-            this._blockList = [];
+            this._taskPopupList = [];
+            this._blockPopupList = [];
         }
         //========================================================================
         // Internal call function
@@ -191,12 +193,12 @@ define([
         //========================================================================
 
         /**
-         * Open menu as popup
+         * Create popup
          * @param {String} blockType task, block (task:TaskBlock / block:Block)
          * @param {String} menuId com_library
          * @param {Object} menuState { ...states to load }
          */
-        openPopup(blockType, menuId, menuState, background=false) {
+        createPopup(blockType, menuId, menuState, background=false, position=-1) {
             let that = this;
             // get specific menu configuration
             let menuConfig = this.menuFrame.getMenuLibrary(menuId);
@@ -218,64 +220,64 @@ define([
                 let option = new OptionComponent(state);
                 if (blockType === 'block') {
                     // add to block list
-                    that.addBlock(option);
+                    that.addBlock(option, position);
                 } else {
                     // add to task list
                     that.addTask(option);
                 }
                 if (!background) {
-                    $('#vp_wrapper').trigger({
-                        type: 'focus_option_page',
-                        component: option
-                    });
+                    that.openPopup(option);
                 }
-                
 
             }, function (err) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
             });
         }
-
+        
         /**
-         * Focus on PopupComponent
+         * Open Popupcomponent
          * @param {PopupComponent} component 
          */
-        focusPopup(component) {
-            if (!component.equals(this.focusedPage)) {
+        openPopup(component) {
+            if (component && component.isHidden()) {
                 // hide other tasks
                 this.hideAllPopup();
     
                 // open it and focus it
                 this._nowTask = component;
                 component.open();
-                this.setFocusedPage(component);
             }
         }
 
-        blurPopup() {
-            let component = this._nowTask;
-            if (component) {
-                // hide it and blur it
-                component.hide();
-            }
-            this.setFocusedPage(null);
-        }
-
         /**
-         * Hide all PopupComponent
-         */
-        hideAllPopup() {
-            let taskList = this.taskList;
-            taskList.forEach(task => {
-                task.hide();
-            });
-        }
-
-        /**
-         * Close PopupComponent (removed)
+         * Close PopupComponent
          * @param {PopupComponent} component 
          */
         closePopup(component) {
+            if (component) {
+                component.close();
+            }
+        }
+
+        /**
+         * Apply task to board block
+         * - remove from taskList
+         * - add to blockList
+         * - close component
+         * @param {PopupComponent} component 
+         */
+        applyPopup(component) {
+            // remove from taskBlockList
+            this.removeTask(component);
+            this.addBlock(component);
+            component.close();
+        }
+
+        /**
+         * Remove PopupComponent
+         * @param {PopupComponent} component 
+         */
+        removePopup(component) {
             if (component) {
                 if (component.getTaskType() === 'block') {
                     // block
@@ -284,11 +286,40 @@ define([
                     // task
                     this.removeTask(component);
                 }
-                component.close();
-                // remove from task list
+                component.remove();
             } else {
-                vpLog.display(VP_LOG_TYPE.WARN, 'Component to close is not available.');
+                vpLog.display(VP_LOG_TYPE.WARN, 'Component to remove is not available.');
             }
+        }
+
+        /**
+         * Focus on PopupComponent
+         * @param {PopupComponent} component 
+         */
+        focusPopup(component) {
+            component.focus();
+            this.setFocusedPage(component);
+        }
+
+        /**
+         * Blur PopupComponent
+         * @param {PopupComponent} component 
+         */
+        blurPopup(component) {
+            if (component instanceof PopupComponent) {
+                component.blur();
+            }
+            this.setFocusedPage(null);
+        }
+
+        /**
+         * Hide all PopupComponent
+         */
+        hideAllPopup() {
+            let taskPopupList = this.taskPopupList;
+            taskPopupList.forEach(task => {
+                task.hide();
+            });
         }
 
         /**
@@ -297,24 +328,11 @@ define([
          */
         setFocusedPage(focusedPage) {
             this.focusedPage = focusedPage;
-            // remove other focused classes
-            $('.vp-popup-frame').removeClass('vp-focused');
-            $('.vp-popup-frame').css({ 'z-index': 200 });
-            if (focusedPage) {
-                // check focused page
-                $(this.focusedPage.wrapSelector()).addClass('vp-focused');
-                $(this.focusedPage.wrapSelector()).css({ 'z-index': 205 }); // move forward
-            }
         }
 
         checkDuplicatedTask(menuId) {
             // find on task list
-            let dupTask = this._taskList.filter(t => menuId === t.id);
-            if (dupTask.length > 0) {
-                return dupTask[0];
-            }
-            // find on block list
-            dupTask = this._blockList.filter(t => menuId === t.id);
+            let dupTask = this._taskPopupList.filter(t => t && menuId === t.id);
             if (dupTask.length > 0) {
                 return dupTask[0];
             }
@@ -322,11 +340,15 @@ define([
             return null;
         }
 
-        addBlock(option) {
-            this._blockList.push(option);
+        addBlock(option, position=-1) {
+            if (!position || position < 0) {
+                this._blockPopupList.push(option);
+            } else {
+                this._blockPopupList.splice(position, 0, option);
+            }
 
             // render board frame
-            this.boardFrame.renderBlockList(this._blockList);
+            this.boardFrame.reloadBlockList();
         }
 
         /**
@@ -334,30 +356,40 @@ define([
          * @param {PopupComponent} option 
          */
         removeBlock(option) {
-            const taskToRemove = this._blockList.find(function(item) { return item.uuid === option.uuid });
-            const taskIdx = this._blockList.indexOf(taskToRemove);
+            const taskToRemove = this._blockPopupList.find(function(item) { return item.uuid === option.uuid });
+            const taskIdx = this._blockPopupList.indexOf(taskToRemove);
             if (taskIdx > -1) {
                 taskToRemove.removeBlock();
-                this._blockList.splice(taskIdx, 1);
+                this._blockPopupList.splice(taskIdx, 1);
                 // render block list  
-                this.boardFrame.renderBlockList(this._blockList);
+                this.boardFrame.reloadBlockList();
             } else {
                 vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
             }
         }
 
         /**
-         * Change position of task in  blockList
+         * Change position of task in  blockPopupList
          * @param {int} startIdx 
          * @param {int} endIdx 
          */
         moveBlock(startIdx, endIdx) {
             if (startIdx == endIdx) {
+                // set group item of endIdx block
+                // var element = this._blockPopupList[startIdx];
+                // // set child item
+                // element.taskItem.setChildBlock();
+                // this._blockPopupList.splice(startIdx, 1);
+                // this._blockPopupList.splice(endIdx + 1, 0, element);
                 return;
             }
-            var element = this._blockList[startIdx];
-            this._blockList.splice(startIdx, 1);
-            this._blockList.splice(endIdx, 0, element);
+            var element = this._blockPopupList[startIdx];
+            if (element) {
+                this._blockPopupList.splice(startIdx, 1);
+                this._blockPopupList.splice(endIdx, 0, element);
+                // move tag
+                element.taskItem
+            }
         }
 
         /**
@@ -365,10 +397,10 @@ define([
          * @param {PopupComponent} option 
          */
         addTask(option) {
-            this._taskList.push(option);
+            this._taskPopupList.push(option);
 
             // render task bar
-            this.menuFrame.renderTaskBar(this._taskList);
+            this.menuFrame.renderTaskBar(this._taskPopupList);
             // focus added task
 
         }
@@ -378,13 +410,13 @@ define([
          * @param {PopupComponent} option 
          */
         removeTask(option) {
-            const taskToRemove = this._taskList.find(function(item) { return item.uuid === option.uuid });
-            const taskIdx = this._taskList.indexOf(taskToRemove);
+            const taskToRemove = this._taskPopupList.find(function(item) { return item.uuid === option.uuid });
+            const taskIdx = this._taskPopupList.indexOf(taskToRemove);
             if (taskIdx > -1) {
                 taskToRemove.removeBlock();
-                this._taskList.splice(taskIdx, 1);
+                this._taskPopupList.splice(taskIdx, 1);
                 // render task bar
-                this.menuFrame.renderTaskBar(this._taskList);
+                this.menuFrame.renderTaskBar(this._taskPopupList);
             } else {
                 vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
             }
@@ -409,8 +441,12 @@ define([
             this._focusedPage = component;
         }
 
-        get taskList() {
-            return this._taskList;
+        get taskPopupList() {
+            return this._taskPopupList;
+        }
+
+        get blockPopupList() {
+            return this._blockPopupList;
         }
 
         

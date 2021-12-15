@@ -28,8 +28,6 @@ define([
     class MenuItem extends Component{
         constructor($target, state) {
             super($target, state);
-
-            this._bindDraggable();
         }
 
         _getMenuGroupRootType() {
@@ -76,7 +74,7 @@ define([
             $(this.wrapSelector()).on('click', function(evt) {
                 // click event
                 $('#vp_wrapper').trigger({
-                    type: 'open_option_page', 
+                    type: 'create_option_page', 
                     blockType: 'task',
                     menuId: that.state.id,
                     menuState: {}
@@ -94,21 +92,27 @@ define([
                 connectToSortable: '.vp-board-body',
                 helper: function() {
                     let isApps = that.state.apps != undefined;
-                    return Block.getTemplate(that._getColorClass(isApps), that.state.name);
-                },
-                start: function(event, ui) {
-
-                },
-                drag: function(event, ui) {
-
+                    let helperTag = new com_String();
+                    helperTag.appendFormatLine('<div class="vp-block vp-draggable-helper {0}" style="z-index: 199;">', that._getColorClass(isApps));
+                    helperTag.appendFormatLine('<div class="vp-block-header">{0}</div>', that.state.name);
+                    helperTag.appendLine('</div>');
+                    return helperTag.toString();
                 },
                 stop: function(event, ui) {
+                    let position = ui.helper.index();
+                    // remove helper
+                    if (ui.helper) {
+                        ui.helper.remove();
+                    }
+
                     $('#vp_wrapper').trigger({
-                        type: 'open_option_page', 
+                        type: 'create_option_page', 
                         blockType: 'block',
+                        helper: ui.helper,
                         menuId: that.state.id,
                         menuState: {},
-                        background: true
+                        background: true,
+                        position: position
                     });
                 }
             });
@@ -132,6 +136,11 @@ define([
                 page.append('</div>');
             }
             return page.toString();
+        }
+
+        render() {
+            super.render();
+            this._bindDraggable();
         }
     }
 
