@@ -200,7 +200,7 @@ define([
                             blockType: 'block',
                             component: that
                         });
-                        com_interface.insertCell('code', that.generateCode());
+                        that.run();
                         break;
                     case 'show-detail':
                         $(that.wrapSelector('.vp-popup-run-detailbox')).show();
@@ -225,7 +225,7 @@ define([
                             blockType: 'block',
                             component: that
                         });
-                        com_interface.insertCell('code', that.generateCode(), false);
+                        that.run(false);
                         break;
                 }
             });
@@ -293,6 +293,10 @@ define([
         generateCode() {
             /** Implementation needed */
             return '';
+        }
+
+        run(execute=true) {
+            com_interface.insertCell('code', this.generateCode(), execute);
         }
 
         /**
