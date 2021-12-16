@@ -373,22 +373,21 @@ define([
          * @param {int} startIdx 
          * @param {int} endIdx 
          */
-        moveBlock(startIdx, endIdx) {
-            if (startIdx == endIdx) {
-                // set group item of endIdx block
-                // var element = this._blockPopupList[startIdx];
-                // // set child item
-                // element.taskItem.setChildBlock();
-                // this._blockPopupList.splice(startIdx, 1);
-                // this._blockPopupList.splice(endIdx + 1, 0, element);
-                return;
-            }
+        moveBlock(startIdx, endIdx, parentBlock=null) {
             var element = this._blockPopupList[startIdx];
             if (element) {
                 this._blockPopupList.splice(startIdx, 1);
                 this._blockPopupList.splice(endIdx, 0, element);
                 // move tag
-                element.taskItem
+                if (parentBlock != null) {
+                    // set child
+                    element.taskItem.setChildBlock(parentBlock.depth + 1);
+                    console.log('its child');
+                } else {
+                    // set group block
+                    element.taskItem.setGroupBlock();
+                    console.log('its group');
+                }
             }
         }
 

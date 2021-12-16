@@ -89,11 +89,26 @@ define([
          * Generate template
          */
         template() {
-            return Block.getTemplate(this._getMenuGroupRootType(), this.state.task.name, this.state.depth, this.state.blockNumber);
+            let blockType = this._getMenuGroupRootType();
+            let headerName = this.state.task.name;
+            let isGroup = this.state.isGroup;
+            let depth = this.state.depth;
+            let blockNumber = this.state.blockNumber;
+
+            var page = new com_String();
+            page.appendFormatLine('<div class="vp-block {0} {1}">', isGroup?'vp-block-group':'', blockType);
+            page.appendFormatLine('<div class="vp-block-header">{0}</div>', headerName);
+            page.appendFormatLine('<div class="vp-block-left-holder"></div>');
+            page.appendFormatLine('<div class="vp-block-depth-info" style="{0}">{1}</div>', '', depth);
+            page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', isGroup?'':'style="display:none;"', blockNumber);
+            page.appendLine('</div>');
+            return page.toString();
         }
 
         render() {
             super.render();
+
+            $(this.wrapSelector()).data('block', this);
 
             // emphasize it if its task is visible
             if (!this.state.task.isHidden()) {
@@ -118,17 +133,17 @@ define([
         //========================================================================
         // Get Set methods
         //========================================================================
+        get name() {
+            return this.state.task.name;
+        }
         get isGroup() {
             return this.state.isGroup;
         }
         get blockNumber() {
             return this.state.blockNumber;
         }
-        /**
-          * @param {Boolean} isGroup
-          */
-        setGroup(isGroup) {
-            this.state.isGroup = isGroup;
+        get depth() {
+            return this.state.depth;
         }
         /**
           * @param {int} blockNumber
@@ -137,10 +152,17 @@ define([
             this.state.blockNumber = blockNumber;
         }
         /**
+          */
+        setGroupBlock() {
+            this.state.isGroup = true;
+            this.state.depth = 0;
+        }
+        /**
          * Set block as child block of given block
          */
-        setChildBlock(block) {
-            this.state.depth = block.blockNumber + 1;
+        setChildBlock(newDepth) {
+            this.state.isGroup = false;
+            this.state.depth = newDepth;
         }
 
         //========================================================================
@@ -153,17 +175,6 @@ define([
         fromJson(jsonObject) {
 
         }
-    }
-
-    Block.getTemplate = function(blockType, header, depth=0, index=0) {
-        var page = new com_String();
-        page.appendFormatLine('<div class="vp-block {0} {1}">', depth==0?'vp-block-group':'', blockType);
-        page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
-        page.appendFormatLine('<div class="vp-block-left-holder"></div>');
-        page.appendFormatLine('<div class="vp-block-depth-info" style="{0}">{1}</div>', '', depth);
-        page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', depth>0?'style="display=none;"':'', index);
-        page.appendLine('</div>');
-        return page.toString();
     }
 
     return Block;

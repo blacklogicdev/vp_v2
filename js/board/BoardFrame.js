@@ -16,13 +16,14 @@ define([
     'text!../../html/boardFrame.html!strip',
     'css!../../css/boardFrame.css',
     '../com/component/Component',
+    '../com/com_String',
     './Block'
-], function(boardFrameHtml, boardFrameCss, Component, Block) {
+], function(boardFrameHtml, boardFrameCss, Component, com_String, Block) {
 	'use strict';
     //========================================================================
     // Define Variable
     //========================================================================
-
+    const BLOCK_PADDING = 10;
 	
     /**
      * BoardFrame
@@ -89,24 +90,90 @@ define([
             let that = this;
             let parent = this.prop.parent;
             let position = -1;
+            let parentBlock = null;
+            let depth = 0;
             $('.vp-board-body').sortable({
                 items: '> .vp-block',
                 axis: 'y',
                 scroll: true,
                 revert: false,
+                placeholder: {
+                    element: function(currentItem) {
+                        let block = currentItem.data('block');
+                        if (block) {
+                            let tag = new com_String();
+                            tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', '');
+                            tag.appendFormatLine('<div class="vp-block-header">{0}</div>', block.name);
+                            tag.appendLine('</div>');
+                            return tag.toString();
+                        } else {
+                            let header = currentItem.find('.vp-block-header').text();
+                            let tag = new com_String();
+                            tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', '');
+                            tag.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
+                            tag.appendLine('</div>');
+                            return tag.toString();
+                        }
+                    },
+                    update: function(container, p) {
+                        // container: container
+                        // p: placeholder object
+                        return;
+                    }
+                },
                 start: function(evt, ui) {
                     position = ui.item.index();
+
+                    // hide original item
+                    ui.item.hide();
+                },
+                sort: function(evt, ui) {
+                    let tmpPos = ui.placeholder.index();
+                    let currCursorX = evt.clientX; 
+                    let currCursorY = evt.clientY; 
+                    let befBlockTag = $('.vp-block:not(.vp-draggable-helper):not(.vp-sortable-placeholder):nth('+(tmpPos - 1)+')');
+                    if (befBlockTag && befBlockTag.length > 0) {
+                        let befBlock = befBlockTag.data('block');
+                        let rect = befBlockTag[0].getBoundingClientRect();
+                        let befRange = rect.y + rect.height;
+                        let befDepth = befBlock.depth;
+                        if (currCursorY < befRange) {
+                            parentBlock = befBlock;
+                            depth = befDepth + 1;
+                            ui.placeholder.removeClass('vp-block-group');
+                            ui.placeholder.css({ 'padding-left': befDepth*BLOCK_PADDING + 'px'});
+                        } else {
+                            parentBlock = null;
+                            if (!ui.placeholder.hasClass('vp-block-group')) {
+                                ui.placeholder.addClass('vp-block-group');
+                            }
+                            ui.placeholder.css({ 'padding-left': 0});
+                            depth = 0;
+                        }
+
+                    }
                 },
                 stop: function(evt, ui) {
                     var spos = position;
                     var epos = ui.item.index();
 
+                    console.log('moves ', spos, epos);
+
                     if (spos != epos && epos > -1) {
                         // move list element
-                        parent.moveBlock(spos, epos);
-                        // render block information
-                        that.renderInfo();
+                        if (parentBlock) {
+                            parent.moveBlock(spos, epos, parentBlock);
+                            // reload block list
+                            that.reloadBlockList();
+                        } else {
+                            parent.moveBlock(spos, epos);
+                            // just render block information
+                            that.renderInfo();
+                        }
                     }
+
+                    // show original item
+                    ui.item.show();
                 }
             }).disableSelection();
         }
