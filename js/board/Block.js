@@ -25,6 +25,9 @@ define([
      class Block extends Component {
         constructor($target, state, prop) {
             super($target, state, prop);
+            /**
+             * state.task: PopupComponent
+             */
         }
 
         _getMenuGroupRootType() {
@@ -144,6 +147,9 @@ define([
         }
         get depth() {
             return this.state.depth;
+        }
+        get popup() {
+            return this.state.task;
         }
         /**
           * @param {int} blockNumber
