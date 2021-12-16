@@ -100,7 +100,7 @@
 }
 .fileNavigationPage-ul .fileNavigationPage-li:hover {
     cursor: pointer;
-    transition: 0.7s;
+    transition: 0.5s;
     background-color: #EEE;
 }
 .fileNavigationPage-ul .fileNavigationPage-li:last-child:after {

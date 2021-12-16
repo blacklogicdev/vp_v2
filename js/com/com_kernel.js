@@ -161,7 +161,7 @@ define([
         //====================================================================
         // FileNavigation 
         //====================================================================
-        getNowDirectory() {
+        getCurrentDirectory() {
             var that = this;
             return new Promise(function(resolve, reject) {
                 that.execute('%pwd')
@@ -174,8 +174,14 @@ define([
             });
         }
 
-        getCurrentFileList(path) {
+        getFileList(path, useFunction=false) {
             var that = this;
+            if (path === '') {
+                path = '.';
+            }
+            if (!useFunction) {
+                path = "'" + path + "'";
+            }
             var cmd = com_util.formatString('_vp_print(_vp_search_path({0}))', path);
             return new Promise(function(resolve, reject) {
                 that.execute(cmd)
