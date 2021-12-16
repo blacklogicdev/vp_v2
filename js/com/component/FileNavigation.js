@@ -40,10 +40,9 @@ define([
              * state.type           open / save
              * state.extensions     extensions list
              * state.finish         callback function after selection
-             * - example form : function (status, filesPath, result, error) { }
-             * - status       : boolean => true for success / false for error
+             * - example form : function (filesPath, status, error) { }
              * - filesPath    : list    => list of Object [ { file: '', path: '' } ]
-             * - result       : string  => file read result data / no data for save type
+             * - status       : boolean => true for success / false for error
              * - error        : if there's error, return its content
              * ---------------------------------------------------------------
              * state.multiSelect    (optional)
@@ -121,17 +120,29 @@ define([
                                     ${name}
                                 </i>`);
             directoryI.click(function() {
-                let dirPath = that.makeNewCurrRelativePath();
-                let extension = name.substring(name.lastIndexOf('.') + 1);
-                let allowExtensionList = that.state.extensions;
-                // if it is not allowed extension
-                if (!allowExtensionList.includes(extension)) {
-                    // TODO: alert
-                    //vpCommon.renderAlertModal('Not supported file type');
-                    return;
+                if (type == 'dir') {
+                    var dirObj = {
+                        direction: NAVIGATION_DIRECTION_TYPE.TO,
+                        destDir: path
+                    }
+        
+                    // initialize sidebar-menu selection
+                    $('.fnp-sidebar-menu').removeClass('selected');
+        
+                    that.getFileList(dirObj);
+                } else {
+                    let dirPath = that.makeNewCurrRelativePath();
+                    let extension = name.substring(name.lastIndexOf('.') + 1);
+                    let allowExtensionList = that.state.extensions;
+                    // if it is not allowed extension
+                    if (!allowExtensionList.includes(extension)) {
+                        // TODO: alert
+                        //vpCommon.renderAlertModal('Not supported file type');
+                        return;
+                    }
+                    
+                    that.handleSelectFile(dirPath, name);
                 }
-                console.log('clicked');
-                //that.handleSelectFile(dirPath, name);
             });
     
             directoryLi.append(directoryI);
@@ -282,12 +293,90 @@ define([
         //============================================================================
         // File & Path control
         //============================================================================
+        handleSelectFile(relativeDirPath, filePathStr) {
+            var fileNavigationState = this.pathState;
+
+            var baseFolder = fileNavigationState.baseFolder;
+            var baseDirStr = fileNavigationState.baseDir;
+            var noteBookPathStr = fileNavigationState.notebookPath;
+            var currentDirStr = fileNavigationState.currentPath;
+            var noteBookPathStrLength = noteBookPathStr.length;
+        
+            var baseDirStrLength = baseDirStr.length;
+
+            /** upDirectoryCount: 
+             *  count how many times went up to the parent path, since file navigation opened
+             */
+            var upDirectoryCount = 0;
+            var _upDirectoryCount = 0;
+
+            var splitedNoteBookPathStrArray = noteBookPathStr.split('/');
+            var splitedBaseDirArray = baseDirStr.split('/');
+            var splitedCurrentDirArray  = currentDirStr.split('/');
+
+            var relativeBaseDirArray = splitedBaseDirArray.slice(splitedNoteBookPathStrArray.length, splitedBaseDirArray.length);
+            var relativeCurrentDirArray = splitedCurrentDirArray.slice(splitedNoteBookPathStrArray.length, splitedCurrentDirArray.length);
+
+            /** 
+             * compare base path and notebook path, increase upDirectoryCount
+             */
+            var _baseDirStrLength = baseDirStrLength;
+            while ( noteBookPathStrLength < _baseDirStrLength ) {
+                _baseDirStrLength--;
+                if ( baseDirStr[_baseDirStrLength] === '/') {
+                    upDirectoryCount += 1;
+                }
+            }
+
+            /**
+             * Compare notebook path and current relative path, decrease upDirectoryCount
+             */
+            relativeCurrentDirArray.forEach((forderName,index) => {
+                if ( forderName === relativeBaseDirArray[index] ) {
+                    upDirectoryCount -= 1;
+                }
+            });
+        
+            /**
+             * Add ../ based on upDirectoryCount
+             */
+            _upDirectoryCount = upDirectoryCount;
+            var prefixUpDirectory = ``;
+            while (_upDirectoryCount-- > 0) {
+                prefixUpDirectory += `../`;
+            }
+
+            var slashstr = `/`;
+            if (relativeDirPath === '') {
+                slashstr = '';
+            }
+
+            var pathInput = '';
+            var fileInput = `${filePathStr}`;
+            // if baseFolder doesn't exist in current path
+            if (upDirectoryCount > 0 
+                && currentDirStr.indexOf(baseFolder) === -1) {
+                
+                pathInput = `${prefixUpDirectory}${relativeDirPath}${slashstr}${filePathStr}`;
+            } else {
+                // if baseFolder exists in current path
+                pathInput = `./${relativeDirPath}${slashstr}${filePathStr}`;
+            }
+
+            //============================================================================
+            // Sending result using finish callback function
+            //============================================================================
+            // Manage result using finish function
+            let filesPath = [{ file: fileInput, path: pathInput }]; //FIXME: fix it if multiple selection implemented
+            let status = true;
+            let error = null;
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'fileNavigation finished', filesPath, status, error);
+            this.state.finish(filesPath, status, error);
+    
+            // remove and close file navigation
+            this.close();
+        }
         getCurrentDirectory() {
-            // return new Promise(function(resolve, reject) {
-            //     vpKernel.getCurrentDirectory().then(function(result) {
-            //         resolve(result);
-            //     });
-            // });
             return vpKernel.getCurrentDirectory();
         }
 
