@@ -53,10 +53,10 @@ define([
             var cnt = arguments.length;
             if (cnt < 2) {
                 // if there's no more arguments
-                sbSelector.appendFormat("#{0} .{1} {2}", VP_CONTAINER_ID, this.uuid, selector);
+                sbSelector.appendFormat(".{0} {1}", this.uuid, selector);
             } else {
                 // if there's more arguments
-                sbSelector.appendFormat("#{0} .{1}", VP_CONTAINER_ID, this.uuid);
+                sbSelector.appendFormat(".{0}", this.uuid);
                 for (var idx = 0; idx < cnt; idx++) {
                     sbSelector.appendFormat(" {0}", arguments[idx]);
                 }
