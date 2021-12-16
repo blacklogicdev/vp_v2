@@ -22,7 +22,7 @@ define([
      * SuccessMessage
      */
     class SuccessMessage extends Component {
-        constructor(title, timeout=3000) {
+        constructor(title, timeout=1500) {
             super($('#header'), { title: title, timeout: timeout });
         }
 
@@ -36,9 +36,10 @@ define([
             // set title
             $(this.wrapSelector('.vp-successMessage-title')).text(this.state.title);
 
+            let that = this;
             // remove after timeout
             setTimeout( function() {
-                $(this.wrapSelector()).remove();
+                $(that.wrapSelector()).remove();
             }, this.state.timeout);
         }
 

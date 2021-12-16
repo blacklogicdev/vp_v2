@@ -17,20 +17,13 @@ define([
         return Jupyter.notebook.get_selected_index();
     }
 
-    var insertCell = function(type, command, exec=true) {
+    var insertCell = function(type, command, exec=true, sigNum=0) {
         var selectedIndex = getSelectedCell();
         var targetCell = Jupyter.notebook.insert_cell_below(type, selectedIndex);
 
-        // TODO: apply to board (use com_Event)
-        var appliedBlock = null;
-        var appliedBlockIndex = 0;
-
-        // TODO: render success message ref: renderSuccessMessage();
-
         // Add signature
         if (type == 'code') {
-            // TODO:
-            command = com_util.formatString('# VisualPython [{0}]\n', appliedBlockIndex) + command
+            command = com_util.formatString('# VisualPython [{0}]\n', sigNum) + command
         }
         targetCell.set_text(command);
         Jupyter.notebook.select_next();
@@ -47,7 +40,8 @@ define([
         }
         // move to executed cell
         Jupyter.notebook.scroll_to_cell(Jupyter.notebook.get_selected_index());
-        
+
+        com_util.renderSuccessMessage('Your code has been executed');
     }
     
     var enableOtherShortcut = function() {
