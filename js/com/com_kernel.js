@@ -55,24 +55,28 @@ define([
                         iopub: {
                             output: function (msg) {
                                 if (msg.content) {
-                                    if (msg.content['name'] == 'stderr') {
-                                        reject(msg);
-                                    } else {
-                                        var result = '';
-                                        var type = '';
-                                        if (msg.content['text']) {
-                                            result = String(msg.content['text']);
-                                            type = 'text';
-                                        } else if (msg.content.data) {
-                                            if (msg.content.data['text/plain']) {
-                                                result = String(msg.content.data['text/plain']);
-                                                type = 'text/plain';
-                                            } else if (msg.content.data['text/html']) {
-                                                result = String(msg.content.data['text/html']);
-                                                type = 'text/html';
+                                    try {
+                                        if (msg.content['name'] == 'stderr') {
+                                            reject(msg);
+                                        } else {
+                                            var result = '';
+                                            var type = '';
+                                            if (msg.content['text']) {
+                                                result = String(msg.content['text']);
+                                                type = 'text';
+                                            } else if (msg.content.data) {
+                                                if (msg.content.data['text/plain']) {
+                                                    result = String(msg.content.data['text/plain']);
+                                                    type = 'text/plain';
+                                                } else if (msg.content.data['text/html']) {
+                                                    result = String(msg.content.data['text/html']);
+                                                    type = 'text/html';
+                                                }
                                             }
+                                            resolve(result, type);
                                         }
-                                        resolve(result, type);
+                                    } catch(ex) {
+                                        reject(ex);
                                     }
                                 }
                             }
@@ -108,7 +112,10 @@ define([
                 that.execute(com_util.formatString('_vp_print(_vp_get_columns_list({0}))', dataframe))
                 .then(function(result) {
                     resolve(result);
-                });
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
             });
         }
     
@@ -118,7 +125,10 @@ define([
                 that.execute(com_util.formatString('_vp_print(_vp_get_multi_columns_list([{0}]))', dataframeList.join(',')))
                 .then(function(result) {
                     resolve(result);
-                });
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
             });
         }
     
@@ -128,7 +138,10 @@ define([
                 that.execute(com_util.formatString('_vp_print(_vp_get_rows_list({0}))', dataframe))
                 .then(function(result) {
                     resolve(result);
-                });
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
             });
         }
     
@@ -138,7 +151,40 @@ define([
                 that.execute('_vp_print(_vp_get_profiling_list())')
                 .then(function(result) {
                     resolve(result);
-                });
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
+            });
+        }
+
+        //====================================================================
+        // FileNavigation 
+        //====================================================================
+        getNowDirectory() {
+            var that = this;
+            return new Promise(function(resolve, reject) {
+                that.execute('%pwd')
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
+            });
+        }
+
+        getCurrentFileList(path) {
+            var that = this;
+            var cmd = com_util.formatString('_vp_print(_vp_search_path({0}))', path);
+            return new Promise(function(resolve, reject) {
+                that.execute(cmd)
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
             });
         }
 
