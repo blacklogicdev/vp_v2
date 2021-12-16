@@ -15,10 +15,11 @@
 define([
     'text!../../html/boardFrame.html!strip',
     'css!../../css/boardFrame.css',
-    '../com/component/Component',
     '../com/com_String',
-    './Block'
-], function(boardFrameHtml, boardFrameCss, Component, com_String, Block) {
+    '../com/component/Component',
+    '../com/component/FileNavigation',
+    './Block',
+], function(boardFrameHtml, boardFrameCss, com_String, Component, FileNavigation, Block) {
 	'use strict';
     //========================================================================
     // Define Variable
@@ -70,7 +71,7 @@ define([
                 $(that.wrapSelector('.vp-board-header-button-inner')).toggle();
             });
             // board menu button click
-            $(this.wrapSelector('.vp-board-header-button-inner')).on('click', function() {
+            $(this.wrapSelector('.vp-board-header-button-inner ul li')).on('click', function() {
                 let menu = $(this).data('menu');
                 switch (menu) {
                     case 'new':
@@ -295,7 +296,15 @@ define([
             this.tmpState.boardPath = '';
         }
         openNote() {
-
+            // open file navigation
+            let fileNavi = new FileNavigation({ 
+                type: 'open',
+                extensions: ['vp'],
+                finish: function(status, filesPath, result, error) {
+                    console.log(status, filesPath, result, error);
+                }
+            });
+            fileNavi.open();
         }
         saveNote() {
 
