@@ -81,8 +81,43 @@ define([
 
         _bindEvent() {
             var that = this;
+            // Close file navigation
             $(this.wrapSelector('.fileNavigationPage-closedBtn')).on('click', function() {
                 that.close();
+            });
+
+            // Click sidebar
+            $(this.wrapSelector('.fnp-sidebar-menu')).click(function(event) {
+                $('.fnp-sidebar-menu').removeClass('selected');
+                $(this).addClass('selected');
+
+                var pathType = $(this).attr('data-path');
+                var dirObj = {
+                    direction: NAVIGATION_DIRECTION_TYPE.TO,
+                    destDir: '/'
+                }
+                switch (pathType) {
+                    case '/':
+                        dirObj.direction = NAVIGATION_DIRECTION_TYPE.TOP;
+                        break;
+                    case 'desktop':
+                        dirObj.destDir = "_vp_get_desktop_path()";
+                        dirObj.useFunction = true;
+                        break;
+                    case 'documents':
+                        dirObj.destDir = "_vp_get_documents_path()";
+                        dirObj.useFunction = true;
+                        break;
+                    case 'downloads':
+                        dirObj.destDir = "_vp_get_downloads_path()";
+                        dirObj.useFunction = true;
+                        break;
+                    case 'userid':
+                        dirObj.destDir = "_vp_get_userprofile_path()";
+                        dirObj.useFunction = true;
+                        break;
+                }
+                that.getFileList(dirObj);
             });
         }
 

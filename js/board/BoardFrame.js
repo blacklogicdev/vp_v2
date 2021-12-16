@@ -300,8 +300,8 @@ define([
             let fileNavi = new FileNavigation({ 
                 type: 'open',
                 extensions: ['vp'],
-                finish: function(status, filesPath, result, error) {
-                    console.log(status, filesPath, result, error);
+                finish: function(filesPath, status, error) {
+                    console.log(filesPath, status, error);
                 }
             });
             fileNavi.open();
