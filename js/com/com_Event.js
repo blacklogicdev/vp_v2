@@ -57,7 +57,8 @@ define([], function() {
                                 type: 'blur_option_page'
                             });
                         }
-                        if (!$(target).hasClass('vp-close-on-blur')) {
+                        // Close on blur
+                        if (!$(target).hasClass('vp-close-on-blur') && !$(target).hasClass('vp-close-on-blur-btn')) {
                             $('.vp-close-on-blur').hide();
                         }
                     }

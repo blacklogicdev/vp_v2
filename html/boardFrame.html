@@ -16,10 +16,28 @@
             <div class="vp-board-title">
                 <input type="text" id="vp_boardTitle" class="vp-input" placeholder="Untitled"/>
             </div>
-            <div class="vp-board-header-button">
-                <div class="vp-board-header-button-inner">
+            <div class="vp-board-header-button vp-close-on-blur-btn">
+                <div class="vp-board-header-button-inner vp-no-selection vp-close-on-blur">
+                    <ul>
+                        <li data-menu="new">New Note</li>
+                        <li data-menu="open">Open</li>
+                        <hr class="vp-extra-menu-line">
+                        <li data-menu="save">Save</li>
+                        <li data-menu="save-as">Save as</li>
+                        <hr class="vp-extra-menu-line">
+                        <li data-menu="run-all">Run All</li>
+                        <li data-menu="view-depth">View Depth Number</li>
+                        <hr class="vp-extra-menu-line">
+                        <li data-menu="clear">Clear Board</li>
+                        <li data-menu="close">Close Note</li>
+                    </ul>
                 </div>
             </div>
+            <!-- <div id="vp_noteModeExtraMenuBtn" style="display: block; position: absolute; right: 0;">
+                <div id="vp_noteModeExtraMenu">
+                
+                </div>
+                </div> -->
         </div>
         <!-- Board Body -->
         <div id="vp_boardBody" class="vp-board-body">

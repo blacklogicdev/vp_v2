@@ -188,12 +188,10 @@ body {
 .vp-accordian.vp-open + .vp-accordian-box {
     display: block !important;
 }
-
 /* cursor */
 .vp-cursor {
     cursor: pointer;
 }
-
 /* No-selection */
 .vp-no-selection {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -203,4 +201,8 @@ body {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome, Edge, Opera and Firefox */
+}
+/* divider */
+hr.vp-extra-menu-line {
+    margin: 5px 0px 7px 0px;
 }

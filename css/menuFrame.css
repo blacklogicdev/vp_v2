@@ -115,6 +115,10 @@
     margin-bottom: 2px;
     float: none;
 }
+#vp_headerExtraMenu .vp-header-extra-menu-list li:hover {
+    color: var(--font-hightlight);
+    background-color: #F5F5F5;
+}
 /* resizing handle */
 .vp-menu-frame .ui-resizable-handle {
     position: absolute;

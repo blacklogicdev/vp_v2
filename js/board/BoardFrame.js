@@ -34,8 +34,9 @@ define([
         //========================================================================
         constructor($target, state, prop) {
             super($target, state, prop);
-            
-            this._bindSortable();
+            /*
+             * prop.parent: MainFrame
+             */
         }
 
         //========================================================================
@@ -53,6 +54,8 @@ define([
 
             // temporary state
             this.tmpState = {
+                boardTitle: 'Untitled',
+                boardPath: null,
                 copy: {
                     start: 0,
                     end: 0
@@ -62,6 +65,41 @@ define([
 
         _bindEvent() {
             let that = this;
+            // board menu toggle button
+            $(this.wrapSelector('.vp-board-header-button')).on('click', function() {
+                $(that.wrapSelector('.vp-board-header-button-inner')).toggle();
+            });
+            // board menu button click
+            $(this.wrapSelector('.vp-board-header-button-inner')).on('click', function() {
+                let menu = $(this).data('menu');
+                switch (menu) {
+                    case 'new':
+                        that.createNewNote();
+                        break;
+                    case 'open':
+                        that.openNote();
+                        break;
+                    case 'save':
+                        that.saveNote();
+                        break;
+                    case 'save-as':
+                        that.saveAsNote();
+                        break;
+                    case 'run-all':
+                        that.runAll();
+                        break;
+                    case 'view-depth':
+                        that.viewDepthInfo();
+                        break;
+                    case 'clear':
+                        that.clearBoard();
+                        break;
+                    case 'close':
+                        that.closeBoard();
+                        break;
+                }
+            });
+            // footer +code, +text button
             $('.vp-board-footer-buttons button').on('click', function() {
                 let menu = $(this).data('menu');
                 if (menu === 'code') {
@@ -185,8 +223,7 @@ define([
          * Make template
          */
         template() {
-            this.$pageDom = $(boardFrameHtml);
-            return this.$pageDom;
+            return boardFrameHtml;
         }
 
         /**
@@ -197,6 +234,7 @@ define([
 
             // render taskBar
             this.renderBlockList([]);
+            this._bindSortable();
         }
 
         /**
@@ -245,7 +283,44 @@ define([
                 $(numInfo).html(num++);
             });
         }
+        //========================================================================
+        // Note control
+        //========================================================================
+        createNewNote() {
+            // TODO: alert before closing
 
+            // set title to Untitled
+            this.tmpState.boardTitle = 'Untitled';
+            // set path to empty
+            this.tmpState.boardPath = '';
+        }
+        openNote() {
+
+        }
+        saveNote() {
+
+        }
+        saveAsNote() {
+
+        }
+        runAll() {
+
+        }
+        viewDepthInfo() {
+            this.state.viewDepthNumber = true;
+        }
+        clearBoard() {
+            // TODO: alert before clearing
+
+            // clear board
+            this.blockList.forEach(block => {
+                block.task
+            })
+            this.blockList = [];
+        }
+        closeBoard() {
+            this.createNewNote();
+        }
         //========================================================================
         // Block control
         //========================================================================
