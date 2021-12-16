@@ -16,8 +16,9 @@ define([
     'text!vp_base/html/fileNavigation.html!strip',
     'css!vp_base/css/fileNavigation.css',
     'vp_base/js/com/com_String',
+    'vp_base/js/com/com_util',
     'vp_base/js/com/component/Component'
-], function(fileNaviHtml, fileNaviCss, com_String, Component) {
+], function(fileNaviHtml, fileNaviCss, com_String, com_util, Component) {
     // Temporary constant data
     const NAVIGATION_DIRECTION_TYPE = {
         TOP: 0,
@@ -66,6 +67,7 @@ define([
                 ...this.state
             };
             
+            this.pathStackPointer = -1;
             this.pathStack = [];
             this.currentFileList = [];
 
@@ -118,6 +120,48 @@ define([
                         break;
                 }
                 that.getFileList(dirObj);
+            });
+
+            // Click next(>) directory
+            $(this.wrapSelector('.fileNavigationPage-btn-next')).click(() => {
+                if (that.pathStackPointer + 1 == that.pathStack.length) {
+                    com_util.renderAlertModal('No next directory');
+                    return;
+                }
+
+                // initialize sidebar-menu selection
+                $('.fnp-sidebar-menu').removeClass('selected');
+
+                // get next path stack
+                that.pathStackPointer++;
+                var nextData = that.pathStack[that.pathStackPointer];
+
+                var dirObj = {
+                    direction: NAVIGATION_DIRECTION_TYPE.PREV,
+                    destDir: nextData
+                }  
+                that.getFileList(dirObj);
+            });
+        
+            // Click prev(<) directory
+            $(this.wrapSelector('.fileNavigationPage-btn-prev')).click(() => {
+                if (that.pathStackPointer <= 0) {
+                    com_util.renderAlertModal('No previous directory');
+                    return;
+                }
+
+                // initialize sidebar-menu selection
+                $('.fnp-sidebar-menu').removeClass('selected');
+
+                // get prev path stack
+                that.pathStackPointer--;
+                var popedData = that.pathStack[that.pathStackPointer];
+
+                var dirObj = {
+                    direction: NAVIGATION_DIRECTION_TYPE.PREV,
+                    destDir: popedData
+                }
+                that.getFileList(dirObj);       
             });
         }
 
@@ -190,7 +234,6 @@ define([
         renderFileList() {
             let that = this;
             let fileList = this.currentFileList;
-            console.log('render file list', fileList);
             // clear body
             $(this.wrapSelector('.fileNavigationPage-body')).html('');
             // render file items
@@ -487,7 +530,6 @@ define([
                 that.pathState.currentPath = currentDirStr;
                 that.currentFileList = filtered_varList;
 
-                console.log('filetered list', filtered_varList);
                 that.loadFileList(); 
             });;
         }
