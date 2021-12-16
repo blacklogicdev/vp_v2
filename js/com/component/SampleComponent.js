@@ -28,7 +28,6 @@ define([
         }
 
         _bindEvent() {
-            super._bindEvent();
             /** Implement binding events */
             
         }
