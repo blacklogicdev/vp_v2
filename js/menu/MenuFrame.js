@@ -65,33 +65,28 @@ define([
          */
         _bindEvent() {
             var that = this;
-            this.$target.on('click', function(evt) {
-                // Toggle board
-                if (evt.target.id == 'vp_toggleBoard') {
-                    $('#vp_boardFrame').toggle();
+            $(this.wrapSelector('#vp_headerExtraMenuBtn')).on('click', function() {
+                $('#vp_headerExtraMenu').toggle();
+            });
+            $(this.wrapSelector('#vp_toggleBoard')).on('click', function() {
+                $('#vp_boardFrame').toggle();
                     
-                    let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
-                    let menuWidth = $('#vp_menuFrame')[0].getBoundingClientRect().width;
-                    let showBoard = $('#vp_boardFrame').is(':visible');
-                    if (showBoard) {
-                        $('#vp_boardFrame').width(BOARD_MIN_WIDTH);
-                        $('#vp_wrapper').width(vpWidth + BOARD_MIN_WIDTH + MENU_BOARD_SPACING);
-                        $('#vp_wrapper').resizable({ minWidth: VP_MIN_WIDTH });
-                        that._bindResizable();
-                    } else {
-                        $('#vp_boardFrame').width(0);
-                        $('#vp_menuFrame').width(menuWidth);
-                        $('#vp_wrapper').width(menuWidth + MENU_BOARD_SPACING);
-                        $('#vp_wrapper').resizable({ minWidth: MENU_MIN_WIDTH + MENU_BOARD_SPACING });
-                        that._unbindResizable();
-                    }
-                    $('#vp_wrapper').trigger('resize');
+                let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
+                let menuWidth = $('#vp_menuFrame')[0].getBoundingClientRect().width;
+                let showBoard = $('#vp_boardFrame').is(':visible');
+                if (showBoard) {
+                    $('#vp_boardFrame').width(BOARD_MIN_WIDTH);
+                    $('#vp_wrapper').width(vpWidth + BOARD_MIN_WIDTH + MENU_BOARD_SPACING);
+                    $('#vp_wrapper').resizable({ minWidth: VP_MIN_WIDTH });
+                    that._bindResizable();
+                } else {
+                    $('#vp_boardFrame').width(0);
+                    $('#vp_menuFrame').width(menuWidth);
+                    $('#vp_wrapper').width(menuWidth + MENU_BOARD_SPACING);
+                    $('#vp_wrapper').resizable({ minWidth: MENU_MIN_WIDTH + MENU_BOARD_SPACING });
+                    that._unbindResizable();
                 }
-
-                // TEST: target class click event
-                if ($(evt.target).hasClass('sample-class')) {
-                    
-                }
+                $('#vp_wrapper').trigger('resize');
             });
         }
 
