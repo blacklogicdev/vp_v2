@@ -101,21 +101,6 @@ define([
                 start: function(event, ui) {
                     ui.helper.hide();
                 },
-                // drag: function(event, ui) {
-                //     currCursorX = event.clientX; 
-                //     currCursorY = event.clientY; 
-                //     // use sortable placeholder index to get position
-                //     let position = $('.ui-sortable-placeholder').index();
-                //     let befBlock = $('.vp-block:not(.vp-draggable-helper):not(.ui-sortable-placeholder):nth('+(position - 1)+')');
-                //     if (befBlock && befBlock.length > 0) {
-                //         let top = $(befBlock).position().top;
-                //         let left = $(befBlock).position().left;
-                //         let width = $(befBlock).width();
-    
-                //         ui.helper.css({top: top, left: left, width: width});
-                //     }
-
-                // },
                 stop: function(event, ui) {
                     let position = ui.helper.index();
                     // remove helper
