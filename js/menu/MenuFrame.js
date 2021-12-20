@@ -19,13 +19,15 @@ define([
     '../com/com_Config',
     '../com/com_Const',
     '../com/component/Component',
+    '../com/component/SuggestInput',
 
     'text!../../data/libraries.json',
 
     './MenuGroup',
     './MenuItem',
     './TaskBar'
-], function(menuFrameHtml, menuFrameCss, com_Config, com_Const, Component, librariesJson, 
+], function(menuFrameHtml, menuFrameCss, com_Config, com_Const, Component, SuggestInput, 
+            librariesJson, 
             MenuGroup, MenuItem, TaskBar) {
 	'use strict';
     //========================================================================
@@ -57,6 +59,7 @@ define([
         //========================================================================
         _init() {
             // get json library list
+            this.menuLibrariesFlatten = [];
             this.menuLibraries = this.getMenuLibraries();
         }
         
@@ -201,6 +204,7 @@ define([
                     }
                 } else {
                     // functions : MenuItem
+                    that.menuLibrariesFlatten.push(child);
                     var menuItem = new MenuItem($(body), child);
                 }
             });
@@ -220,6 +224,7 @@ define([
             var menuLibraries = this.menuLibraries;
             vpLog.display(VP_LOG_TYPE.DEVELOP, menuLibraries);
 
+            this.menuLibrariesFlatten = [];
             menuLibraries && menuLibraries.forEach(item => {
                 if (item.type == 'package') {
                     // packages : MenuGroup
@@ -229,6 +234,35 @@ define([
                     }
                 }
             });
+
+            let functionList = this.menuLibrariesFlatten.map(menu => {
+                return { label: menu.name, value: menu.name, ...menu }
+            });
+            // render searchbox
+            let searchBox = new SuggestInput();
+            searchBox.setComponentID('vp_menuSearchBox');
+            searchBox.addClass('vp-input vp-menu-search-box');
+            searchBox.setPlaceholder('Search');
+            searchBox.setSuggestList(function () { return functionList; });
+            searchBox.setSelectEvent(function (value) {
+                $(this.wrapSelector()).val(value);
+                $(this.wrapSelector()).trigger('change');
+            });
+            searchBox.setSelectEvent(function(value, item) {
+                $(this.wrapSelector()).val(value);
+
+                $('#vp_wrapper').trigger({
+                    type:"create_option_page",
+                    blockType: 'task',
+                    menuId: item.id,
+                    menuState: {}
+                });
+                // clear search box
+                $(that.wrapSelector('#vp_menuSearchBox')).val('');
+            });
+            searchBox.setNormalFilter(true);
+            // replace searchbox
+            $(this.wrapSelector('#vp_menuSearchBox')).replaceWith(searchBox.toTagString());
 
             // render taskBar
             this.renderTaskBar([]);
