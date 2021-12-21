@@ -299,10 +299,14 @@ define([
          * @param {PopupComponent} component 
          */
         applyPopup(component) {
-            // remove from taskBlockList
-            this.removeTask(component);
-            this.addBlock(component);
+            if (component.getTaskType() == 'task') {
+                // remove from taskBlockList
+                this.removeTask(component);
+                this.addBlock(component);
+            }
             component.close();
+            // render board frame
+            this.boardFrame.reloadBlockList();
         }
 
         /**
@@ -313,7 +317,7 @@ define([
             if (component) {
                 if (component.getTaskType() === 'block') {
                     // block
-                    this.removeBlock(component);
+                    this.boardFrame.removeBlock(component);
                 } else {
                     // task
                     this.removeTask(component);
@@ -379,48 +383,10 @@ define([
                 this._blockPopupList.splice(position, 0, option);
             }
 
+            this.boardFrame.addBlock(option, position);
+
             // render board frame
             this.boardFrame.reloadBlockList();
-        }
-
-        /**
-         * Remove block from block list and render BoardBody
-         * @param {PopupComponent} option 
-         */
-        removeBlock(option) {
-            const taskToRemove = this._blockPopupList.find(function(item) { return item.uuid === option.uuid });
-            const taskIdx = this._blockPopupList.indexOf(taskToRemove);
-            if (taskIdx > -1) {
-                taskToRemove.removeBlock();
-                this._blockPopupList.splice(taskIdx, 1);
-                // render block list  
-                this.boardFrame.reloadBlockList();
-            } else {
-                vpLog.display(VP_LOG_TYPE.WARN, 'No option task to remove');
-            }
-        }
-
-        /**
-         * Change position of task in  blockPopupList
-         * @param {int} startIdx 
-         * @param {int} endIdx 
-         */
-        moveBlock(startIdx, endIdx, parentBlock=null) {
-            var element = this._blockPopupList[startIdx];
-            if (element) {
-                this._blockPopupList.splice(startIdx, 1);
-                this._blockPopupList.splice(endIdx, 0, element);
-                // move tag
-                if (parentBlock != null) {
-                    // set child
-                    element.taskItem.setChildBlock(parentBlock.depth + 1);
-                    console.log('its child');
-                } else {
-                    // set group block
-                    element.taskItem.setGroupBlock();
-                    console.log('its group');
-                }
-            }
         }
 
         /**

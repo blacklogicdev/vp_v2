@@ -17,6 +17,8 @@ define([
     '../com/com_String'
 ], function(Component, com_String) {
 	'use strict';
+
+    const BLOCK_PADDING = 20;
 	
     /**
      * @class Block
@@ -31,22 +33,21 @@ define([
              */
         }
 
-        _getMenuGroupRootType() {
-            // ex) visualpython - apps - frame
+        _getMenuGroupRootType(idx=1) {
+            // ex) visualpython - apps - frame -> apps
             let path = this.state.task.path;
             let pathList = path.split(' - ');
-            return pathList[1];
+            return pathList[idx];
         }
 
         _getMenuGroupType() {
-            // ex) visualpython - apps - frame
+            // ex) visualpython - apps - frame -> apps-frame
             let path = this.state.task.path;
             let pathList = path.split(' - ');
             return pathList.slice(1, pathList.length - 1).join('-');
         }
 
         _init() {
-            // set block to component
             this.task = this.state.task;
             this.task.setTaskItem(this);
         }
@@ -62,12 +63,15 @@ define([
                 let isOpen = $(this).hasClass('vp-focus');
                 if (isOpen) {
                     // hide task if it's already opened
-                    // open task
+                    $(this).removeClass('vp-focus');
+                    // close task
                     $('#vp_wrapper').trigger({
                         type: 'close_option_page'
                     });
                 } else {
                     // open task
+                    $('.vp-block').removeClass('vp-focus');
+                    $(this).addClass('vp-focus');
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page',
                         component: that.task
@@ -86,27 +90,38 @@ define([
             return this.task != undefined;
         }
 
+        getColorLabel() {
+            let root = this._getMenuGroupRootType();
+            let label = root;
+            switch(root) {
+                case 'logic':
+                    let subRoot = this._getMenuGroupRootType(2);
+                    label = 'logic-' + subRoot;
+                    break;
+                case 'library':
+                    break;
+            }
+
+            return label;
+        }
+
         /**
          * Generate template
          */
         template() {
-            let blockType = this._getMenuGroupRootType();
-            let taskId = this.task.id;
-            let header = this.task.name;
-            let isGroup = this.task.state.isGroup;
-            let depth = this.task.state.depth;
-            let blockNumber = this.task.state.blockNumber;
-
-            // if logic, show code
-            if (blockType == 'logic') {
-                header = this.task.generateCode();
-            }
+            let blockType = this.blockType;
+            let taskId = this.id;
+            let header = this.header;
+            let isGroup = this.isGroup;
+            let depth = this.depth;
+            let blockNumber = this.blockNumber;
 
             var page = new com_String();
-            page.appendFormatLine('<div class="vp-block {0} {1}">', isGroup?'vp-block-group':'', blockType);
+            page.appendFormatLine('<div class="vp-block {0} {1}" style="padding-left: {2}px">'
+                                , isGroup?'vp-block-group':'', blockType, depth*BLOCK_PADDING);
             page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
             page.appendFormatLine('<div class="vp-block-left-holder"></div>');
-            page.appendFormatLine('<div class="vp-block-depth-info" style="{0}">{1}</div>', '', depth);
+            page.appendFormatLine('<div class="vp-block-depth-info">{0}</div>', depth);
             page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', isGroup?'':'style="display:none;"', blockNumber);
             page.appendLine('</div>');
             return page.toString();
@@ -122,6 +137,14 @@ define([
                 this.$target.find('.vp-menu-task-item').removeClass('vp-focus');
                 $(this.wrapSelector()).addClass('vp-focus');
             }
+        }
+
+        show() {
+            $(this.wrapSelector()).show();
+        }
+
+        hide() {
+            $(this.wrapSelector()).hide();
         }
 
         focusItem() {
@@ -140,11 +163,25 @@ define([
         //========================================================================
         // Get Set methods
         //========================================================================
+        get id() {
+            return this.task.id;
+        }
         get name() {
             return this.task.name;
         }
+        get blockType() {
+            return this.getColorLabel();
+        }
+        get header() {
+            let header = this.name;
+            // if logic, show code
+            if (this._getMenuGroupRootType() == 'logic') {
+                header = this.task.generateCode();
+            }
+            return header;
+        }
         get isGroup() {
-            return this.task.isGroup;
+            return this.task.state.isGroup;
         }
         get blockNumber() {
             return this.task.state.blockNumber;
@@ -154,6 +191,20 @@ define([
         }
         get popup() {
             return this.task;
+        }
+        getChildDepth() {
+            let depth = this.depth;
+            let innerList = [
+                'lgDef_class', 'lgDef_def', 
+                'lgCtrl_for', 'lgCtrl_while', 'lgCtrl_if', 'lgCtrl_try'
+            ];
+            if (innerList.includes(this.task.id)) {
+                return depth + 1;
+            }
+            return depth;
+        }
+        getGroupedBlocks() {
+            return this.prop.parent.getGroupedBlocks(this);
         }
         /**
           * @param {int} blockNumber

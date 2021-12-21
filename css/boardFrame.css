@@ -112,7 +112,7 @@
     height: 25px;
     width: calc(100% - 35px);
     margin-left: 30px;
-    padding: 3px 10px;
+    padding: 1px 10px;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -122,6 +122,7 @@
     white-space: nowrap;
     word-wrap: normal;
     overflow: hidden;
+    border: 2px solid transparent;
 }
 .vp-block-left-holder {
     display: none;
@@ -189,17 +190,33 @@
 }
 .vp-board-header-button-inner ul li:hover {
     color: var(--font-hightlight);
-    background-color: var(--light-gray-color);
+    background-color: rgb(229, 229, 229);
 }
 
 
 
 /* block color labeling */
-.vp-block.apps .vp-block-header {
-    background: var(--highlight-color);
+.vp-block.vp-focus .vp-block-header {
+    border: 2px solid var(--highlight-color);
+    background-color: rgb(196, 196, 196);
 }
-.vp-block.apps.focused .vp-block-header {
-    background: var(--highlight-color);
+.vp-block.apps .vp-block-header {
+    background-color: rgb(249, 227, 214);
+}
+.vp-block.apps.vp-focus .vp-block-header {
+    background-color: rgb(253, 177, 133);
+}
+.vp-block.logic-define .vp-block-header {
+    background-color: rgb(213, 231, 222);
+}
+.vp-block.logic-define.vp-focus .vp-block-header {
+    background-color: rgb(138, 214, 176);
+}
+.vp-block.logic-control .vp-block-header {
+    background-color: rgb(253, 239, 221);
+}
+.vp-block.logic-control.vp-focus .vp-block-header {
+    background-color: rgb(255, 207, 115);
 }
 
 /* block menu */

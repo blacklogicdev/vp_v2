@@ -270,7 +270,7 @@
                                 "file" : "m_logic/Class"
                             },
                             {
-                                "id"   : "lgDef_",
+                                "id"   : "lgDef_def",
                                 "type" : "function",
                                 "level": 1,
                                 "name" : "def",

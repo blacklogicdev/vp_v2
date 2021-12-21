@@ -108,7 +108,6 @@ define([
                 $(com_util.formatString(".{0}", that.uuid)).autocomplete({
                     minLength: 0,
                     source: function (req, res) {
-                        console.log(req.term);
                         var srcList = typeof that._suggestList == "function" ? that._suggestList() : that._suggestList;
                         var returlList = new Array();
                         if (that._normalFilter) {

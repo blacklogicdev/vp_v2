@@ -131,7 +131,6 @@ define([
             var keyCode = event.keyCode ? event.keyCode : event.which;
             // esc
             if (keyCode == 27) {
-                // console.log('esc from modal', this._UUID);
                 this.close();
             }
         }

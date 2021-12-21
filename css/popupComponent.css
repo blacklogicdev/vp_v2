@@ -21,6 +21,7 @@
     border: 1px solid var(--border-gray-color);
     box-shadow: 2px 2px 1px rgb(0 0 0 / 10%);
     z-index: 200;
+    color: var(--font-primary);
 }
 .vp-popup-frame.vp-close {
     width: 200px !important;

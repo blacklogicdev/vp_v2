@@ -41,6 +41,12 @@
 .vp-primary {
     color: var(--font-hightlight);
 }
+.vp-orange-text {
+    color: var(--font-hightlight);
+}
+.vp-bold {
+    font-weight: bold;
+}
 /* Body */
 body {
     overflow: hidden;
@@ -53,10 +59,6 @@ body {
     display: inline-block;
     width: 10px;
     height: 10px;
-}
-/* width style*/
-.wp100 {
-    width: 100%;
 }
 /* common component style */
 .vp-input {
@@ -241,4 +243,11 @@ body {
 /* divider */
 hr.vp-extra-menu-line {
     margin: 5px 0px 7px 0px;
+}
+/* width style*/
+.wp100 {
+    width: 100%;
+}
+.w100 {
+    width: 100px;
 }

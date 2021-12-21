@@ -14,8 +14,9 @@
 //============================================================================
 define([
     'vp_base/js/com/com_String',
+    'vp_base/js/com/com_util',
     'vp_base/js/com/component/PopupComponent'
-], function(com_String, PopupComponent) {
+], function(com_String, com_util, PopupComponent) {
 
     /**
      * Class
@@ -25,10 +26,10 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
-            this.config.codeview = false;
 
             this.state = {
-                code: '',
+                v1: '',
+                v2: '',
                 ...this.state
             }
             
@@ -43,13 +44,21 @@ define([
         templateForBody() {
             /** Implement generating template */
             var page = new com_String();
-            page.appendFormatLine('<textarea name="code" class="code vp-state" id="code">{0}</textarea>'
-                                , this.state.code);
+            page.appendLine('<div class="vp-orange-text vp-bold">Class Name</div>');
+            page.appendFormatLine('<input type="text" id="v1" class="vp-input wp100 vp-state" value="{0}" placeholder="{1}">'
+                                , this.state.v1, 'Input class name');
+            page.appendLine('<div class="vp-bold">Super Class Name</div>');
+            page.appendFormatLine('<input type="text" id="v2" class="vp-input wp100 vp-state" value="{0}" placeholder="{1}">'
+                                , this.state.v2, 'Input super class name');
             return page.toString();
         }
 
         generateCode() {
-            return this.state.code;
+            let superClass = this.state.v2;
+            if (superClass != '') {
+                superClass = '(' + superClass + ')';
+            }
+            return com_util.formatString('class {0}{1}:', this.state.v1, superClass);
         }
 
     }

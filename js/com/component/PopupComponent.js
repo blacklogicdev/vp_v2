@@ -190,6 +190,33 @@ define([
                 });
             });
 
+            // save state values
+            $(document).on('change', this.wrapSelector('.vp-state'), function() {
+                let id = $(this)[0].id;
+                let tagName = $(this).prop('tagName'); // returns with UpperCase
+                let newValue = null;
+                switch(tagName) {
+                    case 'INPUT':
+                        let inputType = $(this).prop('type');
+                        if (inputType == 'text' || inputType == 'number') {
+                            newValue = $(this).val();
+                            break;
+                        }
+                        if (inputType == 'checkbox') {
+                            newValue = $(this).prop('checked');
+                            break;
+                        }
+                        break;
+                    case 'TEXTAREA':
+                    case 'SELECT':
+                    default:
+                        newValue = $(this).val();
+                        break;
+                }
+                
+                that.state[id] = newValue;
+            });
+
             // Click buttons
             $(this.wrapSelector('.vp-popup-button')).on('click', function(evt) {
                 var btnType = $(this).data('type');
@@ -249,6 +276,10 @@ define([
                         break;
                 }
             });
+        }
+
+        _unbindEvent() {
+            $(document).off('change', this.wrapSelector('.vp-state'));
         }
 
         _bindDraggable() {
@@ -364,6 +395,7 @@ define([
 
         remove() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'remove popup', this);
+            this._unbindEvent();
             $(this.wrapSelector()).remove();
         }
 

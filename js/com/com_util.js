@@ -192,7 +192,6 @@ define([
                     iopub: {
                         output: function(msg) {
                             // msg.content.data['text/plain']
-                            console.log(msg);
                             resolve(msg.content.data);
                         }
                     }

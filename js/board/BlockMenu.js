@@ -38,12 +38,12 @@ define([
             var that = this;
             /** run block */
             $(this.wrapSelector('#vp_block_menu_run')).on('click', function () {
-                that.block.popup.run();
+                that.boardFrame.runBlock(that.block);
                 that.close();
             });
             /** add block */
             $(this.wrapSelector('#vp_block_menu_add')).on('click', function () {
-                that.block.popup.run(false);
+                that.boardFrame.runBlock(that.block, false);
                 that.close();
             });
             /** duplicate block */

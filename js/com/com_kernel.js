@@ -209,7 +209,7 @@ define([
                 
                 // write file
                 var sbfileSaveCmd = new com_String();
-                sbfileSaveCmd.appendFormatLine('%%writefile "{0}"', filePath + fileName);
+                sbfileSaveCmd.appendFormatLine('%%writefile "{0}"', filePath);
                 sbfileSaveCmd.appendLine(saveData);
                 
                 that.execute(sbfileSaveCmd.toString()).then(function(result) {

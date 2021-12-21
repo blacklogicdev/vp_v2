@@ -17,16 +17,17 @@ define([
     'css!../../css/boardFrame.css',
     '../com/com_String',
     '../com/com_util',
+    '../com/com_interface',
     '../com/component/Component',
     '../com/component/FileNavigation',
     './Block',
     './BlockMenu'
-], function(boardFrameHtml, boardFrameCss, com_String, com_util, Component, FileNavigation, Block, BlockMenu) {
+], function(boardFrameHtml, boardFrameCss, com_String, com_util, com_interface, Component, FileNavigation, Block, BlockMenu) {
 	'use strict';
     //========================================================================
     // Define Variable
     //========================================================================
-    const BLOCK_PADDING = 10;
+    const BLOCK_PADDING = 20;
 	
     /**
      * BoardFrame
@@ -137,6 +138,8 @@ define([
             let that = this;
             let parent = this.prop.parent;
             let position = -1;
+            let targetBlock = null;
+            let groupedBlocks = null;
             let parentBlock = null;
             let depth = 0;
             $('.vp-board-body').sortable({
@@ -149,8 +152,8 @@ define([
                         let block = currentItem.data('block');
                         if (block) {
                             let tag = new com_String();
-                            tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', '');
-                            tag.appendFormatLine('<div class="vp-block-header">{0}</div>', block.name);
+                            tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', block.getColorLabel());
+                            tag.appendFormatLine('<div class="vp-block-header">{0}</div>', block.header);
                             tag.appendLine('</div>');
                             return tag.toString();
                         } else {
@@ -170,9 +173,14 @@ define([
                 },
                 start: function(evt, ui) {
                     position = ui.item.index();
-
+                    targetBlock = that.blockList[position];
                     // hide original item
-                    ui.item.hide();
+                    // ui.item.hide();
+                    // hide grouped item
+                    groupedBlocks = targetBlock.getGroupedBlocks();
+                    groupedBlocks.forEach(block => {
+                        block.hide();
+                    });
                 },
                 sort: function(evt, ui) {
                     let tmpPos = ui.placeholder.index();
@@ -182,11 +190,12 @@ define([
                     if (befBlockTag && befBlockTag.length > 0) {
                         let befBlock = befBlockTag.data('block');
                         let rect = befBlockTag[0].getBoundingClientRect();
+                        let befStart = rect.y;
                         let befRange = rect.y + rect.height;
-                        let befDepth = befBlock.depth;
-                        if (currCursorY < befRange) {
+                        let befDepth = befBlock.getChildDepth();
+                        if (currCursorY < befRange && befStart < currCursorY) {
                             parentBlock = befBlock;
-                            depth = befDepth + 1;
+                            depth = befDepth;
                             ui.placeholder.removeClass('vp-block-group');
                             ui.placeholder.css({ 'padding-left': befDepth*BLOCK_PADDING + 'px'});
                         } else {
@@ -204,23 +213,25 @@ define([
                     var spos = position;
                     var epos = ui.item.index();
 
-                    console.log('moves ', spos, epos);
+                    if (spos < epos) {
+                        epos += (1 - groupedBlocks.length);
+                    }
 
-                    if (spos != epos && epos > -1) {
+                    if (epos > -1) {
                         // move list element
                         if (parentBlock) {
-                            parent.moveBlock(spos, epos, parentBlock);
-                            // reload block list
-                            that.reloadBlockList();
+                            that.moveBlock(spos, epos, parentBlock);
                         } else {
-                            parent.moveBlock(spos, epos);
-                            // just render block information
-                            that.renderInfo();
+                            that.moveBlock(spos, epos);
                         }
                     }
 
                     // show original item
-                    ui.item.show();
+                    // ui.item.show();
+                    // show grouped block
+                    groupedBlocks.forEach(block => {
+                        block.show();
+                    });
                 }
             }).disableSelection();
         }
@@ -265,26 +276,20 @@ define([
          * Reload block list on the board
          */
         reloadBlockList() {
-            let that = this;
-            let parent = this.prop.parent;
             let num = 1;
             // init boardframe body
             $(this.wrapSelector('.vp-board-body')).html('');
             // render block list
-            parent.blockPopupList.forEach(popup => {
-                let taskItem = popup.taskItem;
+            this.blockList.forEach(block => {
                 // if it's already rendered and block
-                if (taskItem && taskItem instanceof Block) {
-                    if (taskItem.isGroup) {
-                        taskItem.setNumber(num++);
+                if (block && block instanceof Block) {
+                    if (block.isGroup) {
+                        block.setNumber(num++);
                     }
-                    taskItem.render();
-                } else {
-                    let block = new Block(this, { task: popup, blockNumber: num++ });
-                    popup.setTaskItem(block);
-                    that.blockList.push(block);
+                    block.render();
                 }
             })
+            this.renderInfo();
         }
 
         renderInfo() {
@@ -321,7 +326,7 @@ define([
                 extensions: ['vp'],
                 finish: function(filesPath, status, error) {
                     // clear board before open note
-                    this.clearBoard();
+                    that.clearBoard();
                     
                     let vpFilePath = filesPath[0].path;
                     let vpFileName = filesPath[0].file;
@@ -335,7 +340,6 @@ define([
                         file.text().then(function(data) {
                             // var parsedData = decodeURIComponent(data);
                             var jsonList = JSON.parse(data);
-                            console.log('jsonList', jsonList);
                             // load blocks
                             that.jsonToBlock(jsonList);
 
@@ -365,7 +369,6 @@ define([
                 }
                 let saveData = this.blockToJson(this.blockList);
                 let saveDataStr = JSON.stringify(saveData);
-                console.log('saveData', saveDataStr);
                 vpKernel.saveFile(boardTitle, boardPath, saveDataStr);
                 return;
             }
@@ -382,15 +385,10 @@ define([
                 finish: function(filesPath, status, error) {
                     let boardTitle = filesPath[0].file;
                     let boardPath = filesPath[0].path;
-                    if (boardPath == '') {
-                        boardPath = '.';
-                    }
-                    boardPath += '/';
 
                     // save vp file
                     let saveData = that.blockToJson(that.blockList);
                     let saveDataStr = JSON.stringify(saveData);
-                    console.log('saveData', saveDataStr);
                     vpKernel.saveFile(boardTitle, boardPath, saveDataStr);
 
                     // save it in tmpState
@@ -399,13 +397,25 @@ define([
                     boardTitle = boardTitle.substring(0, idx);
                     that.tmpState.boardTitle = boardTitle;
                     that.tmpState.boardPath = boardPath;
+                    $('#vp_boardTitle').val(boardTitle);
                 }
             });
             fileNavi.open();
         }
+        runBlock(block, execute=true) {
+            let groupedBlocks = block.getGroupedBlocks();
+            let code = new com_String();
+            groupedBlocks.forEach(groupBlock => {
+                code.appendLine(groupBlock.popup.generateCode());
+            });
+            com_interface.insertCell('code', code.toString(), execute, block.blockNumber);
+        }
         runAll() {
+            let that = this;
             this.blockList.forEach(block => {
-                block.popup.run();
+                if (block.isGroup) {
+                    that.runBlock(block);
+                }
             })
         }
         viewDepthInfo() {
@@ -417,9 +427,11 @@ define([
 
             // clear board
             this.blockList.forEach(block => {
-                that.removeBlock(block);
+                block.popup.remove();
             })
             this.blockList = [];
+            // render block list  
+            this.reloadBlockList();
         }
         closeBoard() {
             this.createNewNote();
@@ -434,28 +446,90 @@ define([
             return createdBlock;
         }
 
-        addBlock(block, position, isGroup) {
-
+        addBlock(option, position=-1, isGroup=true) {
+            let block = new Block(this, { task: option });
+            option.setTaskItem(block);
+            if (position < 0) {
+                // add to the end
+                this.blockList.push(block);
+            } else {
+                // add to specific position
+                this.blockList.splice(position, 0, block);
+            }
         }
 
-        removeBlock(block) {
-            $('#vp_wrapper').trigger({
-                type: 'remove_option_page',
-                component: block.popup
+        removeBlock(blockToRemove) {
+            let that = this;
+            let groupedBlocks = blockToRemove.getGroupedBlocks();
+            groupedBlocks.forEach(block => {
+                const blockIdx = that.blockList.indexOf(block);
+                block.popup.remove();
+                that.blockList.splice(blockIdx, 1);
             });
+            // render block list  
+            this.reloadBlockList();
         }
 
-        moveBlock(block, isGroup, start, end) {
-
+        /**
+         * Change position of task in  blockPopupList
+         * @param {int} startIdx 
+         * @param {int} endIdx 
+         */
+        moveBlock(startIdx, endIdx, parentBlock=null) {
+            var movingBlock = this.blockList[startIdx];
+            if (movingBlock) {
+                let groupBlocks = this.getGroupedBlocks(movingBlock);
+                this.blockList.splice(startIdx, groupBlocks.length);
+                this.blockList.splice(endIdx, 0, ...groupBlocks);
+                // move tag
+                if (parentBlock != null) {
+                    // set child
+                    movingBlock.setChildBlock(parentBlock.getChildDepth());
+                } else {
+                    // set group block
+                    movingBlock.setGroupBlock();
+                }
+                this.reloadBlockList();
+            }
         }
 
         copyBlock(block) {
             // use tmpState.copy
-            // TODO: copy block 
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let dupPosition = blockIdx + groupedBlocks.length;
+            groupedBlocks.forEach((groupBlock, idx) => {
+                let menuId = groupBlock.id;
+                let menuState = groupBlock.popup.state;
+                $('#vp_wrapper').trigger({
+                    type: 'create_option_page',
+                    blockType: 'block',
+                    menuId: menuId,
+                    menuState: JSON.parse(JSON.stringify(menuState)),
+                    background: true,
+                    position: dupPosition + idx
+                });
+            });
         }
 
         showMenu(block, left, top) {
             this.blockMenu.open(block, left, top);
+        }
+
+        getGroupedBlocks(parentBlock) {
+            const parentIdx = this.blockList.indexOf(parentBlock);
+            let nextGroupIdx = parentIdx + 1;
+            while (nextGroupIdx < this.blockList.length) {
+                let isGroup = this.blockList[nextGroupIdx].isGroup;
+                if (isGroup) {
+                    // find next group block
+                    break;
+                }
+                nextGroupIdx++;
+            }
+            // grouped blocks (include this parentBlock)
+            let groupedBlocks = this.blockList.slice(parentIdx, nextGroupIdx);
+            return groupedBlocks;
         }
 
         //========================================================================
