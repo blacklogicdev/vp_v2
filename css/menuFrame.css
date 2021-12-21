@@ -170,12 +170,12 @@
     cursor: pointer;
     box-shadow: 2px 2px 1px rgb(0 0 0 / 10%);
     margin-bottom: 5px;
-    background: moccasin; /* FIXME: sample color */
+    background-color: rgb(196, 196, 196);
 }
 
 /* Menu Items - App */
 .vp-menuitem.apps {
-    width: 58;
+    width: 58px;
     height: 58px;
     text-align: center;
     /* border: 0.25px solid #C4C4C4; */
@@ -207,6 +207,17 @@
 .vp-menuitem-apps-name {
     color: #FFFFFF;
     font-size: 11px;
+}
+/* MenuItem - Logic */
+.vp-menuitem.logic-define {
+    background-color: rgb(138, 214, 176);
+}
+.vp-menuitem.logic-control {
+    background-color: rgb(255, 207, 115);
+}
+/* MenuItem - Library */
+.vp-menuitem.library {
+    background-color: rgb(253, 177, 133);
 }
 
 /* Task Bar */

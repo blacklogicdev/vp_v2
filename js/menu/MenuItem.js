@@ -30,11 +30,11 @@ define([
             super($target, state);
         }
 
-        _getMenuGroupRootType() {
+        _getMenuGroupRootType(idx=1) {
             // ex) visualpython - apps - frame
             let path = this.state.path;
             let pathList = path.split(' - ');
-            return pathList[1];
+            return pathList[idx];
         }
 
         _getMenuGroupType() {
@@ -65,8 +65,23 @@ define([
             } else {
                 // return color class
                 // FIXME: set detailed labels
-                return 'vp-' + this._getMenuGroupRootType();
+                return this.getColorLabel();
             }
+        }
+
+        getColorLabel() {
+            let root = this._getMenuGroupRootType();
+            let label = root;
+            switch(root) {
+                case 'logic':
+                    let subRoot = this._getMenuGroupRootType(2);
+                    label = 'logic-' + subRoot;
+                    break;
+                case 'library':
+                    break;
+            }
+
+            return label;
         }
 
         _bindEvent() {

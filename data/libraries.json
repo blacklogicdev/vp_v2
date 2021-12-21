@@ -432,26 +432,6 @@
                 "desc" : "Libraries",
                 "item" : [
                     {
-                        "id"   : "lib_common",
-                        "type" : "package",
-                        "level": 1,
-                        "name" : "Common",
-                        "path" : "visualpython - library - common",
-                        "desc" : "Common utilities",
-                        "item" : [
-                            {
-                                "id"   : "apps_import",
-                                "type" : "function",
-                                "level": 1,
-                                "name" : "Import",
-                                "tag"  : "IMPORT,APPS",
-                                "path" : "visualpython - apps - import",
-                                "desc" : "Import",
-                                "file" : "m_apps/Import"
-                            }
-                        ]
-                    },
-                    {
                         "id"   : "lib_python",
                         "type" : "package",
                         "level": 1,

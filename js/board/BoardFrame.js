@@ -177,10 +177,14 @@ define([
                     // hide original item
                     // ui.item.hide();
                     // hide grouped item
-                    groupedBlocks = targetBlock.getGroupedBlocks();
-                    groupedBlocks.forEach(block => {
-                        block.hide();
-                    });
+                    if (targetBlock) {
+                        groupedBlocks = targetBlock.getGroupedBlocks();
+                        groupedBlocks.forEach(block => {
+                            block.hide();
+                        });
+                    } else {
+                        ui.item.hide();
+                    }
                 },
                 sort: function(evt, ui) {
                     let tmpPos = ui.placeholder.index();
@@ -213,7 +217,7 @@ define([
                     var spos = position;
                     var epos = ui.item.index();
 
-                    if (spos < epos) {
+                    if (spos < epos && groupedBlocks) {
                         epos += (1 - groupedBlocks.length);
                     }
 
@@ -229,9 +233,13 @@ define([
                     // show original item
                     // ui.item.show();
                     // show grouped block
-                    groupedBlocks.forEach(block => {
-                        block.show();
-                    });
+                    if (targetBlock && groupedBlocks) {
+                        groupedBlocks.forEach(block => {
+                            block.show();
+                        });
+                    } else {
+                        ui.item.show();
+                    }
                 }
             }).disableSelection();
         }
@@ -456,6 +464,7 @@ define([
                 // add to specific position
                 this.blockList.splice(position, 0, block);
             }
+            return block;
         }
 
         removeBlock(blockToRemove) {
@@ -552,7 +561,7 @@ define([
         }
 
         jsonToBlock(jsonList) {
-            let parent = this.prop.parent;
+            let parent = this.prop.parent; // MainFrame
             jsonList && jsonList.forEach((obj, idx) => {
                 let {
                     isGroup, depth, blockNumber, taskId, taskState

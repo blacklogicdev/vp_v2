@@ -226,13 +226,13 @@ define([
             try {
                 // open component
                 require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                    that.callPoupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
+                    that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
                 }, function (err) {
                     // if it's library menu, call LibraryComponent
                     if (menuGroupRootType == 'library') {
                         menuConfig.file = 'com/component/LibraryComponent'
                         require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                            that.callPoupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
+                            that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
                         });
                     } else {
                         vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
@@ -243,7 +243,7 @@ define([
             }
         }
 
-        callPoupComponent(blockType, OptionComponent, menuConfig, menuState, background, position) {
+        callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position) {
             if (!OptionComponent) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuId+')');
                 return;
@@ -256,7 +256,8 @@ define([
             let option = new OptionComponent(state);
             if (blockType === 'block') {
                 // add to block list
-                this.addBlock(option, position);
+                let newBlock = this.addBlock(option, position);
+                this.createChildBlocks(newBlock, position);
             } else {
                 // add to task list
                 this.addTask(option);
@@ -264,6 +265,65 @@ define([
             if (!background) {
                 this.openPopup(option);
             }
+        }
+
+        createChildBlocks(newBlock, position) {
+            let menuId = newBlock.id;
+            let childDepth = newBlock.getChildDepth();
+            let childBlocks = [];
+            switch (menuId) {
+                case 'lgDef_class':
+                    childBlocks = [
+                        { 
+                            id: 'lgDef_def', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth, 
+                                v1: '__init__', 
+                                v2: [{ param: 'self' }] 
+                            }
+                        }
+                    ]
+                    break;
+                case 'lgDef_def':
+                    childBlocks = [
+                        { 
+                            id: 'lgExe_code', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth
+                            }
+                        },
+                        { 
+                            id: 'lgCtrl_return', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth
+                            }
+                        }
+                    ]
+                    break;
+                case 'lgCtrl_for':
+                case 'lgCtrl_while':
+                case 'lgCtrl_if':
+                case 'lgCtrl_try':
+                    childBlocks = [
+                        { 
+                            id: 'lgCtrl_pass', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth
+                            }
+                        }
+                    ];
+                    break;
+            }
+
+            // create blocks
+            let that = this;
+            childBlocks.forEach((cfg, idx)=> {
+                that.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
+            });
         }
         
         /**
@@ -377,16 +437,12 @@ define([
         }
 
         addBlock(option, position=-1) {
-            if (position == undefined || position < 0) {
-                this._blockPopupList.push(option);
-            } else {
-                this._blockPopupList.splice(position, 0, option);
-            }
-
-            this.boardFrame.addBlock(option, position);
+            this._blockPopupList.push(option);
+            let newBlock = this.boardFrame.addBlock(option, position);
 
             // render board frame
             this.boardFrame.reloadBlockList();
+            return newBlock;
         }
 
         /**
