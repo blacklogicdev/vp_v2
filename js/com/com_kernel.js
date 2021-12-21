@@ -13,8 +13,9 @@
 //============================================================================
 define([
     './com_Config',
-    './com_util'
-], function(com_Config, com_util) {
+    './com_util',
+    './com_String'
+], function(com_Config, com_util, com_String) {
 
     /**
      * Kernel interface class
@@ -191,6 +192,32 @@ define([
                     // reject
                     reject(err);
                 })
+            });
+        }
+        //====================================================================
+        // Write File 
+        //====================================================================
+        saveFile(fileName, filePath, saveData) {
+            let that = this;
+            fetch(filePath + fileName).then(function(data) {
+                // overwrite confirmation
+                if (data.status == 200) {
+                    if (!confirm(com_util.formatString("{0} already exists.\nDo you want to replace it?", fileName))) {
+                        return false;
+                    }
+                }
+                
+                // write file
+                var sbfileSaveCmd = new com_String();
+                sbfileSaveCmd.appendFormatLine('%%writefile "{0}"', filePath + fileName);
+                sbfileSaveCmd.appendLine(saveData);
+                
+                that.execute(sbfileSaveCmd.toString()).then(function(result) {
+                    com_util.renderSuccessMessage('Successfully saved file. (' + fileName + ')');
+                }).catch(function(err) {
+                    com_util.renderAlertModal("Couldn't save file. "+err.message);
+                    vpLog.display(VP_LOG_TYPE.ERROR, err);
+                });
             });
         }
 

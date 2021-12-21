@@ -155,24 +155,10 @@
 }
 .vp-menugroup {
     font-weight: bold;
-    cursor: pointer;
 }
 .vp-menugroup-box:empty::after {
     content: '(Empty)';
     color: var(--gray-color);
-}
-.vp-accordian .vp-indicator {
-    display: inline-block;
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 10px;
-    height: 10px;
-}
-.vp-accordian.vp-open .vp-indicator {
-    background-image: url(../../visualpython/img/chevron_big_down.svg);
-}
-.vp-accordian.vp-close .vp-indicator {
-    background-image: url(../../visualpython/img/chevron_big_right.svg);
 }
 :not(.apps) > .vp-menugroup-box {
     padding-left: 20px;

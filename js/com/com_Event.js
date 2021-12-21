@@ -85,8 +85,41 @@ define([], function() {
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         // blockType: block/task / menuItem: menu id / menuState: saved state
-                        // TODO: rearrange mechanism
-                        var { blockType, menuId, menuState, background, position } = evt;
+                        let { blockType, menuId, menuState, background, position } = evt;
+                        let defaultMenuState = {};
+                        // set menuState
+                        switch (menuId) {
+                            case 'lgCtrl_continue':
+                                menuId = 'lgExe_code';
+                                defaultMenuState['code'] = 'continue';
+                                break;
+                            case 'lgCtrl_break':
+                                menuId = 'lgExe_code';
+                                defaultMenuState['code'] = 'break';
+                                break;
+                            case 'lgCtrl_pass':
+                                menuId = 'lgExe_code';
+                                defaultMenuState['code'] = 'pass';
+                                break;
+                            case 'lgExe_lambda':
+                                menuId = 'lgExe_code';
+                                defaultMenuState['code'] = 'lambda x: x';
+                                break;
+                            case 'lgExe_print':
+                                menuId = 'lgExe_code';
+                                defaultMenuState['code'] = 'print()';
+                                break;
+                            case 'lgExe_comment':
+                                menuId = 'lgExe_code';
+                                defaultMenuState['code'] = '# Write down comments';
+                                break;
+                            default:
+                                break;
+                        }
+                        menuState = {
+                            ...defaultMenuState,
+                            ...menuState
+                        }
                         let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
                         if (blockType == 'task' && dupTask) {
                             // if duplicated, open its task

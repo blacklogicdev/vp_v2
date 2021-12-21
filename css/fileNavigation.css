@@ -205,26 +205,6 @@
     cursor: pointer;
     transition: 0.7s;
 }
-.fileNavigationPage-btn-saveVisualPython
-, .fileNavigationPage-btn-cabcelVisualPython {
-    padding: 2.5px 20px;
-    margin-left: 10px;
-    font-size: 12px;
-    -webkit-transition-property: background,color;
-    transition-property: background,color;
-    -webkit-transition-duration: .2s;
-    transition-duration: .2s;
-    border: 1px solid transparent;
-    border-color: #ccc;
-    outline: 0px;
-}
-.fileNavigationPage-btn-saveVisualPython:hover
-, .fileNavigationPage-btn-cabcelVisualPython:hover {
-    cursor: pointer;
-    transition: 0.7s;
-    border:1px solid var(--base_color);
-    color: var(--base_color);
-}
 .fileNavigationPage-directory-nowLocation {
     color: var(--font-primary);
 }
@@ -238,9 +218,11 @@
     background: #EEE;
     border: 1px solid #DDD;
 }
-.fileNavigationPage-button input {
-    border: 0.25px solid #C4C4C4;
+#vp_fileNavigationInput {
     width: calc(100% - 170px);
+}
+#vp_fileNavigationExt {
+    width: 80px;
 }
 .fileNavigationPage-style-flex-column-center {
     display: flex;

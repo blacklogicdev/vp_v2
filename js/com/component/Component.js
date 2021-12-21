@@ -14,17 +14,9 @@
 //============================================================================
 define([
     '../com_util',
-    '../com_Const',
     '../com_String'
-], function(com_util, com_Const, com_String) {
+], function(com_util, com_String) {
     'use strict';
-
-    //========================================================================
-    // Declare variables
-    //========================================================================
-    const {
-        VP_CONTAINER_ID
-    } = com_Const;
 
     //========================================================================
     // Declare class
@@ -45,6 +37,7 @@ define([
             this.prop = prop;
 
             this._init();
+            this.load();
             this.render();
         }
 
@@ -73,6 +66,13 @@ define([
         }
 
         _bindEvent() {
+            /** Implementation needed */
+        }
+
+        /**
+         * Load data
+         */
+        load() {
             /** Implementation needed */
         }
 

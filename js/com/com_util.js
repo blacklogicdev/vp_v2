@@ -202,6 +202,15 @@ define([
         });
     }
 
+     /**
+     * Convert string(include html text) to safe string to display
+     * @param {String} text 
+     * @returns 
+     */
+    var safeString = function(text) {
+        return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     return {
         getUUID: getUUID,
         loadCss: loadCss,
@@ -217,7 +226,8 @@ define([
 
         setIsAPIListRunCode: setIsAPIListRunCode,
         getIsAPIListRunCode: getIsAPIListRunCode,
-        kernelExecute: kernelExecute
+        kernelExecute: kernelExecute,
+        safeString: safeString
     }
 
 }); /* function, define */

@@ -45,10 +45,12 @@ define([
     }
     
     var enableOtherShortcut = function() {
+        vpLog.display(VP_LOG_TYPE.DEVELOP, 'enable short cut');
         Jupyter.notebook.keyboard_manager.enable();
     }
 
     var disableOtherShortcut = function() {
+        vpLog.display(VP_LOG_TYPE.DEVELOP, 'disable short cut');
         Jupyter.notebook.keyboard_manager.disable();
     }
     

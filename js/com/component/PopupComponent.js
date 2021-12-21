@@ -54,6 +54,14 @@ define([
                 dataview: true
             };
 
+            this.state = {
+                isGroup: true,
+                leftHolderHeight: 0,
+                depth: 0,
+                blockNumber: $('.vp-block.vp-block-group').length + 1,
+                ...this.state
+            };
+
             this.cmReadonlyConfig = {
                 mode: {
                     name: 'python',
@@ -92,8 +100,13 @@ define([
             this.cmCodeList = [];
         }
 
-        _addCodemirror(selector, readonly=false) {
-            this.cmCodeList.push({ selector: selector, readonly: readonly, cm: null });
+        /**
+         * 
+         * @param {String} className textarea class name
+         * @param {boolean} readonly 
+         */
+        _addCodemirror(className, readonly=false) {
+            this.cmCodeList.push({ class: className, selector: this.wrapSelector('.' + className), readonly: readonly, cm: null });
         }
 
         /**
@@ -101,6 +114,7 @@ define([
          * @param {string} selector 
          */
         _bindCodemirror() {
+            let that = this;
             // codemirror editor (if available)
             for (let i = 0; i < this.cmCodeList.length; i++) {
                 let cmObj = this.cmCodeList[i];
@@ -124,6 +138,7 @@ define([
                             // instance = codemirror
                             // save its code to textarea component
                             instance.save();
+                            that.state[cmObj.class] = targetTag.val();
                         });
                     } else { 
                         vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to bind codemirror. (selector: '+cmObj.selector+')');
@@ -134,8 +149,13 @@ define([
             // code view
             if (!this.cmCodeview) {
                 // codemirror setting
-                this.cmCodeview = codemirror.fromTextArea(
-                    $(this.wrapSelector('.vp-popup-codeview-box textarea'))[0], this.cmReadonlyConfig);
+                let selector = this.wrapSelector('.vp-popup-codeview-box textarea');
+                let textarea = $(selector);
+                if (textarea && textarea.length > 0) {
+                    this.cmCodeview = codemirror.fromTextArea(textarea[0], this.cmReadonlyConfig);
+                } else {
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to create codemirror. (selector: '+selector+')');
+                }
             } else {
                 this.cmCodeview.refresh();
             }
@@ -254,10 +274,6 @@ define([
             $(this.wrapSelector()).resizable();
         }
 
-        _renderView() {
-
-        }
-
         templateForBody() {
             /** Implementation needed */
             return '';
@@ -290,9 +306,32 @@ define([
             this._bindResizable();
         }
 
+        templateForDataView() {
+            /** Implementation needed */
+            return '';
+        }
+
+        renderDataView() {
+            $('.vp-popup-dataview-box').html('');
+            $('.vp-popup-dataview-box').html(this.templateForDataView());
+        }
+
         generateCode() {
             /** Implementation needed */
             return '';
+        }
+
+        load() {
+            this.loadState();
+        }
+
+        loadState() {
+            $(this.wrapSelector())
+            /** Implementation needed */
+        }
+
+        saveState() {
+            /** Implementation needed */
         }
 
         run(execute=true) {
@@ -319,6 +358,7 @@ define([
          */
         close() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'close popup', this);
+            this.saveState();
             this.hide();
         }
 
@@ -361,11 +401,11 @@ define([
             if (isClosed) {
                 // show
                 $this.removeClass('vp-close');
-                $(this.wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_down_fill_dark.svg');
+                $(this.wrapSelector('.vp-popup-toggle')).attr('src', '/nbextensions/visualpython/img/tri_down_fill_dark.svg');
             } else {
                 // hide
                 $this.addClass('vp-close');
-                $(this.wrapSelector('.vp-popup-toggle')).attr('src', '../../nbextensions/visualpython/img/tri_right_fill_dark.svg');
+                $(this.wrapSelector('.vp-popup-toggle')).attr('src', '/nbextensions/visualpython/img/tri_right_fill_dark.svg');
             }
         }
 
@@ -384,8 +424,7 @@ define([
                     that.cmCodeview.refresh();
                 }, 1);
             } else {
-                // TODO: dataview
-
+                this.renderDataView();
             }
 
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).show();
@@ -411,6 +450,10 @@ define([
 
         removeBlock() {
             this.taskItem.removeItem();
+        }
+
+        getState() {
+            return this.state;
         }
     }
 

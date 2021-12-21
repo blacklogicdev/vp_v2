@@ -16,10 +16,12 @@ define([
     'text!../../html/boardFrame.html!strip',
     'css!../../css/boardFrame.css',
     '../com/com_String',
+    '../com/com_util',
     '../com/component/Component',
     '../com/component/FileNavigation',
     './Block',
-], function(boardFrameHtml, boardFrameCss, com_String, Component, FileNavigation, Block) {
+    './BlockMenu'
+], function(boardFrameHtml, boardFrameCss, com_String, com_util, Component, FileNavigation, Block, BlockMenu) {
 	'use strict';
     //========================================================================
     // Define Variable
@@ -122,6 +124,12 @@ define([
                         background: true
                     });
                 }
+            });
+            // change of boardTitle
+            $(this.wrapSelector('#vp_boardTitle')).on('change', function() {
+                let fileName = $(this).val();
+                that.tmpState.boardTitle = fileName;
+                that.tmpState.boardPath = null;
             });
         }
 
@@ -236,6 +244,8 @@ define([
             // render taskBar
             this.renderBlockList([]);
             this._bindSortable();
+
+            this.blockMenu = new BlockMenu(this);
         }
 
         /**
@@ -246,7 +256,7 @@ define([
             let parent = this.prop.parent;
             $('.vp-board-body').html('');
             blockPopupList && blockPopupList.forEach(task => {
-                let block = new Block($('.vp-board-body'), { task: task });
+                let block = new Block(this, { task: task });
                 that.blockList.push(block); 
             });
         }
@@ -270,7 +280,7 @@ define([
                     }
                     taskItem.render();
                 } else {
-                    let block = new Block($('.vp-board-body'), { task: popup, blockNumber: num++ });
+                    let block = new Block(this, { task: popup, blockNumber: num++ });
                     popup.setTaskItem(block);
                     that.blockList.push(block);
                 }
@@ -290,40 +300,124 @@ define([
         createNewNote() {
             // TODO: alert before closing
 
+            // clear board before create new note
+            this.clearBoard();
+
             // set title to Untitled
             this.tmpState.boardTitle = 'Untitled';
             // set path to empty
-            this.tmpState.boardPath = '';
+            this.tmpState.boardPath = null;
+
+            // set title
+            $(this.wrapSelector('#vp_boardTitle')).val('Untitled');
         }
         openNote() {
+            // TODO: check save as
+
+            let that = this;
             // open file navigation
             let fileNavi = new FileNavigation({ 
                 type: 'open',
                 extensions: ['vp'],
                 finish: function(filesPath, status, error) {
-                    console.log(filesPath, status, error);
+                    // clear board before open note
+                    this.clearBoard();
+                    
+                    let vpFilePath = filesPath[0].path;
+                    let vpFileName = filesPath[0].file;
+                    // read file
+                    fetch(vpFilePath).then(function(file) {
+                        if (file.status != 200) {
+                            com_util.renderAlertModal('The file format is not valid. (file: '+file+')');
+                            return;
+                        }
+                
+                        file.text().then(function(data) {
+                            // var parsedData = decodeURIComponent(data);
+                            var jsonList = JSON.parse(data);
+                            console.log('jsonList', jsonList);
+                            // load blocks
+                            that.jsonToBlock(jsonList);
+
+                            var indexVp = vpFileName.indexOf('.vp');
+                            var saveFileName = vpFileName.slice(0,indexVp);
+            
+                            // show title of board and path
+                            $('#vp_boardTitle').val(saveFileName);
+                            that.tmpState.boardTitle = saveFileName;
+                            that.tmpState.boardPath = vpFilePath;
+
+                            com_util.renderSuccessMessage('Successfully opened file. (' + vpFileName + ')');
+                        });
+                    });
                 }
             });
             fileNavi.open();
         }
         saveNote() {
+            let { boardPath, boardTitle } = this.tmpState;
+            // if path exists, save note
+            if (boardPath && boardPath != '') {
+                // save vp file
+                let idx = boardTitle.lastIndexOf('.vp');
+                if (idx < 0) {
+                    boardTitle += '.vp';
+                }
+                let saveData = this.blockToJson(this.blockList);
+                let saveDataStr = JSON.stringify(saveData);
+                console.log('saveData', saveDataStr);
+                vpKernel.saveFile(boardTitle, boardPath, saveDataStr);
+                return;
+            }
 
+            this.saveAsNote();
         }
         saveAsNote() {
+            let that = this;
+            // save file navigation
+            let fileNavi = new FileNavigation({ 
+                type: 'save',
+                fileName: this.tmpState.boardTitle,
+                extensions: ['vp'],
+                finish: function(filesPath, status, error) {
+                    let boardTitle = filesPath[0].file;
+                    let boardPath = filesPath[0].path;
+                    if (boardPath == '') {
+                        boardPath = '.';
+                    }
+                    boardPath += '/';
 
+                    // save vp file
+                    let saveData = that.blockToJson(that.blockList);
+                    let saveDataStr = JSON.stringify(saveData);
+                    console.log('saveData', saveDataStr);
+                    vpKernel.saveFile(boardTitle, boardPath, saveDataStr);
+
+                    // save it in tmpState
+                    // detach extension
+                    let idx = boardTitle.lastIndexOf('.vp');
+                    boardTitle = boardTitle.substring(0, idx);
+                    that.tmpState.boardTitle = boardTitle;
+                    that.tmpState.boardPath = boardPath;
+                }
+            });
+            fileNavi.open();
         }
         runAll() {
-
+            this.blockList.forEach(block => {
+                block.popup.run();
+            })
         }
         viewDepthInfo() {
             this.state.viewDepthNumber = true;
         }
         clearBoard() {
             // TODO: alert before clearing
+            let that = this;
 
             // clear board
             this.blockList.forEach(block => {
-                block.task
+                that.removeBlock(block);
             })
             this.blockList = [];
         }
@@ -334,10 +428,7 @@ define([
         // Block control
         //========================================================================
         createBlock(component, state) {
-            let prop = {
-                addBlock: this.addBlock
-            }
-            let createdBlock = new Block($(this.wrapSelector('.vp-board-body'), state, prop));
+            let createdBlock = new Block(this, state);
             component.setTaskItem(createdBlock);
 
             return createdBlock;
@@ -348,7 +439,10 @@ define([
         }
 
         removeBlock(block) {
-
+            $('#vp_wrapper').trigger({
+                type: 'remove_option_page',
+                component: block.popup
+            });
         }
 
         moveBlock(block, isGroup, start, end) {
@@ -357,17 +451,46 @@ define([
 
         copyBlock(block) {
             // use tmpState.copy
+            // TODO: copy block 
+        }
+
+        showMenu(block, left, top) {
+            this.blockMenu.open(block, left, top);
         }
 
         //========================================================================
         // Block save/load
         //========================================================================
         blockToJson(blockList) {
-
+            let result = [];
+            blockList && blockList.forEach(block => {
+                let task = block.task;
+                let jsonBlock = {
+                    isGroup: block.isGroup,
+                    depth: block.depth,
+                    blockNumber: block.blockNumber,
+                    taskId: task.id,
+                    taskState: task.getState()
+                };
+                result.push(jsonBlock);
+            });
+            return result;
         }
 
         jsonToBlock(jsonList) {
-
+            let parent = this.prop.parent;
+            jsonList && jsonList.forEach((obj, idx) => {
+                let {
+                    isGroup, depth, blockNumber, taskId, taskState
+                } = obj;
+                let state = {
+                    isGroup: isGroup,
+                    depth: depth,
+                    blockNumber: blockNumber,
+                    ...taskState
+                };
+                parent.createPopup('block', taskId, state, true, idx);
+            });
         }
     } // class
 

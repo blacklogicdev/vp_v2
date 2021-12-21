@@ -23,10 +23,11 @@ define([
      * @constructor
      */
      class Block extends Component {
-        constructor($target, state, prop) {
-            super($target, state, prop);
+        constructor(parent, state) {
+            super($('.vp-board-body'), state, { parent: parent });
             /**
              * state.task: PopupComponent
+             * prop.parent : BoardFrame
              */
         }
 
@@ -45,17 +46,9 @@ define([
         }
 
         _init() {
-            // temporary state
-            this.state = {
-                isGroup: true,
-                leftHolderHeight: 0,
-                depth: 0,
-                blockNumber: $('.vp-block.vp-block-group').length + 1,
-                ...this.state
-            };
-
             // set block to component
-            this.state.task.setTaskItem(this);
+            this.task = this.state.task;
+            this.task.setTaskItem(this);
         }
 
         _bindEvent() {
@@ -77,15 +70,20 @@ define([
                     // open task
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page',
-                        component: that.state.task
+                        component: that.task
                     });
                 }
                 evt.stopPropagation();
             });
+            // right click event - blockMenu
+            $(this.wrapSelector()).on('contextmenu', function(evt) {
+                that.prop.parent.showMenu(that, evt.pageX, evt.pageY);
+                evt.preventDefault();
+            });
         }
 
         checkTaskAvailable() {
-            return this.state.task != undefined;
+            return this.task != undefined;
         }
 
         /**
@@ -93,14 +91,20 @@ define([
          */
         template() {
             let blockType = this._getMenuGroupRootType();
-            let headerName = this.state.task.name;
-            let isGroup = this.state.isGroup;
-            let depth = this.state.depth;
-            let blockNumber = this.state.blockNumber;
+            let taskId = this.task.id;
+            let header = this.task.name;
+            let isGroup = this.task.state.isGroup;
+            let depth = this.task.state.depth;
+            let blockNumber = this.task.state.blockNumber;
+
+            // if logic, show code
+            if (blockType == 'logic') {
+                header = this.task.generateCode();
+            }
 
             var page = new com_String();
             page.appendFormatLine('<div class="vp-block {0} {1}">', isGroup?'vp-block-group':'', blockType);
-            page.appendFormatLine('<div class="vp-block-header">{0}</div>', headerName);
+            page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
             page.appendFormatLine('<div class="vp-block-left-holder"></div>');
             page.appendFormatLine('<div class="vp-block-depth-info" style="{0}">{1}</div>', '', depth);
             page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', isGroup?'':'style="display:none;"', blockNumber);
@@ -114,7 +118,7 @@ define([
             $(this.wrapSelector()).data('block', this);
 
             // emphasize it if its task is visible
-            if (!this.state.task.isHidden()) {
+            if (!this.task.isHidden()) {
                 this.$target.find('.vp-menu-task-item').removeClass('vp-focus');
                 $(this.wrapSelector()).addClass('vp-focus');
             }
@@ -137,38 +141,38 @@ define([
         // Get Set methods
         //========================================================================
         get name() {
-            return this.state.task.name;
+            return this.task.name;
         }
         get isGroup() {
-            return this.state.isGroup;
+            return this.task.isGroup;
         }
         get blockNumber() {
-            return this.state.blockNumber;
+            return this.task.state.blockNumber;
         }
         get depth() {
-            return this.state.depth;
+            return this.task.state.depth;
         }
         get popup() {
-            return this.state.task;
+            return this.task;
         }
         /**
           * @param {int} blockNumber
           */
         setNumber(blockNumber) {
-            this.state.blockNumber = blockNumber;
+            this.task.state.blockNumber = blockNumber;
         }
         /**
           */
         setGroupBlock() {
-            this.state.isGroup = true;
-            this.state.depth = 0;
+            this.task.state.isGroup = true;
+            this.task.state.depth = 0;
         }
         /**
          * Set block as child block of given block
          */
         setChildBlock(newDepth) {
-            this.state.isGroup = false;
-            this.state.depth = newDepth;
+            this.task.state.isGroup = false;
+            this.task.state.depth = newDepth;
         }
 
         //========================================================================

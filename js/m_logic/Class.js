@@ -1,16 +1,16 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : code.js
+ *    File Name       : Class.js
  *    Author          : Black Logic
- *    Note            : Logic > code
+ *    Note            : Logic > class
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] code
+// [CLASS] Class
 //============================================================================
 define([
     'vp_base/js/com/com_String',
@@ -18,9 +18,9 @@ define([
 ], function(com_String, PopupComponent) {
 
     /**
-     * Code
+     * Class
      */
-    class Code extends PopupComponent {
+    class Class extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -54,5 +54,5 @@ define([
 
     }
 
-    return Code;
+    return Class;
 });

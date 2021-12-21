@@ -46,6 +46,7 @@ define([
              * - status       : boolean => true for success / false for error
              * - error        : if there's error, return its content
              * ---------------------------------------------------------------
+             * state.fileName       (optional on save type) pre-defined fileName
              * state.multiSelect    (optional)
              * state.showAll        (optional)
              */
@@ -340,6 +341,50 @@ define([
             $('.fileNavigationPage-directory-nowLocation').append(currentRelativePathDomElement);
         }
 
+        renderSaveBox() {
+            let page = new com_String();
+            page.appendFormatLine('<input id="{0}" type="text" class="vp-input" placeholder="{1}" value="{2}"/>'
+                                , 'vp_fileNavigationInput', 'Input file name', this.state.fileName);
+            page.appendFormatLine('<select id="{0}" class="vp-select">', 'vp_fileNavigationExt');
+            this.state.extensions.forEach(ext => {
+                page.appendFormatLine('<option value="{0}">{1}</option>', ext, ext);
+            });
+            page.appendLine('</select>');
+            page.appendFormatLine('<button class="{0} vp-button" data-menu="{1}">{2}</button>', 'vp-filenavi-btn', 'select', 'Select');
+            $('.fileNavigationPage-button').html(page.toString());
+
+            let that = this;
+            // bind filename change event
+            $(this.wrapSelector('#vp_fileNavigationInput')).on('change', function() {
+                let fileName = $(this).val();
+                let filePath = that.getRelativePath(that.pathState.baseDir, that.pathState.currentPath);
+                that.setSelectedFile(fileName, filePath);
+            });
+            // bind save cancel event
+            $(this.wrapSelector('.vp-filenavi-btn')).on('click', function() {
+                let menu = $(this).data('menu');
+                if (menu == 'select') {
+                    // select file
+                    let { fileName, filePath } = that.state;
+                    let selectedExt = $(that.wrapSelector('#vp_fileNavigationExt')).val();
+                    let fileExtIdx = fileName.lastIndexOf('.');
+                    if (fileExtIdx < 0 || fileName.substring(fileExtIdx) != selectedExt) {
+                        fileName += '.' + selectedExt;
+                    }
+
+                    // Manage result using finish function
+                    let filesPath = [{ file: fileName, path: filePath }]; //FIXME: fix it if multiple selection implemented
+                    let status = true;
+                    let error = null;
+                    vpLog.display(VP_LOG_TYPE.DEVELOP, 'fileNavigation finished saving', filesPath, status, error);
+                    that.state.finish(filesPath, status, error);
+
+                    // cancel file navigation
+                    that.close();
+                }
+            });
+        }
+
         loadFileList() {
             this.renderNowLocation();
             this.renderFileList();
@@ -349,10 +394,14 @@ define([
             super.render();
             let that = this;
             /** Implement after rendering */
+            // if save mode
+            if (this.state.type == 'save') {
+                // render saving box
+                this.renderSaveBox();
+            }
 
             // get current path
             this.getCurrentDirectory().then(function(currentPath) {
-                vpLog.display(VP_LOG_TYPE.DEVELOP, 'currentPath: '+currentPath);
                 that.pathState.currentPath = currentPath;
                 that.makePaths(currentPath);
                 // get file list of current path
@@ -442,17 +491,22 @@ define([
             }
 
             //============================================================================
-            // Sending result using finish callback function
+            // Set selection result
             //============================================================================
-            // Manage result using finish function
-            let filesPath = [{ file: fileInput, path: pathInput }]; //FIXME: fix it if multiple selection implemented
-            let status = true;
-            let error = null;
-            vpLog.display(VP_LOG_TYPE.DEVELOP, 'fileNavigation finished', filesPath, status, error);
-            this.state.finish(filesPath, status, error);
-    
-            // remove and close file navigation
-            this.close();
+            if (this.state.type == 'save') {
+                // add as saving file
+                this.setSelectedFile(fileInput, pathInput);
+            } else {
+                // Manage result using finish function
+                let filesPath = [{ file: fileInput, path: pathInput }]; //FIXME: fix it if multiple selection implemented
+                let status = true;
+                let error = null;
+                vpLog.display(VP_LOG_TYPE.DEVELOP, 'fileNavigation finished', filesPath, status, error);
+                this.state.finish(filesPath, status, error);
+        
+                // remove and close file navigation
+                this.close();
+            }
         }
         getCurrentDirectory() {
             return vpKernel.getCurrentDirectory();
@@ -480,7 +534,6 @@ define([
             }
             // get file list using kernel
             return vpKernel.getFileList(destDir, useFunction).then(function(result) {
-                vpLog.display(VP_LOG_TYPE.DEVELOP, 'fileListStr: ', result);
                 /** Caution : if change code "$1" to '$1' as single quote, json parsing error occurs */
                 var jsonVars = result.replace(/'([^']+)': /g, `"$1": `);        // object front
                 jsonVars = jsonVars.replace(/: '([^']+)'([,}])/g, `: "$1"$2`);  // object back
@@ -661,7 +714,9 @@ define([
                 var notebookDir = this.pathState.notebookPath; //TEST:
                 // FIXME: if current path is upper than Jupyter Home, send no permission?
                 // currentRelativePathStr = currentDirStr.substring(this.getNotebookDir().length + 1, currentDirStr.length);
-                currentRelativePathStr = this.getRelativePath(notebookDir, currentDirStr);
+                // currentRelativePathStr = this.getRelativePath(notebookDir, currentDirStr);
+                var baseDir = this.pathState.baseDir;
+                currentRelativePathStr = this.getRelativePath(baseDir, currentDirStr);
             } else {
                 currentRelativePathStr = currentDirStr.substring(firstIndex, currentDirStr.length); 
             }
@@ -731,8 +786,15 @@ define([
         // Set states
         //============================================================================
 
-        setExtensions = function(arr) {
+        setExtensions(arr) {
             this.state.extensions = arr;
+        }
+
+        setSelectedFile(fileName, filePath) {
+            this.state.fileName = fileName;
+            this.state.filePath = filePath;
+
+            $(this.wrapSelector('#vp_fileNavigationInput')).val(fileName);
         }
     }
 

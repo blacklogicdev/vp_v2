@@ -197,6 +197,12 @@
         $(document).on('blur', '.vp-popup-frame input', function() {
             com_interface.enableOtherShortcut();
         });
+        $(document).on('focus', '#vp_fileNavigation input', function() {
+            com_interface.disableOtherShortcut();
+        });
+        $(document).on('blur', '#vp_fileNavigation input', function() {
+            com_interface.enableOtherShortcut();
+        });
         // textarea - hotkey control
         $(document).on('focus', com_util.wrapSelector('.vp-popup-frame textarea'), function() {
             com_interface.disableOtherShortcut();
