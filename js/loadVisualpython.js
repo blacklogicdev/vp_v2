@@ -29,8 +29,9 @@
     'vp_base/js/com/com_Config',
     'vp_base/js/com/com_Log',
     'vp_base/js/com/com_Kernel',
+    'vp_base/js/com/com_interface',
     'vp_base/js/MainFrame'
-], function (rootCss, com_Const, com_util, com_Config, com_Log, com_Kernel, MainFrame) {
+], function (rootCss, com_Const, com_util, com_Config, com_Log, com_Kernel, com_interface, MainFrame) {
     'use strict';
 
     //========================================================================
@@ -49,7 +50,7 @@
     // Require: Jupyter & events
     //========================================================================
     try {
-        // namespace 의 경우 specifed 체크. events 에 대한 예외 발생 가능할 것으로 예상.
+        // namespace's specified checking. events exception can occur
         // this will work in a live notebook because nbextensions & custom.js are loaded
         // by/after notebook.js, which requires base/js/namespace
         Jupyter = require('base/js/namespace');
@@ -86,7 +87,7 @@
     //========================================================================
     /**
      * Read dejault config
-     * TODO: 하드코딩이 아닌 file read 로 변경 되어야 할듯.
+     * FIXME: move it to com_Config
      */
     var _readDefaultConfig = function() {
         // default values for system-wide configurable parameters
@@ -98,9 +99,6 @@
         };
         // default values for per-notebook configurable parameters
         metadataSettings = {
-            nav_menu: {},
-            number_sections: true,
-            sideBar: true,
             base_numbering: 1,
             title_cell: 'VisualPython',
             title_sidebar: 'VisualPython',
@@ -110,7 +108,7 @@
             vp_window_display: false
         };
     
-        // 기본설정 병합
+        // merge default config
         $.extend(true, defaultConfig, metadataSettings);
         
         // vpPosition default also serves as the defaults for a non-live notebook
@@ -124,12 +122,12 @@
     }
 
     /**
-     * 메타 데이터 반영
-     * @param {*} key 설정 키
-     * @param {*} value 설정 값
+     * set metadta
+     * @param {*} key
+     * @param {*} value
      */
     var _setVpMetaData = function (key, value) {
-        // Jupyter Notebook 정상 로드된 경우
+        // Jupyter Notebook loaded
         if (liveNotebook) {
             var vpMetaData = Jupyter.notebook.metadata.vp;
             if (vpMetaData === undefined) {
@@ -145,11 +143,11 @@
     };
 
     /**
-     * 툴바 버튼 추가
-     * @param {defaultConfig} cfg 설정값
+     * Add toolbar button
+     * @param {defaultConfig} cfg configuration
      */
     var _addToolBarVpButton = function (cfg) {
-        // 툴바가 생성되기 전이라면 노트북앱 초기화 후 호출되도록 이벤트 바인딩
+        // Call notebookApp initialize event, if toolbar is not yet ready
         if (!Jupyter.toolbar) {
             events.on('app_initialized.NotebookApp', function (evt) {
                 _addToolBarVpButton(cfg);
@@ -157,7 +155,7 @@
             return;
         }
         
-        // 툴바 토글버튼이 존재하지 않으면 추가
+        // Add toolbar button, if it's not existing
         if ($('#' + com_Const.TOOLBAR_BTN_INFO.ID).length === 0) {
             $(Jupyter.toolbar.add_buttons_group([
                 Jupyter.keyboard_manager.actions.register({
@@ -174,8 +172,8 @@
     };
 
     /**
-     * vp 생성
-     * @param {defaultConfig} cfg 설정값
+     * Create vp
+     * @param {defaultConfig} cfg configuration
      * @param {*} st 
      */
     var _loadVpResource = function (cfg, st) {
@@ -186,26 +184,25 @@
         vpFrame.loadMainFrame();
 
         // TODO: hotkey control -> Implement under InputComponent or Event class
-        // hotkey 제어 input text 인 경우 포커스를 가지면 핫키 막고 잃으면 핫키 허용
-        $(document).on('focus', com_util.wrapSelector('input[type="text"]'), function() {
-            Jupyter.notebook.keyboard_manager.disable();
+        // input:text - hotkey control
+        $(document).on('focus', com_util.wrapSelector('input'), function() {
+            com_interface.disableOtherShortcut();
         });
-        $(document).on('blur', com_util.wrapSelector('input[type="text"]'), function() {
-            Jupyter.notebook.keyboard_manager.enable();
+        $(document).on('blur', com_util.wrapSelector('input'), function() {
+            com_interface.enableOtherShortcut();
         });
-        // minju: hotkey 제어 input number 인 경우 포커스를 가지면 핫키 막고 잃으면 핫키 허용
-        $(document).on('focus', com_util.wrapSelector('input[type="number"]'), function() {
-            Jupyter.notebook.keyboard_manager.disable();
+        $(document).on('focus', '.vp-popup-frame input', function() {
+            com_interface.disableOtherShortcut();
         });
-        $(document).on('blur', com_util.wrapSelector('input[type="number"]'), function() {
-            Jupyter.notebook.keyboard_manager.enable();
+        $(document).on('blur', '.vp-popup-frame input', function() {
+            com_interface.enableOtherShortcut();
         });
-        // minju: textarea용 - hotkey 제어 textarea 인 경우 포커스를 가지면 핫키 막고 잃으면 핫키 허용
-        $(document).on('focus', com_util.wrapSelector('textarea'+ ' .vp-popup-frame textarea'), function() {
-            Jupyter.notebook.keyboard_manager.disable();
+        // textarea - hotkey control
+        $(document).on('focus', com_util.wrapSelector('.vp-popup-frame textarea'), function() {
+            com_interface.disableOtherShortcut();
         });
-        $(document).on('blur', com_util.wrapSelector('textarea') + ' .vp-popup-frame textarea', function() {
-            Jupyter.notebook.keyboard_manager.enable();
+        $(document).on('blur', com_util.wrapSelector('.vp-popup-frame textarea'), function() {
+            com_interface.enableOtherShortcut();
         });
     };
 
@@ -305,6 +302,10 @@
         _readKernelFunction();
         _addToolBarVpButton(cfg);
         _loadVpResource(cfg);
+
+        if (cfg.vp_section_display && vpFrame) {
+            vpFrame.openVp();
+        }
     }
     
     //========================================================================

@@ -153,6 +153,13 @@ define([
             $('#notebook-container').css({ 'width': nbContainerWidth + 'px' });
         }
 
+        _getMenuGroupRootType(menu) {
+            // ex) visualpython - apps - frame
+            let path = menu.path;
+            let pathList = path.split(' - ');
+            return pathList[1];
+        }
+
         //========================================================================
         // External call function
         //========================================================================
@@ -188,6 +195,15 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp toggled');
         }
 
+        openVp() {
+            $('#vp_wrapper').show();
+
+            let vpWidth = $('#vp_wrapper')[0].clientWidth;
+            this._resizeNotebook(vpWidth);
+
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp opened');
+        }
+
         //========================================================================
         // Child components control function
         //========================================================================
@@ -206,32 +222,48 @@ define([
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Menu is not found (menu id: '+menuId+')');
                 return;
             }
-            // open component
-            require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                if (!OptionComponent) {
-                    vpLog.display(VP_LOG_TYPE.ERROR, 'Not implementd or available menu. (menu id: '+menuId+')');
-                    return;
-                }
-                // pass configuration inside state
-                let state = {
-                    ...menuState,
-                    config: menuConfig
-                }
-                let option = new OptionComponent(state);
-                if (blockType === 'block') {
-                    // add to block list
-                    that.addBlock(option, position);
-                } else {
-                    // add to task list
-                    that.addTask(option);
-                }
-                if (!background) {
-                    that.openPopup(option);
-                }
+            let menuGroupRootType = this._getMenuGroupRootType(menuConfig);
+            try {
+                // open component
+                require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
+                    that.callPoupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
+                }, function (err) {
+                    // if it's library menu, call LibraryComponent
+                    if (menuGroupRootType == 'library') {
+                        menuConfig.file = 'com/component/LibraryComponent'
+                        require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
+                            that.callPoupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
+                        });
+                    } else {
+                        vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
+                    }
+                });
+            } catch(err) {
+                ;
+            }
+        }
 
-            }, function (err) {
-                vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
-            });
+        callPoupComponent(blockType, OptionComponent, menuConfig, menuState, background, position) {
+            if (!OptionComponent) {
+                vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuId+')');
+                return;
+            }
+            // pass configuration inside state
+            let state = {
+                ...menuState,
+                config: menuConfig
+            }
+            let option = new OptionComponent(state);
+            if (blockType === 'block') {
+                // add to block list
+                this.addBlock(option, position);
+            } else {
+                // add to task list
+                this.addTask(option);
+            }
+            if (!background) {
+                this.openPopup(option);
+            }
         }
         
         /**
