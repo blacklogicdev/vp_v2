@@ -444,7 +444,10 @@ define([
             })
         }
         viewDepthInfo() {
-            this.state.viewDepthNumber = true;
+            this.state.viewDepthNumber = !this.state.viewDepthNumber;
+
+            // reloadBlockList
+            this.reloadBlockList();
         }
         clearBoard() {
             // TODO: alert before clearing

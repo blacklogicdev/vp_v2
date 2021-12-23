@@ -121,7 +121,8 @@ define([
                                 , isGroup?'vp-block-group':'', blockType, depth*BLOCK_PADDING);
             page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
             page.appendFormatLine('<div class="vp-block-left-holder"></div>');
-            page.appendFormatLine('<div class="vp-block-depth-info">{0}</div>', depth);
+            page.appendFormatLine('<div class="vp-block-depth-info" style="left: {0}px">{1}</div>'
+                                , depth*BLOCK_PADDING + BLOCK_PADDING, depth);
             page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', isGroup?'':'style="display:none;"', blockNumber);
             page.appendLine('</div>');
             return page.toString();
@@ -141,6 +142,12 @@ define([
             // if markdown, set its height to fit-content
             if (this.id == 'apps_markdown') {
                 $(this.wrapSelector()).addClass('vp-block-markdown');
+            }
+
+            // if viewDepthNumber, show it
+            let viewDepthNumber = this.prop.parent.state.viewDepthNumber;
+            if (this.depth > 0 && viewDepthNumber) {
+                $(this.wrapSelector('.vp-block-depth-info')).css({ opacity: 1 });
             }
         }
 
