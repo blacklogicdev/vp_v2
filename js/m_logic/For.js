@@ -61,6 +61,11 @@ define([
                 $('.vp-for-sub-box').hide();
                 $('.vp-sub-'+type).show();
             });
+
+            $(this.wrapSelector('#v7')).on('var_changed', function(evt) {
+                let value = evt.value;
+                that.state.v7 = value;
+            });
         }
 
         templateForBody() {
