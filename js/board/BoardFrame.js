@@ -53,7 +53,8 @@ define([
 
             // state
             this.state = {
-                viewDepthNumber: false
+                viewDepthNumber: false,
+                indentCount: 4
             }
 
             // temporary state
@@ -430,8 +431,11 @@ define([
             }
             let groupedBlocks = block.getGroupedBlocks();
             let code = new com_String();
-            groupedBlocks.forEach(groupBlock => {
-                code.appendLine(groupBlock.popup.generateCode());
+            let indentCount = this.state.indentCount;
+            groupedBlocks.forEach((groupBlock, idx) => {
+                let prevNewLine = idx > 0?'\n':'';
+                let indent = ' '.repeat(groupBlock.depth * indentCount);
+                code.appendFormat('{0}{1}{2}', prevNewLine, indent, groupBlock.popup.generateCode());
             });
             com_interface.insertCell('code', code.toString(), execute, block.blockNumber);
         }
