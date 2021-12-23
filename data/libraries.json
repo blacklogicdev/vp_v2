@@ -345,7 +345,7 @@
                                 "level": 1,
                                 "name" : "continue",
                                 "tag"  : "CONTINUE,LOGIC",
-                                "path" : "visualpython - logic - control - continue",
+                                "path" : "visualpython - logic - execute - continue",
                                 "desc" : "continue on loop",
                                 "file" : "m_logic/Continue"
                             },
@@ -355,7 +355,7 @@
                                 "level": 1,
                                 "name" : "break",
                                 "tag"  : "BREAK,LOGIC",
-                                "path" : "visualpython - logic - control - break",
+                                "path" : "visualpython - logic - execute - break",
                                 "desc" : "break on loop",
                                 "file" : "m_logic/Break"
                             },
@@ -365,7 +365,7 @@
                                 "level": 1,
                                 "name" : "pass",
                                 "tag"  : "PASS,LOGIC",
-                                "path" : "visualpython - logic - control - pass",
+                                "path" : "visualpython - logic - execute - pass",
                                 "desc" : "pass",
                                 "file" : "m_logic/Pass"
                             }

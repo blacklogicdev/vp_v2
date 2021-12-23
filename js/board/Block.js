@@ -137,6 +137,11 @@ define([
                 this.$target.find('.vp-menu-task-item').removeClass('vp-focus');
                 $(this.wrapSelector()).addClass('vp-focus');
             }
+
+            // if markdown, set its height to fit-content
+            if (this.id == 'apps_markdown') {
+                $(this.wrapSelector()).addClass('vp-block-markdown');
+            }
         }
 
         show() {
@@ -178,6 +183,10 @@ define([
             if (this._getMenuGroupRootType() == 'logic') {
                 header = this.task.generateCode();
             }
+            if (this.id == 'apps_markdown') {
+                header = this.task.getPreview();
+            }
+            this.state.header = header;
             return header;
         }
         get isGroup() {
@@ -205,6 +214,9 @@ define([
         }
         getGroupedBlocks() {
             return this.prop.parent.getGroupedBlocks(this);
+        }
+        setHeader(text) {
+            this.state.header = text;
         }
         /**
           * @param {int} blockNumber

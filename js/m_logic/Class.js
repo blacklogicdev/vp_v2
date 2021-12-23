@@ -33,7 +33,7 @@ define([
                 ...this.state
             }
             
-            this._addCodemirror('code');
+            this._addCodemirror('code', this.wrapSelector('#code'));
         }
 
         _bindEvent() {

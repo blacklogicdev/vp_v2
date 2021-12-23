@@ -139,6 +139,7 @@ define([
             let parent = this.prop.parent;
             let position = -1;
             let targetBlock = null;
+            let targetId = '';
             let groupedBlocks = null;
             let parentBlock = null;
             let depth = 0;
@@ -150,6 +151,8 @@ define([
                 placeholder: {
                     element: function(currentItem) {
                         let block = currentItem.data('block');
+                        let color = currentItem.data('color');
+                        targetId = currentItem.data('menu');
                         if (block) {
                             let tag = new com_String();
                             tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', block.getColorLabel());
@@ -159,7 +162,7 @@ define([
                         } else {
                             let header = currentItem.find('.vp-block-header').text();
                             let tag = new com_String();
-                            tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', '');
+                            tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', color);
                             tag.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
                             tag.appendLine('</div>');
                             return tag.toString();
@@ -197,12 +200,21 @@ define([
                         let befStart = rect.y;
                         let befRange = rect.y + rect.height;
                         let befDepth = befBlock.getChildDepth();
-                        if (currCursorY < befRange && befStart < currCursorY) {
+                        
+                        let isMarkdown = false; // if befBlock or thisBlock is markdown
+                        // check if thisBlock is markdown block or befBlock is markdown block
+                        if (targetId == 'apps_markdown' || (befBlock && befBlock.id == 'apps_markdown')) {
+                            isMarkdown = true;
+                        }
+
+                        if (!isMarkdown && currCursorY < befRange && befStart < currCursorY) {
+                            // sort as child of befBlock (except Markdown)
                             parentBlock = befBlock;
                             depth = befDepth;
                             ui.placeholder.removeClass('vp-block-group');
                             ui.placeholder.css({ 'padding-left': befDepth*BLOCK_PADDING + 'px'});
                         } else {
+                            // sort after befBlock
                             parentBlock = null;
                             if (!ui.placeholder.hasClass('vp-block-group')) {
                                 ui.placeholder.addClass('vp-block-group');
@@ -411,6 +423,11 @@ define([
             fileNavi.open();
         }
         runBlock(block, execute=true) {
+            if (block.id == 'apps_markdown') {
+                // if markdown, run single
+                block.popup.run();
+                return;
+            }
             let groupedBlocks = block.getGroupedBlocks();
             let code = new com_String();
             groupedBlocks.forEach(groupBlock => {
@@ -454,17 +471,81 @@ define([
             return createdBlock;
         }
 
-        addBlock(option, position=-1, isGroup=true) {
+        addBlock(option, position=-1, createChild=true) {
             let block = new Block(this, { task: option });
             option.setTaskItem(block);
             if (position < 0) {
                 // add to the end
                 this.blockList.push(block);
+                position = this.blockList.length;
             } else {
                 // add to specific position
                 this.blockList.splice(position, 0, block);
             }
+            if (createChild) {
+                this.createChildBlocks(block, position);
+            }
+            
             return block;
+        }
+
+        createChildBlocks(newBlock, position) {
+            let menuId = newBlock.id;
+            let childDepth = newBlock.getChildDepth();
+            let childBlocks = [];
+            switch (menuId) {
+                case 'lgDef_class':
+                    childBlocks = [
+                        { 
+                            id: 'lgDef_def', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth, 
+                                v1: '__init__', 
+                                v2: [{ param: 'self' }] 
+                            }
+                        }
+                    ]
+                    break;
+                case 'lgDef_def':
+                    childBlocks = [
+                        { 
+                            id: 'lgExe_code', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth
+                            }
+                        },
+                        { 
+                            id: 'lgCtrl_return', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth
+                            }
+                        }
+                    ]
+                    break;
+                case 'lgCtrl_for':
+                case 'lgCtrl_while':
+                case 'lgCtrl_if':
+                case 'lgCtrl_try':
+                    childBlocks = [
+                        { 
+                            id: 'lgCtrl_pass', 
+                            state: { 
+                                isGroup: false, 
+                                depth: childDepth
+                            }
+                        }
+                    ];
+                    break;
+            }
+
+            // create blocks
+            let that = this;
+            childBlocks.forEach((cfg, idx)=> {
+                that.prop.parent.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
+            });
         }
 
         removeBlock(blockToRemove) {
@@ -503,7 +584,6 @@ define([
         }
 
         copyBlock(block) {
-            // use tmpState.copy
             const blockIdx = this.blockList.indexOf(block);
             let groupedBlocks = block.getGroupedBlocks();
             let dupPosition = blockIdx + groupedBlocks.length;
@@ -516,7 +596,8 @@ define([
                     menuId: menuId,
                     menuState: JSON.parse(JSON.stringify(menuState)),
                     background: true,
-                    position: dupPosition + idx
+                    position: dupPosition + idx,
+                    createChild: false
                 });
             });
         }

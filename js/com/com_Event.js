@@ -47,7 +47,6 @@ define([], function() {
             this._globalEvent = [
                 {
                     method: 'click focus',
-                    selector: document,
                     operation: (evt) => {
                         var target = evt.target;
                         // Focus recognization
@@ -85,47 +84,13 @@ define([], function() {
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         // blockType: block/task / menuItem: menu id / menuState: saved state
-                        let { blockType, menuId, menuState, background, position } = evt;
-                        let defaultMenuState = {};
-                        // set menuState
-                        switch (menuId) {
-                            case 'lgCtrl_continue':
-                                menuId = 'lgExe_code';
-                                defaultMenuState['code'] = 'continue';
-                                break;
-                            case 'lgCtrl_break':
-                                menuId = 'lgExe_code';
-                                defaultMenuState['code'] = 'break';
-                                break;
-                            case 'lgCtrl_pass':
-                                menuId = 'lgExe_code';
-                                defaultMenuState['code'] = 'pass';
-                                break;
-                            case 'lgExe_lambda':
-                                menuId = 'lgExe_code';
-                                defaultMenuState['code'] = 'lambda x: x';
-                                break;
-                            case 'lgExe_print':
-                                menuId = 'lgExe_code';
-                                defaultMenuState['code'] = 'print()';
-                                break;
-                            case 'lgExe_comment':
-                                menuId = 'lgExe_code';
-                                defaultMenuState['code'] = '# Write down comments';
-                                break;
-                            default:
-                                break;
-                        }
-                        menuState = {
-                            ...defaultMenuState,
-                            ...menuState
-                        }
+                        let { blockType, menuId, menuState, background, position, createChild } = evt;
                         let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
                         if (blockType == 'task' && dupTask) {
                             // if duplicated, open its task
                             that.mainFrame.openPopup(dupTask);
                         } else {
-                            that.mainFrame.createPopup(blockType, menuId, menuState, background, position);
+                            that.mainFrame.createPopup(blockType, menuId, menuState, background, position, createChild);
                         }
                     }
                 },
@@ -219,7 +184,11 @@ define([], function() {
             var globalEvent = this._globalEvent;
             globalEvent.forEach(event => {
                 let { method, selector, operation } = event;
-                $(document).on(method, selector, operation);
+                if (selector != undefined) {
+                    $(document).on(method, selector, operation);
+                } else {
+                    $(document).on(method, operation);
+                }
             });
         }
 

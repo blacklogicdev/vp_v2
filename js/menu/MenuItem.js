@@ -108,7 +108,9 @@ define([
                 helper: function() {
                     let isApps = that.state.apps != undefined;
                     let helperTag = new com_String();
-                    helperTag.appendFormatLine('<div class="vp-block vp-draggable-helper {0}" style="z-index: 199;">', that._getColorClass(isApps));
+                    let colorClass = that.getColorLabel();
+                    helperTag.appendFormatLine('<div class="vp-block vp-draggable-helper {0}" style="z-index: 199;" data-color="{1}" data-menu="{2}">'
+                                            , colorClass, colorClass, that.state.id);
                     helperTag.appendFormatLine('<div class="vp-block-header">{0}</div>', that.state.name);
                     helperTag.appendLine('</div>');
                     return helperTag.toString();

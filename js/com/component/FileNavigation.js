@@ -29,6 +29,17 @@ define([
 
     /**
      * FileNavigation
+     * ------------------------------------------------------
+     * How to use: 
+     * // create file navigation
+     * let fileNavigation = new FileNavigation({ 
+     *          type: 'open', 
+     *          extensions: ['vp'], 
+     *          finish: function(filesPath, status, error) {
+     *              // Do something after selecting file
+     *          }});
+     * // open file navigation
+     * fileNavigation.open(); 
      */
     class FileNavigation extends Component {
         /**

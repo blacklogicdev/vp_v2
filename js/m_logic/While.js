@@ -1,16 +1,16 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : code.js
+ *    File Name       : While.js
  *    Author          : Black Logic
- *    Note            : Logic > code
+ *    Note            : Logic > while
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] code
+// [CLASS] While
 //============================================================================
 define([
     'vp_base/js/com/com_String',
@@ -18,9 +18,9 @@ define([
 ], function(com_String, PopupComponent) {
 
     /**
-     * Code
+     * While
      */
-    class Code extends PopupComponent {
+    class While extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -28,7 +28,6 @@ define([
             this.config.codeview = false;
 
             this.state = {
-                code: '',
                 ...this.state
             }
             
@@ -41,18 +40,14 @@ define([
         }
 
         templateForBody() {
-            /** Implement generating template */
-            var page = new com_String();
-            page.appendFormatLine('<textarea name="code" class="code vp-state" id="code">{0}</textarea>'
-                                , this.state.code);
-            return page.toString();
+            return '';
         }
 
         generateCode() {
-            return this.state.code;
+            return 'while():';
         }
 
     }
 
-    return Code;
+    return While;
 });

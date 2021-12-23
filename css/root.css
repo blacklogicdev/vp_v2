@@ -72,6 +72,9 @@ body {
     border: 0.25px solid var(--border-gray-color);
     box-sizing: border-box;
 }
+.vp-input::placeholder {
+	color: var(--gray-color);
+}
 
 .vp-file-browser-button {
 	width: 24px;
@@ -247,6 +250,12 @@ hr.vp-extra-menu-line {
 /* width style*/
 .wp100 {
     width: 100%;
+}
+.wp80 {
+    width: 80%;
+}
+.wp49 {
+    width: 49%;
 }
 .w100 {
     width: 100px;

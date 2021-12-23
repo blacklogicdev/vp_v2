@@ -72,6 +72,9 @@ define([
                                                 } else if (msg.content.data['text/html']) {
                                                     result = String(msg.content.data['text/html']);
                                                     type = 'text/html';
+                                                } else if (msg.content.data['image/png']) {
+                                                    result = String(msg.content.data['image/png']);
+                                                    type = 'image/png';
                                                 }
                                             }
                                             resolve(result, type);
@@ -194,6 +197,23 @@ define([
                 })
             });
         }
+        //====================================================================
+        // Image data 
+        //====================================================================
+        getImageFile(path) {
+            var that = this;
+            let code = com_util.formatString("_vp_get_image_by_path('{0}')", path);
+            return new Promise(function(resolve, reject) {
+                that.execute(code)
+                .then(function(result) {
+                    resolve(result);
+                }).catch(function(err) {
+                    // reject
+                    reject(err);
+                })
+            });
+        }
+
         //====================================================================
         // Write File 
         //====================================================================

@@ -214,7 +214,7 @@ define([
          * @param {String} menuId com_library
          * @param {Object} menuState { ...states to load }
          */
-        createPopup(blockType, menuId, menuState, background=false, position=-1) {
+        createPopup(blockType, menuId, menuState, background=false, position=-1, createChild=true) {
             let that = this;
             // get specific menu configuration
             let menuConfig = this.menuFrame.getMenuLibrary(menuId);
@@ -226,13 +226,13 @@ define([
             try {
                 // open component
                 require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                    that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
+                    that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild);
                 }, function (err) {
                     // if it's library menu, call LibraryComponent
                     if (menuGroupRootType == 'library') {
                         menuConfig.file = 'com/component/LibraryComponent'
                         require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                            that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position);
+                            that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild);
                         });
                     } else {
                         vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
@@ -243,7 +243,7 @@ define([
             }
         }
 
-        callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position) {
+        callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild=true) {
             if (!OptionComponent) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuId+')');
                 return;
@@ -256,8 +256,7 @@ define([
             let option = new OptionComponent(state);
             if (blockType === 'block') {
                 // add to block list
-                let newBlock = this.addBlock(option, position);
-                this.createChildBlocks(newBlock, position);
+                let newBlock = this.addBlock(option, position, createChild);
             } else {
                 // add to task list
                 this.addTask(option);
@@ -265,65 +264,6 @@ define([
             if (!background) {
                 this.openPopup(option);
             }
-        }
-
-        createChildBlocks(newBlock, position) {
-            let menuId = newBlock.id;
-            let childDepth = newBlock.getChildDepth();
-            let childBlocks = [];
-            switch (menuId) {
-                case 'lgDef_class':
-                    childBlocks = [
-                        { 
-                            id: 'lgDef_def', 
-                            state: { 
-                                isGroup: false, 
-                                depth: childDepth, 
-                                v1: '__init__', 
-                                v2: [{ param: 'self' }] 
-                            }
-                        }
-                    ]
-                    break;
-                case 'lgDef_def':
-                    childBlocks = [
-                        { 
-                            id: 'lgExe_code', 
-                            state: { 
-                                isGroup: false, 
-                                depth: childDepth
-                            }
-                        },
-                        { 
-                            id: 'lgCtrl_return', 
-                            state: { 
-                                isGroup: false, 
-                                depth: childDepth
-                            }
-                        }
-                    ]
-                    break;
-                case 'lgCtrl_for':
-                case 'lgCtrl_while':
-                case 'lgCtrl_if':
-                case 'lgCtrl_try':
-                    childBlocks = [
-                        { 
-                            id: 'lgCtrl_pass', 
-                            state: { 
-                                isGroup: false, 
-                                depth: childDepth
-                            }
-                        }
-                    ];
-                    break;
-            }
-
-            // create blocks
-            let that = this;
-            childBlocks.forEach((cfg, idx)=> {
-                that.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
-            });
         }
         
         /**
@@ -359,7 +299,8 @@ define([
          * @param {PopupComponent} component 
          */
         applyPopup(component) {
-            if (component.getTaskType() == 'task') {
+            let taskType = component.getTaskType();
+            if (taskType == 'task') {
                 // remove from taskBlockList
                 this.removeTask(component);
                 this.addBlock(component);
@@ -436,9 +377,9 @@ define([
             return null;
         }
 
-        addBlock(option, position=-1) {
+        addBlock(option, position=-1, createChild=true) {
             this._blockPopupList.push(option);
-            let newBlock = this.boardFrame.addBlock(option, position);
+            let newBlock = this.boardFrame.addBlock(option, position, createChild);
 
             // render board frame
             this.boardFrame.reloadBlockList();

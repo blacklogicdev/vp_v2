@@ -17,12 +17,12 @@ define([
         return Jupyter.notebook.get_selected_index();
     }
 
-    var insertCell = function(type, command, exec=true, sigNum=0) {
+    var insertCell = function(type, command, exec=true, sigNum=-1) {
         var selectedIndex = getSelectedCell();
         var targetCell = Jupyter.notebook.insert_cell_below(type, selectedIndex);
 
         // Add signature
-        if (type == 'code') {
+        if (type == 'code' && sigNum >= 0) {
             command = com_util.formatString('# VisualPython [{0}]\n', sigNum) + command
         }
         targetCell.set_text(command);
@@ -36,7 +36,6 @@ define([
                 default:
                     targetCell.execute();
             }
-            executed = true;
         }
         // move to executed cell
         Jupyter.notebook.scroll_to_cell(Jupyter.notebook.get_selected_index());

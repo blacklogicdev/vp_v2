@@ -1,7 +1,7 @@
 define([
     'vp_base/js/com/com_String',
     'vp_base/js/com/com_util',
-], function(sb, com_util) {
+], function(com_String, com_util) {
 
     const VP_VS_BOX = 'vp-vs-box';
     const VP_VS_DATA_TYPE = 'vp-vs-data-type';
@@ -81,7 +81,7 @@ define([
             return com_util.formatString('.{0} {1}', this.uuid, selector);
         }
         render(defaultType = this.defaultType, defaultValue = this.defaultValue) {
-            var tag = new sb.StringBuilder();
+            var tag = new com_String();
 
             // var selector box
             tag.appendFormatLine('<div class="{0} {1} {2}">', VP_VS_BOX, this.uuid, this.boxClass.join(' '));
@@ -138,7 +138,7 @@ define([
             });
         }
         renderVariableList(varList) {
-            var tag = new sb.StringBuilder();
+            var tag = new com_String();
             tag.appendFormatLine('<select class="{0} {1} {2}" {3}>', VP_VS_VARIABLES, 'vp-select m', this.varClass.join(' '),
                 this.state.selectedType == 'typing' ? 'style="display:none;"' : '');
             varList.forEach(vObj => {

@@ -50,6 +50,9 @@ define([
 
 
             this.config = {
+                sizeLevel: 0,          // 0: 400x400 / 1: 500x500 / 2: 600x500 / 3: 750x500
+                executeMode: 'code',   // cell execute mode
+                // show view box
                 codeview: true, 
                 dataview: true
             };
@@ -60,23 +63,6 @@ define([
                 depth: 0,
                 blockNumber: $('.vp-block.vp-block-group').length + 1,
                 ...this.state
-            };
-
-            this.cmReadonlyConfig = {
-                mode: {
-                    name: 'python',
-                    version: 3,
-                    singleLineStringErrors: false
-                },  // text-cell(markdown cell) set to 'htmlmixed'
-                height: '100%',
-                width: '100%',
-                indentUnit: 4,
-                matchBrackets: true,
-                readOnly: true,
-                autoRefresh: true,
-                theme: "ipython",
-                extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
-                scrollbarStyle: "null"
             };
 
             this.cmPythonConfig = {
@@ -94,6 +80,12 @@ define([
                 theme: "ipython",
                 extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
             }
+            this.cmReadonlyConfig = {
+                ...this.cmPythonConfig,
+                readOnly: true,
+                lineNumbers: false,
+                scrollbarStyle: "null"
+            }
 
             this.cmCodeview = null;
 
@@ -101,12 +93,14 @@ define([
         }
 
         /**
-         * 
-         * @param {String} className textarea class name
-         * @param {boolean} readonly 
+         * Add codemirror object
+         * @param {String} key stateKey
+         * @param {String} selector textarea class name
+         * @param {boolean} type code(python)/readonly/markdown
+         * @param {Object} etcOpt { events:[{key, callback}, ...] }
          */
-        _addCodemirror(className, readonly=false) {
-            this.cmCodeList.push({ class: className, selector: this.wrapSelector('.' + className), readonly: readonly, cm: null });
+        _addCodemirror(key, selector, type='code', etcOpt={}) {
+            this.cmCodeList.push({ key: key, selector: selector, type: type, cm: null, ...etcOpt });
         }
 
         /**
@@ -114,35 +108,12 @@ define([
          * @param {string} selector 
          */
         _bindCodemirror() {
-            let that = this;
             // codemirror editor (if available)
             for (let i = 0; i < this.cmCodeList.length; i++) {
                 let cmObj = this.cmCodeList[i];
                 if (cmObj.cm == null) {
-                    let targetTag = $(cmObj.selector);
-                    let cmConfig = cmObj.readonly? this.cmReadonlyConfig: this.cmPythonConfig;
-                    if (targetTag && targetTag.length > 0) {
-                        let cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
-                        if (cmCode) {
-                            cmObj.cm = cmCode;
-                        }
-                        // add class on text area
-                        $(cmObj.selector + ' + .CodeMirror').addClass('vp-writable-codemirror');
-                        cmCode.on('focus', function() {
-                            // disable other shortcuts
-                            com_interface.disableOtherShortcut();
-                        });
-                        cmCode.on('blur', function(instance, evt) {
-                            // enable other shortcuts
-                            com_interface.enableOtherShortcut();
-                            // instance = codemirror
-                            // save its code to textarea component
-                            instance.save();
-                            that.state[cmObj.class] = targetTag.val();
-                        });
-                    } else { 
-                        vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to bind codemirror. (selector: '+cmObj.selector+')');
-                    }
+                    let cm = this.initCodemirror(cmObj);
+                    cmObj.cm = cm;
                 }
             }
 
@@ -159,6 +130,61 @@ define([
             } else {
                 this.cmCodeview.refresh();
             }
+        }
+
+        /**
+         * Initialize codemirror
+         * @param {Object} cmObj { key, selector, type, ... }
+         */
+        initCodemirror(cmObj) {
+            let {key, selector, type, events} = cmObj;
+            let that = this;
+
+            let cmCode = null;
+            let targetTag = $(selector);
+            let cmConfig = this.cmPythonConfig;
+            if (type == 'readonly') {
+                cmConfig = {
+                    ...cmConfig,
+                    readOnly: true,
+                    lineNumbers: false,
+                    scrollbarStyle: "null"
+                }
+            } else if (type == 'markdown') {
+                cmConfig = {
+                    ...cmConfig,
+                    mode: 'markdown'
+                }
+            }
+            
+            if (targetTag && targetTag.length > 0) {
+                cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
+                if (cmCode) {
+                    // add class on text area
+                    $(selector + ' + .CodeMirror').addClass('vp-writable-codemirror');
+                    cmCode.on('focus', function() {
+                        // disable other shortcuts
+                        com_interface.disableOtherShortcut();
+                    });
+                    cmCode.on('blur', function(instance, evt) {
+                        // enable other shortcuts
+                        com_interface.enableOtherShortcut();
+                        // instance = codemirror
+                        // save its code to textarea component
+                        instance.save();
+                        that.state[key] = targetTag.val();
+                    });
+                    // bind events
+                    events && events.forEach(evObj => {
+                        cmCode.on(evObj.key, evObj.callback);
+                    });
+                    vpLog.display(VP_LOG_TYPE.DEVELOP, key, cmCode);
+                }
+            } else {
+                vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to bind codemirror. (selector: '+selector+')');
+            }
+
+            return cmCode;
         }
 
         _bindEvent() {
@@ -326,11 +352,29 @@ define([
         render(inplace=false) {
             super.render(inplace);
 
+            // codeview & dataview button hide/show
             if (!this.config.codeview) {
                 $(this.wrapSelector('.vp-popup-button[data-type="code"]')).hide();
-            }   
+            } 
             if (!this.config.dataview) {
                 $(this.wrapSelector('.vp-popup-button[data-type="data"]')).hide();
+            } else {
+                if (!this.config.codeview) {
+                    $(this.wrapSelector('.vp-popup-button[data-type="data"]')).css({left: '15px', top: '9px'});
+                }
+            }
+
+            // popup-frame size
+            switch (this.config.sizeLevel) {
+                case 1: 
+                    $(this.wrapSelector()).css({width: '500px', height: '500px'});
+                    break;
+                case 2: 
+                    $(this.wrapSelector()).css({width: '600px', height: '500px'});
+                    break;
+                case 3: 
+                    $(this.wrapSelector()).css({width: '750px', height: '500px'});
+                    break;
             }
 
             this._bindDraggable();
@@ -366,7 +410,14 @@ define([
         }
 
         run(execute=true) {
-            com_interface.insertCell('code', this.generateCode(), execute);
+            let mode = this.config.executeMode;
+            let blockNumber = -1;
+            // check if it's block
+            if (this.getTaskType() == 'block') {
+                let block = this.taskItem;
+                blockNumber = block.blockNumber;
+            }
+            com_interface.insertCell(mode, this.generateCode(), execute, blockNumber);
         }
 
         /**
@@ -466,6 +517,24 @@ define([
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).hide();
         }
 
+        //========================================================================
+        // Get / set
+        //========================================================================
+        getState() {
+            return this.state;
+        }
+
+        getCodemirror(key) {
+            let filteredCm = this.cmCodeList.filter(cmObj => cmObj.key == key);
+            if (filteredCm && filteredCm.length > 0) {
+                return filteredCm[0];
+            }
+            return null;
+        }
+
+        //========================================================================
+        // Control task item 
+        //========================================================================
         setTaskItem(taskItem) {
             this.taskItem = taskItem;
         }
@@ -474,7 +543,7 @@ define([
             if (this.taskItem.constructor.name == 'Block') {
                 return 'block';
             }
-            if (this.taskItem.constructor.name == 'Task') {
+            if (this.taskItem.constructor.name == 'TaskItem') {
                 return 'task';
             }
             return null;
@@ -482,10 +551,6 @@ define([
 
         removeBlock() {
             this.taskItem.removeItem();
-        }
-
-        getState() {
-            return this.state;
         }
     }
 

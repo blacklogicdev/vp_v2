@@ -1,16 +1,16 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : code.js
+ *    File Name       : Try.js
  *    Author          : Black Logic
- *    Note            : Logic > code
+ *    Note            : Logic > try
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] code
+// [CLASS] Try
 //============================================================================
 define([
     'vp_base/js/com/com_String',
@@ -18,9 +18,9 @@ define([
 ], function(com_String, PopupComponent) {
 
     /**
-     * Code
+     * Try
      */
-    class Code extends PopupComponent {
+    class Try extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -28,7 +28,6 @@ define([
             this.config.codeview = false;
 
             this.state = {
-                code: '',
                 ...this.state
             }
             
@@ -41,18 +40,14 @@ define([
         }
 
         templateForBody() {
-            /** Implement generating template */
-            var page = new com_String();
-            page.appendFormatLine('<textarea name="code" class="code vp-state" id="code">{0}</textarea>'
-                                , this.state.code);
-            return page.toString();
+            return '';
         }
 
         generateCode() {
-            return this.state.code;
+            return 'try:';
         }
 
     }
 
-    return Code;
+    return Try;
 });

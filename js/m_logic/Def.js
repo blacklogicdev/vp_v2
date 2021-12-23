@@ -33,7 +33,7 @@ define([
                 ...this.state
             }
             
-            this._addCodemirror('code');
+            this._addCodemirror('code', this.wrapSelector('#code'));
         }
 
         _bindEvent() {
@@ -44,6 +44,24 @@ define([
                 that.state.v2.push({ param: '', value: ''});
                 $(that.wrapSelector('.v2 tbody')).append(that.templateForList(that.state.v2.length, '', ''));
             });
+
+            // Delete param
+            $(document).on('click', this.wrapSelector('.v2-del'), function() {
+                let pos = $(this).closest('.v2-tr').index();
+                console.log('remove '+ pos);
+                $(that.wrapSelector('.v2-tr:nth('+pos+')')).remove();
+                that.state.v2.splice(pos, 1);
+
+                // re-numbering
+                $(that.wrapSelector('.v2-tr')).each((idx, tag) => {
+                    $(tag).find('th').text(idx + 1);
+                });
+            });
+        }
+
+        _unbindEvent() {
+            super._unbindEvent();
+            $(document).off('click', this.wrapSelector('.v2-del'));
         }
 
         saveState() {
@@ -76,6 +94,9 @@ define([
         }
 
         templateForList(idx, param, value) {
+            if (!value) {
+                value = '';
+            }
             var page = new com_String();
             page.appendFormatLine('<tr class="{0}">', 'v2-tr');
             page.appendFormatLine('<th>{0}</th>', idx);
@@ -84,6 +105,7 @@ define([
             page.appendLine('<td>=</td>');
             page.appendFormatLine('<td><input type="text" class="vp-input {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v2-value', value, 'Value');
+            page.appendFormatLine('<td class="{0} vp-cursor"><img src="/nbextensions/visualpython/img/close_big.svg"/></td>', 'v2-del');
             page.appendLine('</tr>');
             return page.toString();
         }
@@ -102,7 +124,7 @@ define([
                 }
                 parameters.push(param);
             });
-            return com_util.formatString('def {0}({1})', this.state.v1, parameters.join(', '));
+            return com_util.formatString('def {0}({1}):', this.state.v1, parameters.join(', '));
         }
 
     }

@@ -28,7 +28,7 @@ define([
             this.config.codeview = false;
 
             this.state = {
-                code: '',
+                code: 'continue',
                 ...this.state
             }
             

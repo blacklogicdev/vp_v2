@@ -28,7 +28,7 @@ define([
             this.config.codeview = false;
 
             this.state = {
-                code: '',
+                code: 'lambda x: x',
                 ...this.state
             }
             
