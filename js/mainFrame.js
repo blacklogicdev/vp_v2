@@ -245,7 +245,7 @@ define([
 
         callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild=true) {
             if (!OptionComponent) {
-                vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuId+')');
+                vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuConfig.id+')');
                 return;
             }
             // pass configuration inside state

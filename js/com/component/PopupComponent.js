@@ -118,17 +118,19 @@ define([
             }
 
             // code view
-            if (!this.cmCodeview) {
-                // codemirror setting
-                let selector = this.wrapSelector('.vp-popup-codeview-box textarea');
-                let textarea = $(selector);
-                if (textarea && textarea.length > 0) {
-                    this.cmCodeview = codemirror.fromTextArea(textarea[0], this.cmReadonlyConfig);
+            if (this.config.codeview) {
+                if (!this.cmCodeview) {
+                    // codemirror setting
+                    let selector = this.wrapSelector('.vp-popup-codeview-box textarea');
+                    let textarea = $(selector);
+                    if (textarea && textarea.length > 0) {
+                        this.cmCodeview = codemirror.fromTextArea(textarea[0], this.cmReadonlyConfig);
+                    } else {
+                        vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to create codemirror. (selector: '+selector+')');
+                    }
                 } else {
-                    vpLog.display(VP_LOG_TYPE.ERROR, 'No text area to create codemirror. (selector: '+selector+')');
+                    this.cmCodeview.refresh();
                 }
-            } else {
-                this.cmCodeview.refresh();
             }
         }
 
@@ -397,11 +399,10 @@ define([
         }
 
         load() {
-            this.loadState();
+            
         }
 
         loadState() {
-            $(this.wrapSelector())
             /** Implementation needed */
         }
 

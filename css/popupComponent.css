@@ -254,3 +254,9 @@
 	border: none;
 	box-sizing: border-box;
 }
+/* accordian for popup component */
+.vp-popup-frame .vp-accordian {
+    cursor: pointer;
+    height: 25px;
+    margin-top: 5px;
+}
