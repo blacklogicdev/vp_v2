@@ -383,7 +383,7 @@ define([
                     let selectedExt = $(that.wrapSelector('#vp_fileNavigationExt')).val();
                     let fileExtIdx = fileName.lastIndexOf('.');
                     // if no extension, add it
-                    if (fileExtIdx < 0 || fileName.substring(fileExtIdx) != selectedExt) {
+                    if (fileExtIdx < 0 || fileName.substring(fileExtIdx + 1) != selectedExt) {
                         fileName += '.' + selectedExt;
                     }
                     // no path, set it
@@ -391,7 +391,7 @@ define([
                         filePath = './' + fileName;
                     }
                     fileExtIdx = filePath.lastIndexOf('.');
-                    if (fileExtIdx < 0 || filePath.substring(fileExtIdx) != selectedExt) {
+                    if (fileExtIdx < 0 || filePath.substring(fileExtIdx + 1) != selectedExt) {
                         filePath += '.' + selectedExt;
                     }
 
