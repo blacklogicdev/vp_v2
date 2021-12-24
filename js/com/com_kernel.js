@@ -219,7 +219,7 @@ define([
         //====================================================================
         saveFile(fileName, filePath, saveData) {
             let that = this;
-            fetch(filePath + fileName).then(function(data) {
+            fetch(filePath).then(function(data) {
                 // overwrite confirmation
                 if (data.status == 200) {
                     if (!confirm(com_util.formatString("{0} already exists.\nDo you want to replace it?", fileName))) {

@@ -382,8 +382,17 @@ define([
                     let { fileName, filePath } = that.state;
                     let selectedExt = $(that.wrapSelector('#vp_fileNavigationExt')).val();
                     let fileExtIdx = fileName.lastIndexOf('.');
+                    // if no extension, add it
                     if (fileExtIdx < 0 || fileName.substring(fileExtIdx) != selectedExt) {
                         fileName += '.' + selectedExt;
+                    }
+                    // no path, set it
+                    if (filePath == '') {
+                        filePath = './' + fileName;
+                    }
+                    fileExtIdx = filePath.lastIndexOf('.');
+                    if (fileExtIdx < 0 || filePath.substring(fileExtIdx) != selectedExt) {
+                        filePath += '.' + selectedExt;
                     }
 
                     // Manage result using finish function
