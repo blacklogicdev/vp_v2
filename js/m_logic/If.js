@@ -51,7 +51,7 @@ define([
             // Delete param
             $(document).on('click', this.wrapSelector('.v1-del'), function() {
                 let pos = $(this).closest('.v1-tr').index();
-                console.log('remove '+ pos);
+
                 $(that.wrapSelector('.v1-tr:nth('+pos+')')).remove();
                 that.state.v1.splice(pos, 1);
 
@@ -155,7 +155,6 @@ define([
             this.saveState();
 
             let parameters = [];
-            console.log(this.state);
             let length = this.state.v1.length;
             this.state.v1.forEach((v, idx) => {
                 let value = v.value;
@@ -173,7 +172,6 @@ define([
                 }
                 parameters.push(line);
             });
-            console.log(parameters);
             return com_util.formatString('if({0}):', parameters.join(''));
         }
 

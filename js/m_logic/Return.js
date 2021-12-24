@@ -47,7 +47,7 @@ define([
             // Delete param
             $(document).on('click', this.wrapSelector('.v1-del'), function() {
                 let pos = $(this).closest('.v1-tr').index();
-                console.log('remove '+ pos);
+                
                 $(that.wrapSelector('.v1-tr:nth('+pos+')')).remove();
                 that.state.v1.splice(pos, 1);
 
