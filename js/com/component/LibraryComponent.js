@@ -49,8 +49,13 @@ define([
             // save change of vp-state component
             $(this.wrapSelector('.vp-state')).on('change', function() {
                 let id = $(this)[0].id;
-                that.package
+                let val = $(this).val();
+                that.state.id = val;
             });
+        }
+
+        loadState() {
+            
         }
 
         templateForBody() {

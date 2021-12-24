@@ -8,7 +8,7 @@ define([
     '$3': $2 '$1'
     */
     var PANDAS_FUNCTION = {
-        'pd001': {
+        'pdPdo_series': {
             id: 'Series',
             name: 'Series',
             library: 'pandas',
@@ -42,7 +42,7 @@ define([
                 }
             ]
         },
-        'pd002': {
+        'pdPdo_dataframe': {
             id: 'Dataframe',
             name: 'DataFrame',
             library: 'pandas',
@@ -76,7 +76,7 @@ define([
                 }
             ]
         },
-        'pd003': {
+        'pdPdo_index': {
             id: 'Index',
             name: 'Index',
             library: 'pandas',
@@ -319,7 +319,7 @@ define([
             variable: [
             ]
         },
-        'pd008': {
+        'pdFunc_merge': {
             id: 'merge',
             name: 'Merge',
             library: 'pandas',
@@ -433,7 +433,7 @@ define([
                 }
             ]
         },
-        'pd010': {
+        'pdFunc_concat': {
             id: 'concat',
             name: 'Concat',
             library: 'pandas',
@@ -491,7 +491,7 @@ define([
                 }
             ]
         },
-        'pd011': {
+        'pdSdt_sortByIndex': {
             id: 'sort_index',
             name: 'Sort By Index',
             library: 'pandas',
@@ -549,7 +549,7 @@ define([
                 }
             ]
         },
-        'pd012': {
+        'pdGrp_groupby': {
             id: 'groupby',
             name: 'Group By',
             library: 'pandas',
@@ -602,7 +602,7 @@ define([
                 }
             ]
         },
-        'pd013': {
+        'pdParr_period': {
             id: 'period',
             name: 'Period',
             library: 'pandas',
@@ -651,7 +651,7 @@ define([
                 }
             ]
         },
-        'pd014': {
+        'pdFunc_dropNA': {
             id: 'dropna',
             name: 'Drop NA',
             library: 'pandas',
@@ -704,7 +704,7 @@ define([
                 }
             ]
         },
-        'pd015': {
+        'pdFunc_fillNA': {
             id: 'fillna',
             name: 'Fill NA',
             library: 'pandas',
@@ -775,7 +775,7 @@ define([
                 }
             ]
         },
-        'pd016': {
+        'pdFunc_isDuplicated': {
             id: 'duplicated',
             name: 'Get Duplicates',
             library: 'pandas',
@@ -813,7 +813,7 @@ define([
                 }
             ]
         },
-        'pd017': {
+        'pdFunc_dropDuplicates': {
             id: 'drop_duplicates',
             name: 'Drop  Duplicates',
             library: 'pandas',
@@ -848,7 +848,7 @@ define([
                 }
             ]
         },
-        'pd018': {
+        'pdFunc_replace': {
             id: 'replace_scala',
             name: 'Scala Replace',
             library: 'pandas',
@@ -1062,7 +1062,7 @@ define([
                 }
             ]
         },
-        'pd022': {
+        'pdGrp_sum': {
             id: 'sum',
             name: 'Sum',
             library: 'pandas',
@@ -1110,7 +1110,7 @@ define([
                 }
             ]
         },
-        'pd023': {
+        'pdGrp_mean': {
             id: 'mean',
             name: 'Mean',
             library: 'pandas',
@@ -1158,7 +1158,7 @@ define([
                 }
             ]
         },
-        'pd024': {
+        'pdGrp_count': {
             id: 'count',
             name: 'Count',
             library: 'pandas',
@@ -1206,7 +1206,7 @@ define([
                 }
             ]
         },
-        'pd025': {
+        'pdGrp_max': {
             id: 'max',
             name: 'Max',
             library: 'pandas',
@@ -1254,7 +1254,7 @@ define([
                 }
             ]
         },
-        'pd026': {
+        'pdGrp_min': {
             id: 'min',
             name: 'Min',
             library: 'pandas',
@@ -1302,7 +1302,7 @@ define([
                 }
             ]
         },
-        'pd027': {
+        'pdGrp_median': {
             id: 'median',
             name: 'Median',
             library: 'pandas',
@@ -1361,7 +1361,7 @@ define([
                 }
             ]
         },
-        'pd028': {
+        'pdGrp_std': {
             id: 'std',
             name: 'Std',
             library: 'pandas',
@@ -1419,7 +1419,7 @@ define([
                 }
             ]
         },
-        'pd029': {
+        'pdGrp_quantile': {
             id: 'quantile',
             name: 'Quantile',
             library: 'pandas',
@@ -1478,7 +1478,7 @@ define([
                 }
             ]
         },
-        'pd030': {
+        'pdEdtRC_dropRowCol': {
             id: 'drop',
             name: 'Drop Row/Column',
             library: 'pandas',
@@ -1563,7 +1563,7 @@ define([
                 }
             ]
         },
-        'pd032': {
+        'pdSdt_sortByValues': {
             id: 'sort_values',
             name: 'Sort By Values',
             library: 'pandas',
@@ -1627,7 +1627,7 @@ define([
                 }
             ]
         },
-        'pd033': {
+        'pdFunc_isNull': {
             id: 'isnull',
             name: 'Is Null',
             library: 'pandas',
@@ -1653,7 +1653,7 @@ define([
             variable: [
             ]
         },
-        'pd034': {
+        'pdFunc_notNull': {
             id: 'notnull',
             name: 'Not Null',
             library: 'pandas',
@@ -1679,7 +1679,7 @@ define([
             variable: [
             ]
         },
-        'pd035': {
+        'pdIdt_transpose': {
             id: '.T',
             name: 'Transpose',
             library: 'pandas',
@@ -1703,7 +1703,7 @@ define([
                 }
             ]
         },
-        'pd036': {
+        'pdIdt_columns': {
             id: '.columns',
             name: 'Columns 조회',
             library: 'pandas',
@@ -1727,7 +1727,7 @@ define([
                 }
             ]
         },
-        'pd037': {
+        'pdIdt_index': {
             id: '.index',
             name: 'index 조회',
             library: 'pandas',
@@ -1751,7 +1751,7 @@ define([
                 }
             ]
         },
-        'pd038': {
+        'pdIdt_values': {
             id: '.values',
             name: 'Values 조회',
             library: 'pandas',
@@ -1977,7 +1977,7 @@ define([
                 }
             ]
         },
-        'pd047': {
+        'pdIdt_len': {
             id: 'len',
             name: '크기 조회',
             library: 'pandas',
@@ -2001,7 +2001,7 @@ define([
                 }
             ]
         },
-        'pd048': {
+        'pdIdt_unique': {
             id: 'unique',
             name: '고유값 조회',
             library: 'pandas',
@@ -2025,7 +2025,7 @@ define([
                 }
             ]
         },
-        'pd049': {
+        'pdIdt_valueCounts': {
             id: 'value_counts',
             name: '데이터 개수 조회',
             library: 'pandas',
@@ -2049,7 +2049,7 @@ define([
                 }
             ]
         },
-        'pd050': {
+        'pdIdt_info': {
             id: 'info',
             name: '기본 정보 조회',
             library: 'pandas',
@@ -2073,7 +2073,7 @@ define([
                 }
             ]
         },
-        'pd051': {
+        'pdIdt_describe': {
             id: 'describe',
             name: '기본 상세정보 조회',
             library: 'pandas',
@@ -2297,7 +2297,7 @@ define([
                 }
             ]
         },
-        'pd056': {
+        'pdEdtRC_insertColumn': {
             id: 'insert_column',
             name: 'Insert Column',
             library: 'pandas',
@@ -2376,7 +2376,7 @@ define([
             variable: [],
             output: []
         },
-        'pd058': {
+        'pdEdtRC_insertRow': {
             id: 'insert_row_loc',
             name: 'Insert Row Value',
             library: 'pandas',
@@ -2405,7 +2405,7 @@ define([
             variable: [],
             output: []
         },
-        'pd059': {
+        'pdGrp_groups': {
             id: '.groups',
             name: 'Groups',
             library: 'pandas',
@@ -2429,7 +2429,7 @@ define([
                 }
             ]
         },
-        'pd060': {
+        'pdFunc_reindex': {
             id: 'reindex',
             name: 'Reindex',
             library: 'pandas',
@@ -2486,7 +2486,7 @@ define([
                 }
             ]
         },
-        'pd061': {
+        'pdFunc_setIndex': {
             id: 'set_index',
             name: 'Set Index Values',
             library: 'pandas',
@@ -2538,7 +2538,7 @@ define([
                 }
             ]
         },
-        'pd062': {
+        'pdFunc_resetIndex': {
             id: 'reset_index',
             name: 'Reset Index Values',
             library: 'pandas',
@@ -2611,7 +2611,7 @@ define([
             variable: [],
             output: []  
         },
-        'pd064': {
+        'pdIdt_head': {
             id: 'head',
             name: 'Head',
             library: 'pandas',
@@ -2642,7 +2642,7 @@ define([
                 }
             ]
         },
-        'pd065': {
+        'pdIdt_tail': {
             id: 'tail',
             name: 'Tail',
             library: 'pandas',
@@ -2673,7 +2673,7 @@ define([
                 }
             ]
         },
-        'pd066': {
+        'pdIdt_take': {
             id: 'take',
             name: 'Take',
             library: 'pandas',
@@ -2935,7 +2935,7 @@ define([
                 },
             ]
         },
-        'pd075': {
+        'pdPdo_copy': {
             id: 'copy',
             name: 'copy',
             library: 'pandas',
@@ -3113,7 +3113,7 @@ define([
             variable: [
             ]
         },
-        'pd080': {
+        'pdFunc_combineFirst': {
             id: 'combine_first',
             name: 'Combine First',
             library: 'pandas',
@@ -3144,7 +3144,7 @@ define([
             ],
             variable: [ ]
         },
-        'pd081': {
+        'pdFunc_stack': {
             id: 'stack',
             name: 'Stack',
             library: 'pandas',
@@ -3182,7 +3182,7 @@ define([
                 }
             ]
         },
-        'pd082': {
+        'pdFunc_unstack': {
             id: 'unstack',
             name: 'Unstack',
             library: 'pandas',
@@ -3218,7 +3218,7 @@ define([
                 }
             ]
         },
-        'pd083': {
+        'pdFunc_pivot': {
             id: 'pivot',
             name: 'Pivot',
             library: 'pandas',
@@ -3258,7 +3258,7 @@ define([
                 }
             ]
         },
-        'pd084': {
+        'pdFunc_melt': {
             id: 'melt',
             name: 'Melt',
             library: 'pandas',
@@ -3844,7 +3844,7 @@ define([
             variable: [
             ]
         },
-        'pd097': {
+        'pdGrp_agg': {
             id: 'agg',
             name: 'Aggregation',
             library: 'pandas',
@@ -3924,7 +3924,7 @@ define([
                 }
             ]
         },
-        'pd099': {
+        'pdFunc_pivotTable': {
             id: 'pivot_table',
             name: 'Pivot Table',
             library: 'pandas',
@@ -4445,7 +4445,7 @@ define([
                 }
             ]
         },
-        'pd109': {
+        'pdParr_timestamp': {
             id: 'Timestamp',
             name: 'Timestamp',
             library: 'pandas',
@@ -4718,7 +4718,7 @@ define([
                 }
             ]
         },
-        'pd114': {
+        'pdParr_periodIndex': {
             id: 'PeriodIndex',
             name: 'PeriodIndex',
             library: 'pandas',
@@ -5381,7 +5381,7 @@ define([
                 }
             ]
         },
-        'pd127': {
+        'pdIdt_size': {
             id: 'size',
             name: 'Size', 
             library: 'pandas',
@@ -5404,7 +5404,7 @@ define([
                 }
             ]
         },
-        'pd128': {
+        'pdGrp_size': {
             id: 'groupby_size',
             name: 'Size',
             library: 'pandas',
