@@ -95,9 +95,9 @@ define([
             page.appendLine('<tbody><colgroup><col width="20px"><col width="100px"><col width="100px"><col width="100px"><col width="100px"><col width="30px"></colgroup>');
             this.state.v1.forEach((v, idx) => {
                 if (v.type == 'condition') {
-                    this.templateForList(idx + 1, v.value);
+                    page.appendLine(this.templateForList(idx + 1, v.value));
                 } else {
-                    this.templateForInput(idx + 1, v.value);
+                    page.appendLine(this.templateForInput(idx + 1, v.value));
                 }
             });
             page.appendLine('</tbody></table>');
@@ -172,7 +172,7 @@ define([
                 }
                 parameters.push(line);
             });
-            return com_util.formatString('if({0}):', parameters.join(''));
+            return com_util.formatString('if ({0}):', parameters.join(''));
         }
 
     }
