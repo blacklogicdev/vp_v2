@@ -217,6 +217,12 @@
 .vp-block.logic-control.vp-focus .vp-block-header {
     background-color: rgb(255, 207, 115);
 }
+.vp-block.library .vp-block-header {
+    background-color: rgb(249, 227, 214);
+}
+.vp-block.library.vp-focus .vp-block-header {
+    background-color: rgb(253, 177, 133);
+}
 
 /* markdown block style */
 .vp-block-markdown .vp-block-header {

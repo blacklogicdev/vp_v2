@@ -249,14 +249,16 @@ define([
                 return;
             }
             // pass configuration inside state
+            let taskState = menuState.taskState;
+            let blockState = menuState.blockState;
             let state = {
-                ...menuState,
+                ...taskState,
                 config: menuConfig
             }
             let option = new OptionComponent(state);
             if (blockType === 'block') {
                 // add to block list
-                let newBlock = this.addBlock(option, position, createChild);
+                let newBlock = this.addBlock(option, position, createChild, blockState);
             } else {
                 // add to task list
                 this.addTask(option);
@@ -377,9 +379,9 @@ define([
             return null;
         }
 
-        addBlock(option, position=-1, createChild=true) {
+        addBlock(option, position=-1, createChild=true, blockState={}) {
             this._blockPopupList.push(option);
-            let newBlock = this.boardFrame.addBlock(option, position, createChild);
+            let newBlock = this.boardFrame.addBlock(option, position, createChild, blockState);
 
             // render board frame
             this.boardFrame.reloadBlockList();

@@ -48,6 +48,14 @@ define([
         }
 
         _init() {
+            this.state = {
+                isGroup: true,
+                leftHolderHeight: 0,
+                depth: 0,
+                blockNumber: $('.vp-block.vp-block-group').length + 1,
+                ...this.state
+            }
+
             this.task = this.state.task;
             this.task.setTaskItem(this);
         }
@@ -197,13 +205,13 @@ define([
             return header;
         }
         get isGroup() {
-            return this.task.state.isGroup;
+            return this.state.isGroup;
         }
         get blockNumber() {
-            return this.task.state.blockNumber;
+            return this.state.blockNumber;
         }
         get depth() {
-            return this.task.state.depth;
+            return this.state.depth;
         }
         get popup() {
             return this.task;
@@ -214,7 +222,7 @@ define([
                 'lgDef_class', 'lgDef_def', 
                 'lgCtrl_for', 'lgCtrl_while', 'lgCtrl_if', 'lgCtrl_try'
             ];
-            if (innerList.includes(this.task.id)) {
+            if (innerList.includes(this.id)) {
                 return depth + 1;
             }
             return depth;
@@ -229,31 +237,46 @@ define([
           * @param {int} blockNumber
           */
         setNumber(blockNumber) {
-            this.task.state.blockNumber = blockNumber;
+            this.state.blockNumber = blockNumber;
         }
         /**
           */
         setGroupBlock() {
-            this.task.state.isGroup = true;
-            this.task.state.depth = 0;
+            this.state.isGroup = true;
+            this.state.depth = 0;
         }
         /**
          * Set block as child block of given block
          */
         setChildBlock(newDepth) {
-            this.task.state.isGroup = false;
-            this.task.state.depth = newDepth;
+            this.state.isGroup = false;
+            this.state.depth = newDepth;
         }
 
         //========================================================================
         // Block load/save
         //========================================================================
         toJson() {
-
+            let jsonBlock = {
+                isGroup: this.isGroup,
+                depth: this.depth,
+                blockNumber: this.blockNumber,
+                taskId: this.id,
+                taskState: this.task.getState()
+            };
+            return jsonBlock;
         }
 
         fromJson(jsonObject) {
-
+            let {
+                isGroup, depth, blockNumber, taskId, taskState
+            } = obj;
+            this.state = {
+                isGroup: isGroup,
+                depth: depth,
+                blockNumber: blockNumber,
+                ...taskState
+            };
         }
     }
 

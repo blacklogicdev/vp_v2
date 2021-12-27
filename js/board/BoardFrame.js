@@ -478,8 +478,8 @@ define([
             return createdBlock;
         }
 
-        addBlock(option, position=-1, createChild=true) {
-            let block = new Block(this, { task: option });
+        addBlock(option, position=-1, createChild=true, blockState={}) {
+            let block = new Block(this, { task: option, ...blockState });
             option.setTaskItem(block);
             if (position < 0) {
                 // add to the end
@@ -551,7 +551,7 @@ define([
             // create blocks
             let that = this;
             childBlocks.forEach((cfg, idx)=> {
-                that.prop.parent.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
+                that.prop.parent.createPopup('block', cfg.id, { blockState: cfg.state }, true, position + idx + 1);
             });
         }
 
@@ -635,14 +635,7 @@ define([
         blockToJson(blockList) {
             let result = [];
             blockList && blockList.forEach(block => {
-                let task = block.task;
-                let jsonBlock = {
-                    isGroup: block.isGroup,
-                    depth: block.depth,
-                    blockNumber: block.blockNumber,
-                    taskId: task.id,
-                    taskState: task.getState()
-                };
+                let jsonBlock = block.toJson();
                 result.push(jsonBlock);
             });
             return result;
@@ -655,10 +648,12 @@ define([
                     isGroup, depth, blockNumber, taskId, taskState
                 } = obj;
                 let state = {
-                    isGroup: isGroup,
-                    depth: depth,
-                    blockNumber: blockNumber,
-                    ...taskState
+                    taskState: taskState,
+                    blockState: {
+                        isGroup: isGroup,
+                        depth: depth,
+                        blockNumber: blockNumber
+                    }
                 };
                 parent.createPopup('block', taskId, state, true, idx, false);
             });
