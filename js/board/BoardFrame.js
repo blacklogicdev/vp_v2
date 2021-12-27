@@ -660,7 +660,7 @@ define([
                     blockNumber: blockNumber,
                     ...taskState
                 };
-                parent.createPopup('block', taskId, state, true, idx);
+                parent.createPopup('block', taskId, state, true, idx, false);
             });
         }
     } // class
