@@ -234,23 +234,51 @@ define([
             this.state.header = text;
         }
         /**
+         * Set block's blockNumber
           * @param {int} blockNumber
           */
         setNumber(blockNumber) {
             this.state.blockNumber = blockNumber;
         }
         /**
+         * Set block's depth
+         * @param {int} depth 
+         */
+        setDepth(depth) {
+            this.state.depth = depth;
+        }
+        /**
+         * Set block as group block
           */
         setGroupBlock() {
+            let depthDiff = 0 - this.state.depth;
             this.state.isGroup = true;
-            this.state.depth = 0;
+
+            // change grouped block's depth ( depth + 1 )
+            this.setGroupedBlocksState(block => { block.setDepth(block.depth + depthDiff)});
         }
         /**
          * Set block as child block of given block
          */
         setChildBlock(newDepth) {
+            let depthDiff = newDepth - this.state.depth;
             this.state.isGroup = false;
-            this.state.depth = newDepth;
+
+            // change grouped block's depth ( depth + 1 )
+            this.setGroupedBlocksState(block => { block.setDepth(block.depth + depthDiff)});
+        }
+
+        /**
+         * Set grouped blocks state using setter function
+         * Example:
+         *  block.setGroupedBlocksState(block => { block.setDepth(block.depth + 1)})
+         * @param {Function} setter 
+         */
+        setGroupedBlocksState(setter) {
+            let groupedBlocks = this.getGroupedBlocks();
+            groupedBlocks.forEach(block => {
+                setter(block);
+            });
         }
 
         //========================================================================

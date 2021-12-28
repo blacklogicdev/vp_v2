@@ -557,6 +557,7 @@ define([
 
         removeBlock(blockToRemove) {
             let that = this;
+            // remove grouped blocks
             let groupedBlocks = blockToRemove.getGroupedBlocks();
             groupedBlocks.forEach(block => {
                 const blockIdx = that.blockList.indexOf(block);
@@ -580,7 +581,7 @@ define([
                 this.blockList.splice(endIdx, 0, ...groupBlocks);
                 // move tag
                 if (parentBlock != null) {
-                    // set child
+                    // set this movingBlock as child of parentBlock
                     movingBlock.setChildBlock(parentBlock.getChildDepth());
                 } else {
                     // set group block
