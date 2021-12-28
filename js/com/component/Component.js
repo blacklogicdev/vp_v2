@@ -121,6 +121,10 @@ define([
         get uuid() {
             return this._uuid;
         }
+
+        getTag() {
+            return $(this.wrapSelector());
+        }
     }
 
     return Component;
