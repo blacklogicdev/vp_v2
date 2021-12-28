@@ -27,6 +27,7 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
+            this.config.sizeLevel = 1;
 
             this.state = {
                 v1: [],
@@ -120,7 +121,7 @@ define([
                                 , 'v1-i2', v.i2, 'Operator');
             page.appendFormatLine('<td><input type="text" class="vp-input w100 {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v1-i3', v.i3, 'Variable');
-            page.appendFormatLine('<td><select class="vp-select {0}">', 'v1-i4');
+            page.appendFormatLine('<td><select class="vp-select w100 {0}">', 'v1-i4');
             let operator2 = ['and', 'or'];
             operator2.forEach(op => {
                 page.appendFormatLine('<option value="{0}" {1}>{2}</option>', op, op == v.i4? 'selected': '', op);
@@ -140,7 +141,7 @@ define([
             page.appendFormatLine('<th>{0}</th>', idx);
             page.appendFormatLine('<td colspan="3"><input type="text" class="vp-input wp100 {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v1-i1', v.i1, 'Variable');
-            page.appendFormatLine('<td><select class="vp-select {0}">', 'v1-i4');
+            page.appendFormatLine('<td><select class="vp-select w100 {0}">', 'v1-i4');
             let operator2 = ['and', 'or'];
             operator2.forEach(op => {
                 page.appendFormatLine('<option value="{0}" {1}>{2}</option>', op, op == v.i4? 'selected': '', op);

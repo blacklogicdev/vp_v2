@@ -249,14 +249,14 @@ hr.vp-extra-menu-line {
 }
 /* width style*/
 .wp100 {
-    width: 100%;
+    width: 100% !important; 
 }
 .wp80 {
-    width: 80%;
+    width: 80% !important;
 }
 .wp49 {
-    width: 49%;
+    width: 49% !important;
 }
 .w100 {
-    width: 100px;
+    width: 100px !important;
 }
