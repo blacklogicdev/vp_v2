@@ -228,8 +228,8 @@
 .vp-block-markdown .vp-block-header {
     min-height: 25px;
     height: fit-content;
-    background: white !important;
-    border: 2px solid var(--gray-color);
+    background: rgb(200 200 200 / 17%) !important;
+    border: 2px solid transparent;
 }
 .vp-block-markdown.vp-focus .vp-block-header {
     border: 2px solid var(--highlight-color);
