@@ -75,10 +75,6 @@
     margin: 0px;
 }
 
-/* Common Style */
-.w100 { width: 100%; }
-.w90 { width: 90%; }
-
 /* Arrow Accordions */
 .vp-popup-frame .vp-option-page .vp-accordian-header {
     font-weight: bold;
