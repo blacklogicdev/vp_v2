@@ -48,21 +48,12 @@ define([
             this.name = this.state.config.name;
             this.path = this.state.config.path;
 
-
             this.config = {
                 sizeLevel: 0,          // 0: 400x400 / 1: 500x500 / 2: 600x500 / 3: 750x500
                 executeMode: 'code',   // cell execute mode
                 // show view box
                 codeview: true, 
                 dataview: true
-            };
-
-            this.state = {
-                isGroup: true,
-                leftHolderHeight: 0,
-                depth: 0,
-                blockNumber: $('.vp-block.vp-block-group').length + 1,
-                ...this.state
             };
 
             this.cmPythonConfig = {
@@ -222,7 +213,7 @@ define([
             $(document).on('change', this.wrapSelector('.vp-state'), function() {
                 let id = $(this)[0].id;
                 let tagName = $(this).prop('tagName'); // returns with UpperCase
-                let newValue = null;
+                let newValue = '';
                 switch(tagName) {
                     case 'INPUT':
                         let inputType = $(this).prop('type');
