@@ -242,7 +242,8 @@ define([
             let searchBox = new SuggestInput();
             searchBox.setComponentID('vp_menuSearchBox');
             searchBox.addClass('vp-input vp-menu-search-box');
-            searchBox.setPlaceholder('Search');
+            searchBox.setPlaceholder('Search libraries');
+            searchBox.setShowDefaultList(false);
             searchBox.setSuggestList(function () { return functionList; });
             searchBox.setSelectEvent(function (value) {
                 $(this.wrapSelector()).val(value);

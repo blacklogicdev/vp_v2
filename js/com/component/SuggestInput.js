@@ -21,6 +21,7 @@ define([
             this._suggestList = new Array();
             this._selectEvent = undefined;
             this._attributes = {};
+            this._showDefaultList = true;
         }
 
         render() {
@@ -62,6 +63,15 @@ define([
             this._suggestList = suggestList;
         }
         /**
+         * show default list
+         * - true: autocomplete.minLength to 0
+         * - false: autocomplete.minLength to 1
+         * @param {bool} showDefaultList 
+         */
+        setShowDefaultList(showDefaultList) {
+            this._showDefaultList = showDefaultList;
+        }
+        /**
          * Additional Class
          * @param {String} additionalClass
          */
@@ -94,6 +104,8 @@ define([
             var sbTagString = new com_String();
             var that = this;
 
+            let minLength = this._showDefaultList?0:1;
+
             // make attributes
             var attributes = Object.keys(this._attributes).map(key => key + '="' + this._attributes[key] + '"').join(" ");
 
@@ -106,7 +118,7 @@ define([
                 $(com_util.formatString(".{0}", that.uuid)).removeClass('suggest-input-uninit').addClass('suggest-input');
 
                 $(com_util.formatString(".{0}", that.uuid)).autocomplete({
-                    minLength: 0,
+                    minLength: minLength,
                     source: function (req, res) {
                         var srcList = typeof that._suggestList == "function" ? that._suggestList() : that._suggestList;
                         var returlList = new Array();
