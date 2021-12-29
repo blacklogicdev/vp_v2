@@ -53,8 +53,15 @@ define([
                 executeMode: 'code',   // cell execute mode
                 // show view box
                 codeview: true, 
-                dataview: true
+                dataview: true,
+                // show footer
+                footer: true,
+                position: { right: 10, top: 120 } 
             };
+
+            // check BoardFrame width and set initial position of popup
+            let boardWidth = $('#vp_boardFrame').width();
+            this.config.position.right = boardWidth + 10;
 
             this.cmPythonConfig = {
                 mode: {
@@ -351,20 +358,27 @@ define([
         render(inplace=false) {
             super.render(inplace);
 
+            let {codeview, dataview, footer, sizeLevel, position} = this.config;
+
             // codeview & dataview button hide/show
-            if (!this.config.codeview) {
+            if (!codeview) {
                 $(this.wrapSelector('.vp-popup-button[data-type="code"]')).hide();
             } 
-            if (!this.config.dataview) {
+            if (!dataview) {
                 $(this.wrapSelector('.vp-popup-button[data-type="data"]')).hide();
             } else {
-                if (!this.config.codeview) {
+                if (!codeview) {
                     $(this.wrapSelector('.vp-popup-button[data-type="data"]')).css({left: '15px', top: '9px'});
                 }
             }
 
+            // footer
+            if(!footer) {
+                $(this.wrapSelector('.vp-popup-footer')).hide();
+            }
+
             // popup-frame size
-            switch (this.config.sizeLevel) {
+            switch (sizeLevel) {
                 case 1: 
                     $(this.wrapSelector()).css({width: '500px', height: '500px'});
                     break;
@@ -375,6 +389,9 @@ define([
                     $(this.wrapSelector()).css({width: '750px', height: '500px'});
                     break;
             }
+
+            // position
+            $(this.wrapSelector()).css({ top: position.top, right: position.right });
 
             this._bindDraggable();
             this._bindResizable();
