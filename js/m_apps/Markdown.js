@@ -232,7 +232,8 @@ define([
             let {line, ch} = cm.getCursor();
 
             let that = this;
-            vpKernel.getImageFile(path).then(function(data) {
+            vpKernel.getImageFile(path).then(function(resultObj) {
+                let data = resultObj.result;
                 var imgResult = data["image/png"];
 
                 let imgVal = com_util.formatString("![{0}]({1})", path, path);

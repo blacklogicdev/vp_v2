@@ -77,7 +77,7 @@ define([
                                                     type = 'image/png';
                                                 }
                                             }
-                                            resolve(result, type);
+                                            resolve({result: result, type: type, msg: msg});
                                         }
                                     } catch(ex) {
                                         reject(ex);
@@ -100,9 +100,9 @@ define([
             
             var that = this;
             return new Promise(function(resolve, reject) {
-                that.execute(cmdSB.toString()).then(function(result, type) {
+                that.execute(cmdSB.toString()).then(function(resultObj) {
                     // resolve
-                    resolve(result, type);
+                    resolve(resultObj);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -114,8 +114,8 @@ define([
             var that = this;
             return new Promise(function(resolve, reject) {
                 that.execute(com_util.formatString('_vp_print(_vp_get_columns_list({0}))', dataframe))
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -127,8 +127,8 @@ define([
             var that = this;
             return new Promise(function(resolve, reject) {
                 that.execute(com_util.formatString('_vp_print(_vp_get_multi_columns_list([{0}]))', dataframeList.join(',')))
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -140,8 +140,8 @@ define([
             var that = this;
             return new Promise(function(resolve, reject) {
                 that.execute(com_util.formatString('_vp_print(_vp_get_rows_list({0}))', dataframe))
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -153,8 +153,8 @@ define([
             var that = this;
             return new Promise(function(resolve, reject) {
                 that.execute('_vp_print(_vp_get_profiling_list())')
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -169,8 +169,8 @@ define([
             var that = this;
             return new Promise(function(resolve, reject) {
                 that.execute('%pwd')
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj.result);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -189,8 +189,8 @@ define([
             var cmd = com_util.formatString('_vp_print(_vp_search_path({0}))', path);
             return new Promise(function(resolve, reject) {
                 that.execute(cmd)
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj.result);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -205,8 +205,8 @@ define([
             let code = com_util.formatString("_vp_get_image_by_path('{0}')", path);
             return new Promise(function(resolve, reject) {
                 that.execute(code)
-                .then(function(result) {
-                    resolve(result);
+                .then(function(resultObj) {
+                    resolve(resultObj);
                 }).catch(function(err) {
                     // reject
                     reject(err);
@@ -232,7 +232,7 @@ define([
                 sbfileSaveCmd.appendFormatLine('%%writefile "{0}"', filePath);
                 sbfileSaveCmd.appendLine(saveData);
                 
-                that.execute(sbfileSaveCmd.toString()).then(function(result) {
+                that.execute(sbfileSaveCmd.toString()).then(function(resultObj) {
                     com_util.renderSuccessMessage('Successfully saved file. (' + fileName + ')');
                 }).catch(function(err) {
                     com_util.renderAlertModal("Couldn't save file. "+err.message);

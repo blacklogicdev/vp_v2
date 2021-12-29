@@ -378,7 +378,8 @@ define([
                             return;
                         }
                 
-                        file.text().then(function(data) {
+                        file.text().then(function(resultObj) {
+                            let data = resultObj.result;
                             // var parsedData = decodeURIComponent(data);
                             var jsonList = JSON.parse(data);
                             // load blocks

@@ -193,7 +193,8 @@ define([
             types = types.concat(GROUPBY_TYPES);
         }
 
-        vpKernel.getDataList(types).then((result, type) => {
+        vpKernel.getDataList(types).then((resultObj) => {
+            let { result, type, msg } = resultObj;
             var varList = JSON.parse(result);
             varList = varList.map(function(v) {
                 return { label: v.varName + ' (' + v.varType + ')', value: v.varName, dtype: v.varType };
@@ -236,7 +237,8 @@ define([
             types = types.concat(GROUPBY_TYPES);
         }
 
-        vpKernel.getDataList(types).then(function(result, type) {
+        vpKernel.getDataList(types).then(function(resultObj) {
+            let { result, type, msg } = resultObj;
             var jsonVars = result.replace(/'/gi, `"`);
             var varList = JSON.parse(jsonVars);
             
@@ -448,8 +450,9 @@ define([
             return ;
         }
         // get result and show on detail box
-        vpKernel.getColumnList(varName).then(function(result, type) {
+        vpKernel.getColumnList(varName).then(function(resultObj) {
             try {
+                let { result, type, msg } = resultObj;
                 var varResult = JSON.parse(result);
     
                 if (varResult.length > 0) {

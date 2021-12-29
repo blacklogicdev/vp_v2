@@ -36,8 +36,8 @@ define([
                 var target = evt.target;
                 if ($(that.wrapSelector()).find(target).length > 0) {
                     // Sample : getDataList from Kernel
-                    vpKernel.getDataList().then(function(result, type) {
-                        vpLog.display(VP_LOG_TYPE.DEVELOP, result);
+                    vpKernel.getDataList().then(function(resultObj) {
+                        vpLog.display(VP_LOG_TYPE.DEVELOP, resultObj);
                     }).catch(function(err) {
                         vpLog.display(VP_LOG_TYPE.DEVELOP, err);
                     });

@@ -126,8 +126,9 @@ define([
             var that = this;
             // load using kernel
             var dataTypes = this.showOthers ? [] : this.dataTypes;
-            vpKernel.getDataList(dataTypes).then(function (result) {
+            vpKernel.getDataList(dataTypes).then(function (resultObj) {
                 try {
+                    let { result, type, msg } = resultObj;
                     var varList = JSON.parse(result);
                     that.state.varList = varList;
                     // render variable list
