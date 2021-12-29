@@ -470,6 +470,12 @@ define([
         viewDepthInfo() {
             this.state.viewDepthNumber = !this.state.viewDepthNumber;
 
+            if (this.state.viewDepthNumber) {
+                $(this.wrapSelector('.vp-board-header-button-inner li[data-menu="view-depth"]')).text('Hide Depth Number');
+            } else {
+                $(this.wrapSelector('.vp-board-header-button-inner li[data-menu="view-depth"]')).text('View Depth Number');
+            }
+
             // reloadBlockList
             this.reloadBlockList();
         }
