@@ -671,6 +671,12 @@ define([
             return this.blockList[groupBlockIdx];
         }
 
+        blurAllblock() {
+            this.blockList.forEach(block => {
+                block.blurItem();
+            });
+        }
+
         //========================================================================
         // Block save/load
         //========================================================================

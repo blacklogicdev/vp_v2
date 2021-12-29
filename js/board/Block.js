@@ -58,6 +58,8 @@ define([
 
             this.task = this.state.task;
             this.task.setTaskItem(this);
+
+            this.classes = [];
         }
 
         _bindEvent() {
@@ -127,10 +129,11 @@ define([
             let isGroup = this.isGroup;
             let depth = this.depth;
             let blockNumber = this.blockNumber;
+            let addedClass = this.classes.join(' ');
 
             var page = new com_String();
-            page.appendFormatLine('<div class="vp-block {0} {1}" style="padding-left: {2}px" >'
-                                , isGroup?'vp-block-group':'', blockType, depth*BLOCK_PADDING);
+            page.appendFormatLine('<div class="vp-block {0} {1} {2}" style="padding-left: {3}px" >'
+                                , isGroup?'vp-block-group':'', blockType, addedClass, depth*BLOCK_PADDING);
             page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
             page.appendFormatLine('<div class="vp-block-left-holder"></div>');
             page.appendFormatLine('<div class="vp-block-depth-info" style="left: {0}px">{1}</div>'
@@ -151,8 +154,7 @@ define([
 
             // emphasize it if its task is visible
             if (!this.task.isHidden()) {
-                this.$target.find('.vp-menu-task-item').removeClass('vp-focus');
-                $(this.wrapSelector()).addClass('vp-focus');
+                this.focusItem();
             }
 
             // if markdown, set its height to fit-content
@@ -176,9 +178,9 @@ define([
         }
 
         focusItem() {
-            this.$target.find('.vp-block').removeClass('vp-focus');
-            this.$target.find('.vp-block').removeClass('vp-focus-child');
+            this.prop.parent.blurAllblock();
             $(this.wrapSelector()).addClass('vp-focus');
+            this.addClass('vp-focus');
 
             this.getGroupedBlocks().forEach(block => {
                 block.focusChild();
@@ -186,21 +188,34 @@ define([
         }
         
         blurItem() {
+            this.classes = [];
             $(this.wrapSelector()).removeClass('vp-focus');
             $('.vp-block').removeClass('vp-focus-child');
         }
         
         focusChild() {
             $(this.wrapSelector()).addClass('vp-focus-child');
+            this.addClass('vp-focus-child');
         }
 
         blurChild() {
             $(this.wrapSelector()).removeClass('vp-focus-child');
+            this.removeClass('vp-focus-child');
         }
 
         removeItem() {
             $(this.wrapSelector()).remove();
         }
+
+        addClass(className) {
+            this.classes.push(className);
+        }
+
+        removeClass(className) {
+            let idx = this.classes.indexOf(className);
+            this.classes.splice(idx, 1);
+        }
+
         //========================================================================
         // Get Set methods
         //========================================================================
