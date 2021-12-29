@@ -73,18 +73,18 @@ define([
                 if (isSorting) {
                     return;
                 }
-                let isOpen = $(this).hasClass('vp-focus');
+                let isOpen = $(that.wrapSelector()).hasClass('vp-focus');
                 if (isOpen) {
                     // hide task if it's already opened
-                    $(this).removeClass('vp-focus');
+                    $(that.wrapSelector()).removeClass('vp-focus');
                     // close task
                     $('#vp_wrapper').trigger({
                         type: 'close_option_page'
                     });
                 } else {
                     // open task
-                    $('.vp-block').removeClass('vp-focus');
-                    $(this).addClass('vp-focus');
+                    $('.vp-block').removeClass('vp-focus');      // remove focus of all blocks
+                    $(that.wrapSelector()).addClass('vp-focus'); // add focus on this block
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page',
                         component: that.task

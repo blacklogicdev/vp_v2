@@ -355,8 +355,10 @@ define([
          * Hide all PopupComponent
          */
         hideAllPopup() {
-            let taskPopupList = this.taskPopupList;
-            taskPopupList.forEach(task => {
+            this.taskPopupList.forEach(task => {
+                task.hide();
+            });
+            this.blockPopupList.forEach(task => {
                 task.hide();
             });
         }
