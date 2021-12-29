@@ -102,8 +102,8 @@ define([
             $(this.wrapSelector()).draggable({
                 containment: '#vp_wrapper',
                 appendTo: '.vp-board-body',
-                revert: 'invalid',
-                cursor: 'pointer',
+                revert: true,
+                cursor: 'move',
                 connectToSortable: '.vp-board-body',
                 helper: function() {
                     let isApps = that.state.apps != undefined;
@@ -116,13 +116,17 @@ define([
                     return helperTag.toString();
                 },
                 start: function(event, ui) {
-                    ui.helper.hide();
+                    // ui.helper.hide();
+                    $(ui.helper).css('z-index', 200);
                 },
                 stop: function(event, ui) {
                     let position = ui.helper.index();
-                    // remove helper
-                    if (ui.helper) {
-                        ui.helper.remove();
+                    
+                    let leftPosStr = $(ui.helper).css('left');
+                    let leftPos = parseInt(leftPosStr.substr(0, leftPosStr.length - 2));
+                    if (leftPos < 0) {
+                        // out of board
+                        return;
                     }
 
                     $('#vp_wrapper').trigger({

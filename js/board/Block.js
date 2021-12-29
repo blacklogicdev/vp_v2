@@ -125,7 +125,7 @@ define([
             let blockNumber = this.blockNumber;
 
             var page = new com_String();
-            page.appendFormatLine('<div class="vp-block {0} {1}" style="padding-left: {2}px">'
+            page.appendFormatLine('<div class="vp-block {0} {1}" style="padding-left: {2}px" >'
                                 , isGroup?'vp-block-group':'', blockType, depth*BLOCK_PADDING);
             page.appendFormatLine('<div class="vp-block-header">{0}</div>', header);
             page.appendFormatLine('<div class="vp-block-left-holder"></div>');
@@ -140,6 +140,9 @@ define([
             super.render();
 
             $(this.wrapSelector()).data('block', this);
+            $(this.wrapSelector()).data('color', this.blockType);
+            $(this.wrapSelector()).data('name', this.name);
+            $(this.wrapSelector()).data('menu', this.id);
 
             // emphasize it if its task is visible
             if (!this.task.isHidden()) {
@@ -226,6 +229,12 @@ define([
                 return depth + 1;
             }
             return depth;
+        }
+        /**
+         * Get head group block of this group
+         */
+        getGroupBlock() {
+            return this.prop.parent.getGroupBlock(this);
         }
         getGroupedBlocks() {
             return this.prop.parent.getGroupedBlocks(this);

@@ -235,6 +235,16 @@
     border: 2px solid var(--highlight-color);
 }
 
+/* block sortable style */
+.vp-sortable-placeholder .vp-block-header {
+    opacity: 0.6;
+}
+.vp-sortable-helper {
+    width: fit-content !important;
+    margin-left: 30px;
+    padding: 1px 10px;
+}
+
 /* block menu */
 .vp-block-menu-box {
     position: fixed;

@@ -210,14 +210,14 @@
 }
 /* MenuItem - Logic */
 .vp-menuitem.logic-define {
-    background-color: rgb(138, 214, 176);
+    background-color: rgb(213, 231, 222);
 }
 .vp-menuitem.logic-control {
-    background-color: rgb(255, 207, 115);
+    background-color: rgb(253, 239, 221);
 }
 /* MenuItem - Library */
 .vp-menuitem.library {
-    background-color: rgb(253, 177, 133);
+    background-color: rgb(249, 227, 214);
 }
 
 /* Task Bar */

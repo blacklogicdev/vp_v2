@@ -149,6 +149,15 @@ define([
                 axis: 'y',
                 scroll: true,
                 revert: false,
+                cursor: 'move',
+                helper: function(evt, currentItem) {
+                    let header = currentItem.data('name');
+                    let tag = new com_String();
+                    tag.appendLine('<div class="vp-sortable-helper" style="z-index: 199;">');
+                    tag.appendFormatLine('<div>{0}</div>', header);
+                    tag.appendLine('</div>');
+                    return tag.toString();
+                },
                 placeholder: {
                     element: function(currentItem) {
                         let block = currentItem.data('block');
@@ -157,7 +166,7 @@ define([
                         if (block) {
                             let tag = new com_String();
                             tag.appendFormatLine('<div class="vp-block vp-block-group vp-sortable-placeholder {0}" style="z-index: 199;">', block.getColorLabel());
-                            tag.appendFormatLine('<div class="vp-block-header">{0}</div>', block.header);
+                            tag.appendFormatLine('<div class="vp-block-header">{0}</div>', block.name);
                             tag.appendLine('</div>');
                             return tag.toString();
                         } else {
@@ -178,15 +187,14 @@ define([
                 start: function(evt, ui) {
                     position = ui.item.index();
                     targetBlock = that.blockList[position];
-                    // hide original item
-                    // ui.item.hide();
-                    // hide grouped item
                     if (targetBlock) {
+                        // hide grouped item
                         groupedBlocks = targetBlock.getGroupedBlocks();
                         groupedBlocks.forEach(block => {
                             block.hide();
                         });
                     } else {
+                        // hide original item
                         ui.item.hide();
                     }
                 },
@@ -194,6 +202,11 @@ define([
                     let tmpPos = ui.placeholder.index();
                     let currCursorX = evt.clientX; 
                     let currCursorY = evt.clientY; 
+
+                    if (position < tmpPos && groupedBlocks) {
+                        tmpPos += (1 - groupedBlocks.length);
+                    }
+
                     let befBlockTag = $('.vp-block:not(.vp-draggable-helper):not(.vp-sortable-placeholder):nth('+(tmpPos - 1)+')');
                     if (befBlockTag && befBlockTag.length > 0) {
                         let befBlock = befBlockTag.data('block');
@@ -206,6 +219,15 @@ define([
                         // check if thisBlock is markdown block or befBlock is markdown block
                         if (targetId == 'apps_markdown' || (befBlock && befBlock.id == 'apps_markdown')) {
                             isMarkdown = true;
+                        }
+                        
+                        if (isMarkdown) {
+                            let befGroupedBlocks = befBlock.getGroupedBlocks();
+                            let befGroupLastBlock = befGroupedBlocks[befGroupedBlocks.length - 1]; // last block of previous group
+                            if (!befBlock.equals(befGroupLastBlock)) {
+                                ui.placeholder.insertAfter(befGroupLastBlock.getTag());
+                                return;
+                            }
                         }
 
                         if (!isMarkdown && currCursorY < befRange && befStart < currCursorY) {
@@ -223,7 +245,6 @@ define([
                             ui.placeholder.css({ 'padding-left': 0});
                             depth = 0;
                         }
-
                     }
                 },
                 stop: function(evt, ui) {
@@ -243,14 +264,13 @@ define([
                         }
                     }
 
-                    // show original item
-                    // ui.item.show();
-                    // show grouped block
                     if (targetBlock && groupedBlocks) {
+                        // show grouped block
                         groupedBlocks.forEach(block => {
                             block.show();
                         });
                     } else {
+                        // show original item
                         ui.item.show();
                     }
                 }
@@ -628,6 +648,21 @@ define([
             // grouped blocks (include this parentBlock)
             let groupedBlocks = this.blockList.slice(parentIdx, nextGroupIdx);
             return groupedBlocks;
+        }
+
+        getGroupBlock(thisBlock) {
+            if (thisBlock.isGroup) {
+                return thisBlock;
+            }
+
+            let groupBlockIdx = this.blockList.indexOf(thisBlock) - 1;
+            while (groupBlockIdx > 0) {
+                if (this.blockList[groupBlockIdx].isGroup) {
+                    break;
+                }
+                groupBlockIdx--;
+            }
+            return this.blockList[groupBlockIdx];
         }
 
         //========================================================================
