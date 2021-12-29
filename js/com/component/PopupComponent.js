@@ -186,20 +186,24 @@ define([
             $(this.wrapSelector('.vp-popup-close')).on('click', function(evt) {
                 if (that.getTaskType() === 'task') {
                     $('#vp_wrapper').trigger({
-                        type: 'close_option_page',
+                        type: 'remove_option_page',
                         component: that
                     });
                 } else {
                     // if it's block, just hide it
-                    that.hide();
-                    evt.stopPropagation();
+                    $('#vp_wrapper').trigger({
+                        type: 'close_option_page',
+                        component: that
+                    });
                 }
             });
             // Toggle operation (minimize)
             $(this.wrapSelector('.vp-popup-toggle')).on('click', function(evt) {
                 // that.toggle();
-                that.hide();
-                evt.stopPropagation();
+                $('#vp_wrapper').trigger({
+                    type: 'close_option_page',
+                    component: that
+                });
             });
             // Focus recognization
             $(this.wrapSelector()).on('click', function() {
@@ -251,13 +255,15 @@ define([
                     case 'cancel':
                         if (that.getTaskType() === 'task') {
                             $('#vp_wrapper').trigger({
-                                type: 'close_option_page',
+                                type: 'remove_option_page',
                                 component: that
                             });
                         } else {
                             // if it's block, just hide it
-                            that.hide();
-                            evt.stopPropagation();
+                            $('#vp_wrapper').trigger({
+                                type: 'close_option_page',
+                                component: that
+                            });
                         }
                         break;
                     case 'run':

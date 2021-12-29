@@ -59,21 +59,22 @@
 }
 .vp-popup-toggle {
     position: absolute;
-    width: 30px;
+    width: 20px;
     height: 20px;
     top: 4px;
-    right: 23px;
+    right: 28px;
     z-index: 3;
     line-height: 20px;
     text-align: center;
     cursor: pointer;
+    color: var(--gray-color);
 }
 .vp-popup-close {
     position: absolute;
-    width: 30px;
+    width: 20px;
     height: 20px;
     top: 4px;
-    right: 1px;
+    right: 5px;
     z-index: 3;
     line-height: 20px;
     text-align: center;
