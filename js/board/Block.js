@@ -62,8 +62,13 @@ define([
 
         _bindEvent() {
             let that = this;
+            // hover run button click event
+            $(this.wrapSelector('.vp-block-num-info')).on('click', function(evt) {
+                // run popup
+                that.prop.parent.runBlock(that);
+            });
             // click event - emphasize TaskItem & open/hide PopupComponent
-            $(this.wrapSelector()).on('click', function(evt) {
+            $(this.wrapSelector('.vp-block-header')).on('click', function(evt) {
                 let isSorting = $(this).hasClass('ui-sortable-helper');
                 if (isSorting) {
                     return;
@@ -131,7 +136,8 @@ define([
             page.appendFormatLine('<div class="vp-block-left-holder"></div>');
             page.appendFormatLine('<div class="vp-block-depth-info" style="left: {0}px">{1}</div>'
                                 , depth*BLOCK_PADDING + BLOCK_PADDING, depth);
-            page.appendFormatLine('<div class="vp-block-num-info" {0}>{1}</div>', isGroup?'':'style="display:none;"', blockNumber);
+            page.appendFormatLine('<div class="vp-block-num-info" {0} title="{1}">{2}</div>'
+                                , isGroup?'':'style="display:none;"', 'Run this group', blockNumber);
             page.appendLine('</div>');
             return page.toString();
         }
