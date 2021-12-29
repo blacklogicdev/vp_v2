@@ -76,15 +76,14 @@ define([
                 let isOpen = $(that.wrapSelector()).hasClass('vp-focus');
                 if (isOpen) {
                     // hide task if it's already opened
-                    $(that.wrapSelector()).removeClass('vp-focus');
+                    that.blurItem();
                     // close task
                     $('#vp_wrapper').trigger({
                         type: 'close_option_page'
                     });
                 } else {
                     // open task
-                    $('.vp-block').removeClass('vp-focus');      // remove focus of all blocks
-                    $(that.wrapSelector()).addClass('vp-focus'); // add focus on this block
+                    that.focusItem();
                     $('#vp_wrapper').trigger({
                         type: 'open_option_page',
                         component: that.task
@@ -177,13 +176,26 @@ define([
         }
 
         focusItem() {
-            this.$target.find('.vp-menu-task-item').removeClass('vp-focus');
+            this.$target.find('.vp-block').removeClass('vp-focus');
+            this.$target.find('.vp-block').removeClass('vp-focus-child');
             $(this.wrapSelector()).addClass('vp-focus');
+
+            this.getGroupedBlocks().forEach(block => {
+                block.focusChild();
+            });
+        }
+        
+        blurItem() {
+            $(this.wrapSelector()).removeClass('vp-focus');
+            $('.vp-block').removeClass('vp-focus-child');
+        }
+        
+        focusChild() {
+            $(this.wrapSelector()).addClass('vp-focus-child');
         }
 
-        blurItem() {
-            // hide task if it's already opened
-            $(this.wrapSelector()).removeClass('vp-focus');
+        blurChild() {
+            $(this.wrapSelector()).removeClass('vp-focus-child');
         }
 
         removeItem() {

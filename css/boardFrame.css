@@ -205,30 +205,36 @@
 /* block color labeling */
 .vp-block.vp-focus .vp-block-header {
     border: 2px solid var(--highlight-color);
+}
+.vp-block.vp-focus-child .vp-block-header {
     background-color: rgb(196, 196, 196);
 }
 .vp-block.apps .vp-block-header {
     background-color: rgb(249, 227, 214);
 }
-.vp-block.apps.vp-focus .vp-block-header {
+.vp-block.apps.vp-focus .vp-block-header,
+.vp-block.apps.vp-focus-child .vp-block-header {
     background-color: rgb(253, 177, 133);
 }
 .vp-block.logic-define .vp-block-header {
     background-color: rgb(213, 231, 222);
 }
-.vp-block.logic-define.vp-focus .vp-block-header {
+.vp-block.logic-define.vp-focus .vp-block-header,
+.vp-block.logic-define.vp-focus-child .vp-block-header {
     background-color: rgb(138, 214, 176);
 }
 .vp-block.logic-control .vp-block-header {
     background-color: rgb(253, 239, 221);
 }
-.vp-block.logic-control.vp-focus .vp-block-header {
+.vp-block.logic-control.vp-focus .vp-block-header,
+.vp-block.logic-control.vp-focus-child .vp-block-header {
     background-color: rgb(255, 207, 115);
 }
 .vp-block.library .vp-block-header {
     background-color: rgb(249, 227, 214);
 }
-.vp-block.library.vp-focus .vp-block-header {
+.vp-block.library.vp-focus .vp-block-header, 
+.vp-block.library.vp-focus-child .vp-block-header {
     background-color: rgb(253, 177, 133);
 }
 
