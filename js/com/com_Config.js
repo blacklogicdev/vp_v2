@@ -119,19 +119,17 @@ define([], function() {
                 vp_section_display: true,
                 vp_board_display: true,
             };
-        
-            // merge default config
-            $.extend(true, this.defaultConfig, this.metadataSettings);
             
-            let vp_width = this.MENU_MIN_WIDTH + this.metadataSettings.vp_board_display? this.BOARD_MIN_WIDTH: 0;
-            // vpPosition default also serves as the defaults for a non-live notebook
-            let vpPosition = {
+            let vp_width = Config.MENU_MIN_WIDTH + (this.metadataSettings.vp_board_display? Config.BOARD_MIN_WIDTH: 0) + Config.MENU_BOARD_SPACING;
+            this.metadataSettings['vp_position'] = {
                 height: 'calc(100% - 110px)',
                 width: vp_width + 'px',
                 right: '0px',
                 top: '110px'
-            };
-            $.extend(true, this.defaultConfig.vp_position, vpPosition);
+            }
+        
+            // merge default config
+            $.extend(true, this.defaultConfig, this.metadataSettings);
         }
 
         getMode() {

@@ -12,7 +12,6 @@
     display: none;
 
     position: fixed;
-    width: 50%;
     height: calc(100% - 110px);
     overflow: hidden;
     left: unset !important;

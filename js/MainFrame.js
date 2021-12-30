@@ -171,6 +171,10 @@ define([
             this.$pageDom = $(vpHtml);
             $(this.$pageDom).prependTo(document.body);
 
+            // set vp width using metadata
+            let metadata = vpConfig.getMetadata('vp_position');
+            $('#vp_wrapper').width(metadata.width);
+
             // resize jupyterNotebook area
             let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
             this._resizeNotebook(vpWidth);

@@ -220,8 +220,16 @@
 
         // config may be specified at system level or at document level. first, update
         // defaults with config loaded from server
+        let defaultMetadata = vpConfig.metadataSettings;
         let metadata = vpConfig.getMetadata();
-        $.extend(true, cfg, metadata || {});
+        
+        vpConfig.resetMetadata();
+
+        Object.keys(defaultMetadata).forEach(key => {
+            let value = (metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
+            vpConfig.setMetadata({ [key]: value });
+            cfg[key] = value;
+        })
         
         return cfg;
     };
