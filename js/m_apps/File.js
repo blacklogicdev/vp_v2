@@ -17,13 +17,14 @@ define([
     'css!vp_base/css/m_apps/file.css',
     'vp_base/js/com/com_String',
     'vp_base/js/com/com_util',
+    'vp_base/js/com/com_Const',
     'vp_base/js/com/component/PopupComponent',
     'vp_base/js/com/com_generator',
     'vp_base/data/m_library/pandasLibrary',
     'vp_base/js/com/component/FileNavigation',
     'vp_base/js/com/component/SuggestInput'
-], function(fileHtml, fileCss, com_String, com_util, PopupComponent, pdGen, pandasLibrary
-            , FileNavigation, SuggestInput) {
+], function(fileHtml, fileCss, com_String, com_util, com_Const, PopupComponent
+            , pdGen, pandasLibrary, FileNavigation, SuggestInput) {
 
     /**
      * File
@@ -48,6 +49,8 @@ define([
                     { name: 'vp_pageDom'}
                 ]
             }
+
+            this.dataPath = window.location.origin + com_Const.DATA_PATH + "sample_csv/";
 
             this.state = {
                 fileExtension: 'csv',
