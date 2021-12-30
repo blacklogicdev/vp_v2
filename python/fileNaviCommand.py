@@ -4,6 +4,7 @@ File Navigation Commands
 
 import os as _vp_os 
 import stat as _vp_stat
+import ctypes as _vp_ctypes
 
 def _vp_get_userprofile_path():
     """
@@ -130,4 +131,20 @@ def _vp_check_hidden(path):
     returns: bool
         True for hidden file/dir, False for others
     """
-    return bool(_vp_os.stat(path).st_file_attributes & _vp_stat.FILE_ATTRIBUTE_HIDDEN)
+    try:
+        return bool(_vp_os.stat(path).st_file_attributes & _vp_stat.FILE_ATTRIBUTE_HIDDEN)
+    except:
+        return _vp_is_hidden(path)
+
+def _vp_is_hidden(filepath):
+    name = _vp_os.path.basename(_vp_os.path.abspath(filepath))
+    return name.startswith('.') or _vp_has_hidden_attribute(filepath)
+
+def _vp_has_hidden_attribute(filepath):
+    try:
+        attrs = _vp_ctypes.windll.kernel32.GetFileAttributesW(str(filepath))
+        assert attrs != -1
+        result = bool(attrs & 2)
+    except (AttributeError, AssertionError):
+        result = False
+    return result
