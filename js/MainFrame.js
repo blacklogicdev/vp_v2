@@ -384,9 +384,10 @@ define([
         addBlock(option, position=-1, createChild=true, blockState={}) {
             this._blockPopupList.push(option);
             let newBlock = this.boardFrame.addBlock(option, position, createChild, blockState);
-
             // render board frame
             this.boardFrame.reloadBlockList();
+            // scroll to new block
+            this.boardFrame.scrollToBlock(newBlock);
             return newBlock;
         }
 

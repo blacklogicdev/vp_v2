@@ -677,6 +677,10 @@ define([
             });
         }
 
+        scrollToBlock(block) {
+            $(this.wrapSelector('#vp_boardBody')).animate({scrollTop: $(block.getTag()).position().top}, "fast");
+        }
+
         //========================================================================
         // Block save/load
         //========================================================================

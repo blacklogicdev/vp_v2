@@ -67,7 +67,7 @@
 .vp-board-body {
     width: 100%;
     height: calc(100% - 100px);
-    padding: 5px;
+    padding: 5px 5px 50px 5px;
     box-sizing: border-box;
     position: relative;
     color: #000;
