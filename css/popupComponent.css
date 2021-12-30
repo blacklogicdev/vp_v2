@@ -261,3 +261,8 @@
     height: 25px;
     margin-top: 5px;
 }
+
+/* resizable handler */
+.vp-popup-frame .ui-resizable-se {
+    background-image: url('');
+}

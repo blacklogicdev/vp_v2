@@ -334,7 +334,9 @@ define([
         }
 
         _bindResizable() {
-            $(this.wrapSelector()).resizable();
+            $(this.wrapSelector()).resizable({
+                handles: 'all'
+            });
         }
 
         templateForBody() {
