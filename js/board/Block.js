@@ -70,28 +70,27 @@ define([
                 that.prop.parent.runBlock(that);
             });
             // click event - emphasize TaskItem & open/hide PopupComponent
-            $(this.wrapSelector('.vp-block-header')).on('click', function(evt) {
-                let isSorting = $(this).hasClass('ui-sortable-helper');
+            $(this.wrapSelector('.vp-block-header')).single_double_click(function(evt) {
+                /** single click */
+                let isFocused = $(that.wrapSelector()).hasClass('vp-focus');
+                if (isFocused) {
+                    that.blurItem();
+                } else {
+                    that.focusItem();
+                }
+                evt.stopPropagation();
+            }, function(evt) {
+                /** double click */
+                let isSorting = $(that.wrapSelector()).hasClass('ui-sortable-helper');
                 if (isSorting) {
                     return;
                 }
-                let isOpen = $(that.wrapSelector()).hasClass('vp-focus');
-                if (isOpen) {
-                    // hide task if it's already opened
-                    that.blurItem();
-                    // close task
-                    $('#vp_wrapper').trigger({
-                        type: 'close_option_page'
-                    });
+                let isHidden = that.task.isHidden();
+                if (isHidden) {
+                    that.openPopup();
                 } else {
-                    // open task
-                    that.focusItem();
-                    $('#vp_wrapper').trigger({
-                        type: 'open_option_page',
-                        component: that.task
-                    });
+                    that.closePopup();
                 }
-                evt.stopPropagation();
             });
             // right click event - blockMenu
             $(this.wrapSelector()).on('contextmenu', function(evt) {
@@ -169,6 +168,10 @@ define([
             }
         }
 
+        //========================================================================
+        // Block control
+        //========================================================================
+
         show() {
             $(this.wrapSelector()).show();
         }
@@ -190,7 +193,11 @@ define([
         blurItem() {
             this.classes = [];
             $(this.wrapSelector()).removeClass('vp-focus');
-            $('.vp-block').removeClass('vp-focus-child');
+            this.removeClass('vp-focus');
+
+            this.getGroupedBlocks().forEach(block => {
+                block.blurChild();
+            });
         }
         
         focusChild() {
@@ -216,6 +223,26 @@ define([
             this.classes.splice(idx, 1);
         }
 
+        //========================================================================
+        // Popup control
+        //========================================================================
+        openPopup() {
+            // open task
+            this.focusItem();
+            $('#vp_wrapper').trigger({
+                type: 'open_option_page',
+                component: this.task
+            });
+        }
+        
+        closePopup() {
+            // hide task if it's already opened
+            this.blurItem();
+            // close task
+            $('#vp_wrapper').trigger({
+                type: 'close_option_page'
+            });   
+        }
         //========================================================================
         // Get Set methods
         //========================================================================

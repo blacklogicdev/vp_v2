@@ -36,6 +36,11 @@ define([
 
         _bindEvent() {
             var that = this;
+            /** edit block */
+            $(this.wrapSelector('#vp_block_menu_edit')).on('click', function () {
+                that.block.openPopup();
+                that.close();
+            });
             /** run block */
             $(this.wrapSelector('#vp_block_menu_run')).on('click', function () {
                 that.boardFrame.runBlock(that.block);
@@ -63,6 +68,9 @@ define([
             var sbBlockMenu = new com_String();
             sbBlockMenu.appendFormatLine('<div id="vp_block_menubox"  style="0" class="vp-block-menu-box vp-close-on-blur">',
                 'display: none; position: fixed;');
+            // edit button
+            sbBlockMenu.appendLine('<div id="vp_block_menu_edit" class="vp-block-menu-item">Edit</div>');
+            sbBlockMenu.appendLine('<hr class="vp-extra-menu-line">');
             // run button
             sbBlockMenu.appendLine('<div id="vp_block_menu_run" class="vp-block-menu-item">Run</div>');
             // add button
