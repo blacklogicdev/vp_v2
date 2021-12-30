@@ -445,6 +445,7 @@ define([
          */
         open() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
+            this.loadState();
             this.show();
             this.focus();
             this._bindCodemirror();
