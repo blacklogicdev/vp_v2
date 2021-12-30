@@ -218,6 +218,9 @@ define([
             // load pageDom
             $(this.wrapSelector('#vp_file' + pageType)).html(pageDom);
 
+            // set page type
+            $(this.wrapSelector('#vp_fileioType')).val(pageType);
+
             // show loaded page
             $(this.wrapSelector('.vp-fileio-box')).hide();
             $(this.wrapSelector('#vp_file' + pageType)).show();
