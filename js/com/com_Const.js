@@ -13,8 +13,7 @@
 // Define constant
 //============================================================================
 define ([
-    '../com/com_Config',
-], function(vpConfig) {
+], function() {
     "use strict";
 
     class Constants { }

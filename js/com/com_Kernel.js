@@ -12,10 +12,9 @@
 // [CLASS] Kernel
 //============================================================================
 define([
-    './com_Config',
     './com_util',
     './com_String'
-], function(com_Config, com_util, com_String) {
+], function(com_util, com_String) {
 
     /**
      * Kernel interface class

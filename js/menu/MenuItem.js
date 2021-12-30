@@ -13,11 +13,10 @@
 // [CLASS] MenuItem
 //============================================================================
 define([
-    '../com/com_Config',
     '../com/com_String',
     '../com/component/Component',
     '../board/Block'
-], function(com_Config, com_String, Component, Block) {
+], function(com_String, Component, Block) {
     'use strict';
     //========================================================================
     // Declare class

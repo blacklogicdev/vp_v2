@@ -189,6 +189,9 @@ define([
         toggleVp() {
             $('#vp_wrapper').toggle();
 
+            let vpDisplay = $('#vp_wrapper').is(':visible');
+            vpConfig.setMetadata({ vp_section_display: vpDisplay });
+
             let vpWidth = $('#vp_wrapper')[0].clientWidth;
             this._resizeNotebook(vpWidth);
 

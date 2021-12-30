@@ -61,8 +61,7 @@ define([
     var _init_vp = function () {
         // Read configuration, then call Initialize Visual Python
         Jupyter.notebook.config.loaded.then( function () {
-            var cfg = loadVisualpython.readConfig();
-            loadVisualpython.initVisualpython(cfg);
+            loadVisualpython.initVisualpython();
         });
     };
 

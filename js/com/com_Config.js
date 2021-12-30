@@ -98,13 +98,52 @@ define([], function() {
                 ...initialData
             }
 
+            this.defaultConfig = {};
+            this.metadataSettings = {};
+
+            this._readDefaultConfig();
+        }
+
+        /**
+         * Read dejault config
+         */
+        _readDefaultConfig() {
+            // default values for system-wide configurable parameters
+            this.defaultConfig = {
+                indent: 4
+            };
+            // default values for per-notebook configurable parameters
+            this.metadataSettings = {
+                vp_signature: 'VisualPython',
+                vp_position: {},
+                vp_section_display: true,
+                vp_board_display: true,
+            };
+        
+            // merge default config
+            $.extend(true, this.defaultConfig, this.metadataSettings);
             
+            let vp_width = this.MENU_MIN_WIDTH + this.metadataSettings.vp_board_display? this.BOARD_MIN_WIDTH: 0;
+            // vpPosition default also serves as the defaults for a non-live notebook
+            let vpPosition = {
+                height: 'calc(100% - 110px)',
+                width: vp_width + 'px',
+                right: '0px',
+                top: '110px'
+            };
+            $.extend(true, this.defaultConfig.vp_position, vpPosition);
         }
 
         getMode() {
             return Config.serverMode;
         }
 
+        /**
+         * Get configuration data (on server)
+         * @param {String} dataKey 
+         * @param {String} configKey 
+         * @returns 
+         */
         getData(dataKey, configKey='vpudf') {
             // get data using key
             var data = Jupyter.notebook.config.data[configKey];
@@ -115,11 +154,50 @@ define([], function() {
             return undefined;
         }
 
+        /**
+         * Set configuration data (on server)
+         * @param {Object} dataObj 
+         * @param {String} configKey 
+         */
         setData(dataObj, configKey='vpudf') {
             // set data using key
             Jupyter.notebook.config.loaded.then(function() {
                 Jupyter.notebook.config.update({[configKey]: dataObj});
             });
+        }
+
+        /**
+         * Get metadata (on jupyter file)
+         * @param {String} dataKey 
+         * @param {String} configKey 
+         */
+        getMetadata(dataKey='', configKey='vp') {
+            if (dataKey == '') {
+                return Jupyter.notebook.metadata[configKey];
+            }
+            return Jupyter.notebook.metadata[configKey][dataKey];
+        }
+
+        /**
+         * Set metadata (on jupyter file)
+         * @param {Object} dataObj 
+         * @param {String} configKey 
+         */
+        setMetadata(dataObj, configKey='vp') {
+            let oldData = Jupyter.notebook.metadata[configKey];
+            Jupyter.notebook.metadata[configKey] = {
+                ...oldData,
+                ...dataObj
+            };
+            Jupyter.notebook.set_dirty();
+        }
+
+        /**
+         * Reset metadata (on jupyter file)
+         * @param {String} configKey 
+         */
+        resetMetadata(configKey='vp') {
+            Jupyter.notebook.metadata[configKey] = {};
         }
 
 
@@ -143,10 +221,10 @@ define([], function() {
      * Frame size settings
      */
     Config.JUPYTER_HEADER_SPACING = 110;
-    Config.MENU_MIN_WIDTH = 263;
+    Config.MENU_MIN_WIDTH = 270;
     Config.BOARD_MIN_WIDTH = 263;
     Config.MENU_BOARD_SPACING = 5;
-    Config.VP_MIN_WIDTH = 531; // = MENU_MIN_WIDTH + BOARD_MIN_WIDTH + MENU_BOARD_SPACING
+    Config.VP_MIN_WIDTH = Config.MENU_MIN_WIDTH + Config.BOARD_MIN_WIDTH + Config.MENU_BOARD_SPACING; // = MENU_MIN_WIDTH + BOARD_MIN_WIDTH + MENU_BOARD_SPACING
 
     return Config;
 });
