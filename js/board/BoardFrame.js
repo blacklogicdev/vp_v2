@@ -623,12 +623,12 @@ define([
             let dupPosition = blockIdx + groupedBlocks.length;
             groupedBlocks.forEach((groupBlock, idx) => {
                 let menuId = groupBlock.id;
-                let menuState = groupBlock.popup.state;
+                let popupState = groupBlock.popup.state;
                 $('#vp_wrapper').trigger({
                     type: 'create_option_page',
                     blockType: 'block',
                     menuId: menuId,
-                    menuState: JSON.parse(JSON.stringify(menuState)),
+                    menuState: { taskState: JSON.parse(JSON.stringify(popupState)) },
                     background: true,
                     position: dupPosition + idx,
                     createChild: false

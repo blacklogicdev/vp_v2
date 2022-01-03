@@ -96,9 +96,11 @@ define([
          * @param {String} selector textarea class name
          * @param {boolean} type code(python)/readonly/markdown
          * @param {Object} etcOpt { events:[{key, callback}, ...] }
+         * @returns Object { key, selector, type, cm, ... }
          */
         _addCodemirror(key, selector, type='code', etcOpt={}) {
             this.cmCodeList.push({ key: key, selector: selector, type: type, cm: null, ...etcOpt });
+            return this.cmCodeList[this.cmCodeList.length - 1];
         }
 
         /**
@@ -161,7 +163,7 @@ define([
                 cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
                 if (cmCode) {
                     // add class on text area
-                    $(selector + ' + .CodeMirror').addClass('vp-writable-codemirror');
+                    $(selector).parent().find('.CodeMirror').addClass('vp-writable-codemirror');
                     cmCode.on('focus', function() {
                         // disable other shortcuts
                         com_interface.disableOtherShortcut();
@@ -377,6 +379,10 @@ define([
             // footer
             if(!footer) {
                 $(this.wrapSelector('.vp-popup-footer')).hide();
+                // set body wider
+                $(this.wrapSelector('.vp-popup-body')).css({
+                    'height': 'calc(100% - 30px)'
+                })
             }
 
             // popup-frame size

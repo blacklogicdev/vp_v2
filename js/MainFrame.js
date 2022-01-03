@@ -221,7 +221,7 @@ define([
          * @param {String} menuId com_library
          * @param {Object} menuState { ...states to load }
          */
-        createPopup(blockType, menuId, menuState, background=false, position=-1, createChild=true) {
+        createPopup(blockType, menuId, menuState, background=false, position=-1, createChild=true, afterAction='') {
             let that = this;
             // get specific menu configuration
             let menuConfig = this.menuFrame.getMenuLibrary(menuId);
@@ -233,13 +233,13 @@ define([
             try {
                 // open component
                 require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                    that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild);
+                    that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild, afterAction);
                 }, function (err) {
                     // if it's library menu, call LibraryComponent
                     if (menuGroupRootType == 'library') {
                         menuConfig.file = 'com/component/LibraryComponent'
                         require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                            that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild);
+                            that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild, afterAction);
                         });
                     } else {
                         vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
@@ -250,7 +250,7 @@ define([
             }
         }
 
-        callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild=true) {
+        callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild, afterAction) {
             if (!OptionComponent) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuConfig.id+')');
                 return;
@@ -272,6 +272,16 @@ define([
             }
             if (!background) {
                 this.openPopup(option);
+            }
+            if (afterAction && afterAction != '') {
+                switch (afterAction) {
+                    case 'run':
+                        option.run();
+                        break;
+                    case 'add':
+                        option.run(false);
+                        break;
+                }
             }
         }
         
