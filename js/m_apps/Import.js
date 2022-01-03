@@ -30,11 +30,6 @@ define([
             this.config.dataview = false;
             this.config.sizeLevel = 1;
 
-            this.state = {
-                importMeta: vpConfig.getData('vpImport'),
-                ...this.state
-            }
-            
             this.packageList = [
                 { library: 'numpy',     alias:'np'}
                 , { library: 'pandas',  alias:'pd'}
@@ -46,7 +41,11 @@ define([
                 }
                 , { library: 'seaborn', alias:'sns'}
             ];
-            
+
+            this.state = {
+                importMeta: vpConfig.getDataSimple('', 'vpimport'),
+                ...this.state
+            }
 
             if (!this.state.importMeta || this.state.importMeta.length <= 0) {
                 this.state.importMeta = this.packageList;
@@ -139,7 +138,7 @@ define([
             this.state.importMeta = importMeta;
 
             // save import packages
-            vpConfig.setData({'vpimport': importMeta});
+            vpConfig.setData(importMeta, 'vpimport');
 
             // TODO: 전체에게 해당 함수 리턴 요청
             this.generatedCode = sbCode.toString();
