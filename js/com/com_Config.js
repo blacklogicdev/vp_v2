@@ -136,19 +136,59 @@ define([], function() {
             return Config.serverMode;
         }
 
+        loadData(configKey = 'vpudf') {
+            return new Promise(function(resolve, reject) {
+                Jupyter.notebook.config.load();
+                Jupyter.notebook.config.loaded.then(function() {
+                    var data = Jupyter.notebook.config.data[configKey];
+                    if (data == undefined) {
+                        data = {};
+                    }
+                    resolve(data);
+                });
+            });
+        };
+
         /**
          * Get configuration data (on server)
          * @param {String} dataKey 
          * @param {String} configKey 
          * @returns 
          */
-        getData(dataKey, configKey='vpudf') {
-            // get data using key
+        getData(dataKey='', configKey='vpudf') {
+            return new Promise(function(resolve, reject) {
+                Jupyter.notebook.config.load();
+                Jupyter.notebook.config.loaded.then(function() {
+                    var data = Jupyter.notebook.config.data[configKey];
+                    if (data == undefined) {
+                        data = {};
+                    }
+                    if (dataKey == '') {
+                        resolve(data);
+                        return;
+                    }
+                    if (Object.keys(data).length > 0) {
+                        resolve(data[dataKey]);
+                        return;
+                    }
+                    reject('No data available.');
+                });
+            });
+        }
+
+        getDataSimple(dataKey='', configKey='vpudf') {
+            Jupyter.notebook.config.load();
             var data = Jupyter.notebook.config.data[configKey];
+            if (data == undefined) {
+                data = {};
+            }
+            if (dataKey == '') {
+                return data;
+            }
             if (Object.keys(data).length > 0) {
                 return data[dataKey];
             }
-
+            
             return undefined;
         }
 
@@ -161,6 +201,13 @@ define([], function() {
             // set data using key
             Jupyter.notebook.config.loaded.then(function() {
                 Jupyter.notebook.config.update({[configKey]: dataObj});
+            });
+        }
+
+        removeData(key, configKey = 'vpudf') {
+             // if set value to null, it removes from config data
+            Jupyter.notebook.config.loaded.then(function() {
+                Jupyter.notebook.config.update({[configKey]: {[key]: null}});
             });
         }
 
@@ -207,8 +254,8 @@ define([], function() {
     /**
      * FIXME: before release, change it to _MODE_TYPE.RELEASE
      */
-    // Config.serverMode = _MODE_TYPE.DEVELOP;
-    Config.serverMode = _MODE_TYPE.RELEASE;
+    Config.serverMode = _MODE_TYPE.DEVELOP;
+    // Config.serverMode = _MODE_TYPE.RELEASE;
 
     /**
      * Type of mode
