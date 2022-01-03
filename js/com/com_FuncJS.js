@@ -13,7 +13,7 @@
 // [CLASS] Function JS
 //============================================================================
 define([
-    'vp_base/js/com/com_const',
+    'vp_base/js/com/com_Const',
     'vp_base/js/com/com_util',
     'vp_base/js/com/com_MetaData',
 
@@ -23,7 +23,7 @@ define([
     'nbextensions/visualpython/src/common/component/vpTableLayoutHorizontalSimple',
     'nbextensions/visualpython/src/common/component/vpMultiButtonModal',
     'nbextensions/visualpython/src/common/component/vpMultiButtonModal_new'
-], function(com_const, com_util, com_MetaData,
+], function(com_Const, com_util, com_MetaData,
      vpAccordionBox, vpLineNumberTextArea, vpTableLayoutVerticalSimple,
      vpTableLayoutHorizontalSimple, vpMultiButtonModal, vpMultiButtonModal_new) {
     'use strict';
@@ -122,7 +122,7 @@ define([
 
             // 코드타입인 경우 시그니쳐 추가.
             if (type == 'code') {
-                // command = com_util.formatString('{0}\n{1}', com_const.PREFIX_CODE_SIGNATURE, command);
+                // command = com_util.formatString('{0}\n{1}', com_Const.PREFIX_CODE_SIGNATURE, command);
                 command = com_util.formatString('{0}', command);
             }
             targetCell.set_text(command);
@@ -287,7 +287,7 @@ define([
          * @param {number} pageIndex 페이지 인덱스
          */
         setPage(content, pageIndex = 0) {
-            $(com_util.wrapSelector(com_util.formatString('.{0}.{1}:eq({2})', this.uuid, com_const.API_OPTION_PAGE, pageIndex))).append(content);
+            $(com_util.wrapSelector(com_util.formatString('.{0}.{1}:eq({2})', this.uuid, com_Const.API_OPTION_PAGE, pageIndex))).append(content);
         }
 
         /**
@@ -301,7 +301,7 @@ define([
             var accBoxManualCode = new vpAccordionBox.vpAccordionBox(caption);
             var lineNumberTextArea = new vpLineNumberTextArea.vpLineNumberTextArea(areaID, content);
 
-            accBoxManualCode.addClass(com_const.ACCORDION_GRAY_COLOR);
+            accBoxManualCode.addClass(com_Const.ACCORDION_GRAY_COLOR);
             accBoxManualCode.appendContent(lineNumberTextArea.toTagString());
 
             return accBoxManualCode.toTagString();
@@ -313,14 +313,14 @@ define([
          * @returns {String} tag string
          */
         createPrefixCode(content = '') {
-            return this.createManualCode(com_const.API_OPTION_PREFIX_CAPTION, com_const.API_OPTION_PREFIX_CODE_ID, content);
+            return this.createManualCode(com_Const.API_OPTION_PREFIX_CAPTION, com_Const.API_OPTION_PREFIX_CODE_ID, content);
         }
         /**
          * Set prefix code
          * @param {String} content textarea content
          */
         setPrefixCode(content) {
-            $(this.wrapSelector(com_util.formatString('#{0}', com_const.API_OPTION_PREFIX_CODE_ID))).val(content);
+            $(this.wrapSelector(com_util.formatString('#{0}', com_Const.API_OPTION_PREFIX_CODE_ID))).val(content);
         }
 
         /**
@@ -328,7 +328,7 @@ define([
          * @returns {String} textarea content
          */
         getPrefixCode() {
-            return $(this.wrapSelector(com_util.formatString('#{0}', com_const.API_OPTION_PREFIX_CODE_ID))).val();
+            return $(this.wrapSelector(com_util.formatString('#{0}', com_Const.API_OPTION_PREFIX_CODE_ID))).val();
         }
 
         /**
@@ -337,7 +337,7 @@ define([
          * @returns {String} tag string
          */
         createPostfixCode(content = '') {
-            return this.createManualCode(com_const.API_OPTION_POSTFIX_CAPTION, com_const.API_OPTION_POSTFIX_CODE_ID, content);
+            return this.createManualCode(com_Const.API_OPTION_POSTFIX_CAPTION, com_Const.API_OPTION_POSTFIX_CODE_ID, content);
         }
 
         /**
@@ -345,7 +345,7 @@ define([
          * @param {String} content textarea content
          */
         setPostfixCode(content) {
-            $(this.wrapSelector(com_util.formatString('#{0}', com_const.API_OPTION_POSTFIX_CODE_ID))).val(content);
+            $(this.wrapSelector(com_util.formatString('#{0}', com_Const.API_OPTION_POSTFIX_CODE_ID))).val(content);
         }
 
         /**
@@ -353,7 +353,7 @@ define([
          * @returns {String} textarea content
          */
         getPostfixCode() {
-            return $(this.wrapSelector(com_util.formatString('#{0}', com_const.API_OPTION_POSTFIX_CODE_ID))).val();
+            return $(this.wrapSelector(com_util.formatString('#{0}', com_Const.API_OPTION_POSTFIX_CODE_ID))).val();
         }
 
         /**

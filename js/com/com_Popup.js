@@ -13,10 +13,10 @@
 // [CLASS] Popup page
 //============================================================================
 define([
-    'vp_base/js/com/com_const',
+    'vp_base/js/com/com_Const',
     'vp_base/js/com/com_util',
     'codemirror/lib/codemirror'
-], function(com_const, com_util, codemirror) {
+], function(com_Const, com_util, codemirror) {
     'use strict';
 
     //========================================================================
@@ -90,7 +90,7 @@ define([
          * Initialize
          */
         init() {
-            com_util.loadCss(Jupyter.notebook.base_url + com_const.BASE_PATH + com_const.STYLE_PATH + 'common/popupPage.css');
+            com_util.loadCss(com_Const.STYLE_PATH + 'common/popupPage.css');
             this.renderPopup();
             this.bindEvent();
         }

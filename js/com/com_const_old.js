@@ -18,15 +18,15 @@ define ([
 
     const PATH_SEPARATOR = '/';
     const BASE_PATH = 'nbextensions' + PATH_SEPARATOR + 'visualpython' + PATH_SEPARATOR;
-    const SOURCE_PATH = 'src' + PATH_SEPARATOR;
-    const RESOURCE_PATH = 'resource' + PATH_SEPARATOR;
+    const SOURCE_PATH = 'js' + PATH_SEPARATOR;
+    const RESOURCE_PATH = 'img' + PATH_SEPARATOR;
     const STYLE_PATH = 'css' + PATH_SEPARATOR;
     const DATA_PATH = 'data' + PATH_SEPARATOR;
     const MAIN_CSS_URL = 'main.css';
-    const VP_LIBRARIES_XML_URL = 'libraries.xml';
+    const VP_LIBRARIES_XML_URL = 'libraries.json';
 
     const TOOLBAR_BTN_INFO = {
-        HELP: 'Visual Python 1.1.6'
+        HELP: 'Visual Python 2.0.0'
         // , ICON: 'fa-angellist'
         , ICON: 'vp-main-icon'
         , ID: 'vpBtnToggle'
