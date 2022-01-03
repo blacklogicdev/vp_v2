@@ -56,7 +56,8 @@ define([
                 dataview: true,
                 // show footer
                 footer: true,
-                position: { right: 10, top: 120 } 
+                position: { right: 10, top: 120 },
+                size: { width: 400, height: 400 }
             };
 
             // check BoardFrame width and set initial position of popup
@@ -388,15 +389,20 @@ define([
             // popup-frame size
             switch (sizeLevel) {
                 case 1: 
-                    $(this.wrapSelector()).css({width: '500px', height: '500px'});
+                    this.config.size = { width: 500, height: 500 };
                     break;
                 case 2: 
-                    $(this.wrapSelector()).css({width: '600px', height: '500px'});
+                    this.config.size = { width: 600, height: 500 };
                     break;
                 case 3: 
-                    $(this.wrapSelector()).css({width: '750px', height: '500px'});
+                    this.config.size = { width: 750, height: 500 };
                     break;
             }
+
+            $(this.wrapSelector()).css({
+                width: this.config.size.width + 'px',
+                height: this.config.size.height + 'px'
+            });
 
             // position
             $(this.wrapSelector()).css({ top: position.top, right: position.right });
