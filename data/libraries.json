@@ -226,20 +226,6 @@
                             "color": 4,
                             "icon": "apps/apps_profiling.svg"
                         }
-                    },
-                    {
-                        "id"   : "apps_sample",
-                        "type" : "function",
-                        "level": 1,
-                        "name" : "Sample",
-                        "tag"  : "SAMPLE,APPS",
-                        "path" : "visualpython - apps - sample",
-                        "desc" : "Sample app for testing",
-                        "file" : "m_apps/SampleApp",
-                        "apps" : {
-                            "color": 4,
-                            "icon": "apps/apps_white.svg"
-                        }
                     }
                 ]
             },
