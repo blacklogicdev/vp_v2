@@ -48,9 +48,9 @@ define([
 
             // if start with print(, set default cursor on codemirror
             if (this.state.code.substr(0, 6) === 'print(') {
-                // set cursor
+                // set default cursor
                 let cmObj = this.getCodemirror('code');
-                if (cmObj) {
+                if (cmObj && cmObj.cm) {
                     cmObj.cm.setCursor({ line: 0, ch: 6 });
                     cmObj.cm.focus();
                 }
