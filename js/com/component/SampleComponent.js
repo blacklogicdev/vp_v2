@@ -19,6 +19,21 @@ define([
 
     /**
      * SampleComponent
+     * Add below code in /data/libraries.json
+        {
+            "id"   : "apps_sample",
+            "type" : "function",
+            "level": 1,
+            "name" : "Sample",
+            "tag"  : "SAMPLE,APPS",
+            "path" : "visualpython - apps - sample",
+            "desc" : "Sample app for testing",
+            "file" : "m_apps/SampleApp",
+            "apps" : {
+                "color": 4,
+                "icon": "apps/apps_white.svg"
+            }
+        }
      */
     class SampleComponent extends Component {
         _init() {
