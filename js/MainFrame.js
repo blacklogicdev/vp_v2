@@ -46,7 +46,6 @@ define([
             this.$pageDom = null;
             this._menuFrame = null;
             this._boardFrame = null;
-            this._events = null;
             this._nowTask = null;
             this._focusedPage = null;
             
@@ -75,7 +74,7 @@ define([
                 that._resizeNotebook(vpWidth);
             });
 
-            this._events = new com_Event(this);
+            window.vpEvent = new com_Event(this);
         }
 
         /**
