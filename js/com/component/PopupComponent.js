@@ -192,6 +192,20 @@ define([
             return cmCode;
         }
 
+        setCmValue(key, value) {
+            let targetCmObj = this.cmCodeList.filter(obj => obj.key == key);
+            if (targetCmObj.length > 0) {
+                let cm = targetCmObj[0].cm;
+                if (cm) {
+                    cm.setValue(value);
+                    cm.save();
+                    setTimeout(function () {
+                        cm.refresh();
+                    }, 1);
+                }
+            }
+        }
+
         _bindEvent() {
             var that = this;
             // Close popup event
@@ -538,8 +552,10 @@ define([
                 setTimeout(function() {
                     that.cmCodeview.refresh();
                 }, 1);
+                $(this.wrapSelector('.vp-popup-dataview-box')).hide();
             } else {
                 this.renderDataView();
+                $(this.wrapSelector('.vp-popup-codeview-box')).hide();
             }
 
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).show();
