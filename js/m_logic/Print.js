@@ -1,16 +1,16 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : code.js
+ *    File Name       : Print.js
  *    Author          : Black Logic
- *    Note            : Logic > code
+ *    Note            : Logic > print
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] code
+// [CLASS] Print
 //============================================================================
 define([
     'vp_base/js/com/com_String',
@@ -18,9 +18,9 @@ define([
 ], function(com_String, PopupComponent) {
 
     /**
-     * Code
+     * Print
      */
-    class Code extends PopupComponent {
+    class Print extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -35,11 +35,6 @@ define([
             this._addCodemirror('code', this.wrapSelector('#code'));
         }
 
-        _bindEvent() {
-            super._bindEvent();
-            /** Implement binding events */
-        }
-
         templateForBody() {
             /** Implement generating template */
             var page = new com_String();
@@ -48,11 +43,25 @@ define([
             return page.toString();
         }
 
+        open() {
+            super.open();
+
+            // if start with print(, set default cursor on codemirror
+            if (this.state.code.substr(0, 6) === 'print(') {
+                // set cursor
+                let cmObj = this.getCodemirror('code');
+                if (cmObj) {
+                    cmObj.cm.setCursor({ line: 0, ch: 6 });
+                    cmObj.cm.focus();
+                }
+            }
+        }
+
         generateCode() {
             return this.state.code;
         }
 
     }
 
-    return Code;
+    return Print;
 });
