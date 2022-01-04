@@ -532,10 +532,14 @@ define([
                         { 
                             id: 'lgDef_def', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth, 
-                                v1: '__init__', 
-                                v2: [{ param: 'self' }] 
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                },
+                                taskState: {
+                                    v1: '__init__', 
+                                    v2: [{ param: 'self' }] 
+                                }
                             }
                         }
                     ]
@@ -545,15 +549,19 @@ define([
                         { 
                             id: 'lgExe_code', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                }
                             }
                         },
                         { 
                             id: 'lgCtrl_return', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                }
                             }
                         }
                     ]
@@ -566,8 +574,10 @@ define([
                         { 
                             id: 'lgCtrl_pass', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                }
                             }
                         }
                     ];
@@ -577,7 +587,7 @@ define([
             // create blocks
             let that = this;
             childBlocks.forEach((cfg, idx)=> {
-                that.prop.parent.createPopup('block', cfg.id, { blockState: cfg.state }, true, position + idx + 1);
+                that.prop.parent.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
             });
         }
 
