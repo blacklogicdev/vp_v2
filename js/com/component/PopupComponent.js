@@ -164,7 +164,9 @@ define([
                 cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
                 if (cmCode) {
                     // add class on text area
-                    $(selector).parent().find('.CodeMirror').addClass('vp-writable-codemirror');
+                    if (type != 'readonly') {
+                        $(selector).parent().find('.CodeMirror').addClass('vp-writable-codemirror');
+                    }
                     cmCode.on('focus', function() {
                         // disable other shortcuts
                         com_interface.disableOtherShortcut();
