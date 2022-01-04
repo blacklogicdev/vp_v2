@@ -244,6 +244,7 @@
                         "name" : "Define",
                         "path" : "visualpython - logic - define",
                         "desc" : "Define class or function",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "lgDef_class",
@@ -274,6 +275,7 @@
                         "name" : "Control",
                         "path" : "visualpython - logic - control",
                         "desc" : "Control grammars",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "lgCtrl_for",
@@ -364,6 +366,7 @@
                         "name" : "Execute",
                         "path" : "visualpython - logic - execute",
                         "desc" : "Executing codes",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "lgExe_lambda",
@@ -1407,6 +1410,7 @@
                         "name" : "Pandas",
                         "path" : "visualpython - library - pandas",
                         "desc" : "Pandas operations",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "pd_plot",
