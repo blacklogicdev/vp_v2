@@ -21,7 +21,7 @@ define([
             this._suggestList = new Array();
             this._selectEvent = undefined;
             this._attributes = {};
-            this._showDefaultList = true;
+            this._minLength = 0;
         }
 
         render() {
@@ -68,8 +68,8 @@ define([
          * - false: autocomplete.minLength to 1
          * @param {bool} showDefaultList 
          */
-        setShowDefaultList(showDefaultList) {
-            this._showDefaultList = showDefaultList;
+        setMinSearchLength(minLength) {
+            this._minLength = minLength;
         }
         /**
          * Additional Class
@@ -104,7 +104,7 @@ define([
             var sbTagString = new com_String();
             var that = this;
 
-            let minLength = this._showDefaultList?0:1;
+            let minLength = this._minLength;
 
             // make attributes
             var attributes = Object.keys(this._attributes).map(key => key + '="' + this._attributes[key] + '"').join(" ");
@@ -124,7 +124,7 @@ define([
                         var returlList = new Array();
                         if (that._normalFilter) {
                             for (var idx = 0; idx < srcList.length; idx++) {
-                                // minju: srcList가 object array 형태일 경우 처리 2020-12-15
+                                // srcList as object array
                                 if (typeof srcList[idx] == "object") {
                                     // { label: string, value: string } format
                                     if (srcList[idx].label.toString().toLowerCase().includes(req.term.trim().toLowerCase())) {
