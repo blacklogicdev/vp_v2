@@ -59,7 +59,7 @@ define([
         //========================================================================
         _init() {
             // get json library list
-            this.menuLibrariesFlatten = [];
+            this.menuLibrariesFlatten = []; // use it for searching
             this.menuLibraries = this.getMenuLibraries();
         }
         
@@ -204,8 +204,10 @@ define([
                     }
                 } else {
                     // functions : MenuItem
-                    that.menuLibrariesFlatten.push(child);
-                    var menuItem = new MenuItem($(body), child);
+                    if (!child.hide) {
+                        that.menuLibrariesFlatten.push(child);
+                        var menuItem = new MenuItem($(body), child);
+                    }
                 }
             });
         }   

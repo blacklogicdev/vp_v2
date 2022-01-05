@@ -1,26 +1,25 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : Except.js
+ *    File Name       : Else.js
  *    Author          : Black Logic
- *    Note            : Logic > except
+ *    Note            : Logic > else
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] Except
+// [CLASS] Else
 //============================================================================
 define([
-    'vp_base/js/com/com_String',
     'vp_base/js/com/component/PopupComponent'
-], function(com_String, PopupComponent) {
+], function(PopupComponent) {
 
     /**
-     * Except
+     * Else
      */
-    class Except extends PopupComponent {
+    class Else extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
@@ -29,10 +28,10 @@ define([
         }
 
         generateCode() {
-            return 'except :';
+            return 'else:';
         }
 
     }
 
-    return Except;
+    return Else;
 });

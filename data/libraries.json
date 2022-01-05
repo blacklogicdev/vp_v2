@@ -356,6 +356,50 @@
                                 "path" : "visualpython - logic - execute - pass",
                                 "desc" : "pass",
                                 "file" : "m_logic/Pass"
+                            },
+                            {
+                                "id"   : "lgCtrl_except",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "except",
+                                "tag"  : "TRY CATCH EXCEPT,FINALLY,EXCEPTION,HANDLE ERROR,LOGIC",
+                                "path" : "visualpython - logic - control - except",
+                                "desc" : "try except",
+                                "file" : "m_logic/Except",
+                                "hide" : true
+                            },
+                            {
+                                "id"   : "lgCtrl_finally",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "finally",
+                                "tag"  : "TRY CATCH EXCEPT,FINALLY,EXCEPTION,HANDLE ERROR,LOGIC",
+                                "path" : "visualpython - logic - control - finally",
+                                "desc" : "try finally",
+                                "file" : "m_logic/Finally",
+                                "hide" : true
+                            },
+                            {
+                                "id"   : "lgCtrl_elif",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "elif",
+                                "tag"  : "ELSE,LOGIC",
+                                "path" : "visualpython - logic - control - elif",
+                                "desc" : "elif",
+                                "file" : "m_logic/Elif",
+                                "hide" : true
+                            },
+                            {
+                                "id"   : "lgCtrl_else",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "else",
+                                "tag"  : "ELSE,LOGIC",
+                                "path" : "visualpython - logic - control - else",
+                                "desc" : "else",
+                                "file" : "m_logic/Else",
+                                "hide" : true
                             }
                         ]
                     },

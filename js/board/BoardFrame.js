@@ -570,6 +570,10 @@ define([
                 case 'lgCtrl_while':
                 case 'lgCtrl_if':
                 case 'lgCtrl_try':
+                case 'lgCtrl_elif':
+                case 'lgCtrl_except':
+                case 'lgCtrl_else':
+                case 'lgCtrl_finally':
                     childBlocks = [
                         { 
                             id: 'lgCtrl_pass', 
@@ -593,12 +597,24 @@ define([
 
         removeBlock(blockToRemove) {
             let that = this;
-            // remove grouped blocks
+            // if sub block, change group block's state
+            let groupBlock = blockToRemove.getGroupBlock();
+            if (blockToRemove.id === 'lgCtrl_else') {
+                groupBlock.state.elseFlag = false;
+            }
+            if (blockToRemove.id === 'lgCtrl_finally') {
+                groupBlock.state.finallyFlag = false;
+            }
+
+            // remove grouped blocks (under this depth)
             let groupedBlocks = blockToRemove.getGroupedBlocks();
             groupedBlocks.forEach(block => {
-                const blockIdx = that.blockList.indexOf(block);
-                block.popup.remove();
-                that.blockList.splice(blockIdx, 1);
+                // remove block
+                if (blockToRemove.isGroup || blockToRemove.equals(block) || block.depth > blockToRemove.depth) {
+                    const blockIdx = that.blockList.indexOf(block);
+                    block.popup.remove();
+                    that.blockList.splice(blockIdx, 1);
+                }
             });
             // render block list  
             this.reloadBlockList();
@@ -654,9 +670,13 @@ define([
             const parentIdx = this.blockList.indexOf(parentBlock);
             let nextGroupIdx = parentIdx + 1;
             while (nextGroupIdx < this.blockList.length) {
-                let isGroup = this.blockList[nextGroupIdx].isGroup;
+                let block = this.blockList[nextGroupIdx];
+                let isGroup = block.isGroup;
                 if (isGroup) {
                     // find next group block
+                    break;
+                }
+                if (!parentBlock.isGroup && block.depth <= parentBlock.depth) {
                     break;
                 }
                 nextGroupIdx++;
@@ -689,6 +709,115 @@ define([
 
         scrollToBlock(block) {
             $(this.wrapSelector('#vp_boardBody')).animate({scrollTop: $(block.getTag()).position().top}, "fast");
+        }
+        //========================================================================
+        // Block sub block control
+        //========================================================================
+        toggleElseBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            // check if it has else block
+            let elseFlag = block.state.elseFlag;
+            if (!elseFlag) {
+                // if finally is available, change add position
+                if (block.state.finallyFlag) {
+                    let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+                    let finallyPosition = this.blockList.indexOf(finallyBlock);
+                    position = finallyPosition;
+                }
+                // add else
+                let blockState = {
+                    isGroup: false,
+                    depth: block.depth
+                }
+                this.prop.parent.createPopup('block', 'lgCtrl_else', { blockState: blockState }, true, position);
+                block.state.elseFlag = true;
+                setTimeout(function() {
+                    block.focusItem();
+                }, 100);
+            } else {
+                // remove else
+                let elseBlock = groupedBlocks.filter(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+                if (elseBlock.length > 0) {
+                    this.removeBlock(elseBlock[0]);
+                }
+            }
+        }
+
+        toggleFinallyBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            
+            // check if it has finally block
+            let finallyFlag = block.state.finallyFlag;
+            if (!finallyFlag) {
+                // add finally
+                let blockState = {
+                    isGroup: false,
+                    depth: block.depth
+                }
+                this.prop.parent.createPopup('block', 'lgCtrl_finally', { blockState: blockState }, true, position);
+                block.state.finallyFlag = true;
+                setTimeout(function() {
+                    block.focusItem();
+                }, 100);
+            } else {
+                // remove finally
+                let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+                if (finallyBlock) {
+                    this.removeBlock(finallyBlock);
+                }
+            }
+        }
+
+        addElifBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            // if else is available, change add position
+            if (block.state.elseFlag) {
+                let elseBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+                let elsePosition = this.blockList.indexOf(elseBlock);
+                position = elsePosition;
+            }
+            // add elif
+            let blockState = {
+                isGroup: false,
+                depth: block.depth
+            }
+            this.prop.parent.createPopup('block', 'lgCtrl_elif', { blockState: blockState }, true, position);
+            setTimeout(function() {
+                block.focusItem();
+            }, 100);
+        }
+
+        addExceptBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            // if finally is available, change add position
+            if (block.state.finallyFlag) {
+                let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+                let finallyPosition = this.blockList.indexOf(finallyBlock);
+                position = finallyPosition;
+            }
+            // if else is available, change add position
+            if (block.state.elseFlag) {
+                let elseBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+                let elsePosition = this.blockList.indexOf(elseBlock);
+                position = elsePosition;
+            }
+            // add except
+            let blockState = {
+                isGroup: false,
+                depth: block.depth
+            }
+            this.prop.parent.createPopup('block', 'lgCtrl_except', { blockState: blockState }, true, position);
+            setTimeout(function() {
+                block.focusItem();
+            }, 100);
         }
 
         //========================================================================

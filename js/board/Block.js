@@ -53,6 +53,8 @@ define([
                 leftHolderHeight: 0,
                 depth: 0,
                 blockNumber: $('.vp-block.vp-block-group').length + 1,
+                elseFlag: false,
+                finallyFlag: false,
                 ...this.state
             }
 
@@ -97,6 +99,26 @@ define([
                 that.prop.parent.showMenu(that, evt.pageX, evt.pageY);
                 evt.preventDefault();
             });
+
+            // click event - block button
+            $(this.wrapSelector('.vp-block-button')).on('click', function(evt) {
+                let menu = $(this).data('menu');
+                switch (menu) {
+                    case 'else':
+                        that.prop.parent.toggleElseBlock(that);
+                        break;
+                    case 'elif':
+                        that.prop.parent.addElifBlock(that);
+                        break;
+                    case 'except':
+                        that.prop.parent.addExceptBlock(that);
+                        break;
+                    case 'finally':
+                        that.prop.parent.toggleFinallyBlock(that);
+                        break;
+                }
+                that.focusItem();
+            })
         }
 
         checkTaskAvailable() {
@@ -139,6 +161,27 @@ define([
                                 , depth*BLOCK_PADDING + BLOCK_PADDING, depth);
             page.appendFormatLine('<div class="vp-block-num-info" {0} title="{1}">{2}</div>'
                                 , isGroup?'':'style="display:none;"', 'Run this group', blockNumber);
+
+            // template for block button
+            let { elseFlag, finallyFlag } = this.state; 
+            if (taskId == 'lgCtrl_for') {
+                page.appendLine('<div class="vp-block-button-group">');
+                page.appendFormatLine('<div class="vp-block-button {0}" data-menu="{1}">{2}</div>', 'else', 'else', 'else ' + (elseFlag?'off':'on'));
+                page.appendLine('</div>');
+            }
+            if (taskId == 'lgCtrl_if') {
+                page.appendLine('<div class="vp-block-button-group">');
+                page.appendFormatLine('<div class="vp-block-button {0}" data-menu="{1}">{2}</div>', 'elif', 'elif', '+ elif');
+                page.appendFormatLine('<div class="vp-block-button {0}" data-menu="{1}">{2}</div>', 'else', 'else', 'else ' + (elseFlag?'off':'on'));
+                page.appendLine('</div>');
+            }
+            if (taskId == 'lgCtrl_try') {
+                page.appendLine('<div class="vp-block-button-group">');
+                page.appendFormatLine('<div class="vp-block-button {0}" data-menu="{1}">{2}</div>', 'except', 'except', '+ except');
+                page.appendFormatLine('<div class="vp-block-button {0}" data-menu="{1}">{2}</div>', 'else', 'else', 'else ' + (elseFlag?'off':'on'));
+                page.appendFormatLine('<div class="vp-block-button {0}" data-menu="{1}">{2}</div>', 'finally', 'finally', 'finally ' + (finallyFlag?'off':'on'));
+                page.appendLine('</div>');
+            }
             page.appendLine('</div>');
             return page.toString();
         }
@@ -283,7 +326,8 @@ define([
             let depth = this.depth;
             let innerList = [
                 'lgDef_class', 'lgDef_def', 
-                'lgCtrl_for', 'lgCtrl_while', 'lgCtrl_if', 'lgCtrl_try'
+                'lgCtrl_for', 'lgCtrl_while', 'lgCtrl_if', 'lgCtrl_try',
+                'lgCtrl_elif', 'lgCtrl_else', 'lgCtrl_except', 'lgCtrl_finally'
             ];
             if (innerList.includes(this.id)) {
                 return depth + 1;
