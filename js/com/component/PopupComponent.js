@@ -44,6 +44,7 @@ define([
         }
 
         _init() {
+            this.eventTarget = '#vp_wrapper';
             this.id = this.state.config.id;
             this.name = this.state.config.name;
             this.path = this.state.config.path;
@@ -90,6 +91,22 @@ define([
             this.cmCodeview = null;
 
             this.cmCodeList = [];
+        }
+
+        wrapSelector(selector='') {
+            var sbSelector = new com_String();
+            var cnt = arguments.length;
+            if (cnt < 2) {
+                // if there's no more arguments
+                sbSelector.appendFormat(".vp-popup-frame.{0} {1}", this.uuid, selector);
+            } else {
+                // if there's more arguments
+                sbSelector.appendFormat(".vp-popup-frame.{0}", this.uuid);
+                for (var idx = 0; idx < cnt; idx++) {
+                    sbSelector.appendFormat(" {0}", arguments[idx]);
+                }
+            }
+            return sbSelector.toString();
         }
 
         /**
@@ -212,13 +229,13 @@ define([
             // Close popup event
             $(this.wrapSelector('.vp-popup-close')).on('click', function(evt) {
                 if (that.getTaskType() === 'task') {
-                    $('#vp_wrapper').trigger({
+                    $(that.eventTarget).trigger({
                         type: 'remove_option_page',
                         component: that
                     });
                 } else {
                     // if it's block, just hide it
-                    $('#vp_wrapper').trigger({
+                    $(that.eventTarget).trigger({
                         type: 'close_option_page',
                         component: that
                     });
@@ -227,14 +244,14 @@ define([
             // Toggle operation (minimize)
             $(this.wrapSelector('.vp-popup-toggle')).on('click', function(evt) {
                 // that.toggle();
-                $('#vp_wrapper').trigger({
+                $(that.eventTarget).trigger({
                     type: 'close_option_page',
                     component: that
                 });
             });
             // Focus recognization
             $(this.wrapSelector()).on('click', function() {
-                $('#vp_wrapper').trigger({
+                $(that.eventTarget).trigger({
                     type: 'focus_option_page',
                     component: that
                 });
@@ -281,24 +298,20 @@ define([
                         break;
                     case 'cancel':
                         if (that.getTaskType() === 'task') {
-                            $('#vp_wrapper').trigger({
+                            $(that.eventTarget).trigger({
                                 type: 'remove_option_page',
                                 component: that
                             });
                         } else {
                             // if it's block, just hide it
-                            $('#vp_wrapper').trigger({
+                            $(that.eventTarget).trigger({
                                 type: 'close_option_page',
                                 component: that
                             });
                         }
                         break;
                     case 'run':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         that.run();
                         break;
                     case 'show-detail':
@@ -306,11 +319,7 @@ define([
                         evt.stopPropagation();
                         break;
                     case 'save':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         break;
                 }
             });
@@ -319,18 +328,10 @@ define([
                 var btnType = $(this).data('type');
                 switch(btnType) {
                     case 'apply':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         break;
                     case 'add':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         that.run(false);
                         break;
                 }
@@ -366,7 +367,7 @@ define([
                 containment: 'body',
                 start: function(evt, ui) {
                     // check focused
-                    $('#vp_wrapper').trigger({
+                    $(that.eventTarget).trigger({
                         type: 'focus_option_page',
                         component: that
                     });
@@ -541,6 +542,14 @@ define([
             this.hide();
         }
 
+        save() {
+            $(this.eventTarget).trigger({
+                type: 'apply_option_page', 
+                blockType: 'block',
+                component: this
+            });
+        }
+
         remove() {
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'remove popup', this);
             this._unbindEvent();
@@ -559,12 +568,12 @@ define([
         }
 
         show() {
-            this.taskItem.focusItem();
+            this.taskItem && this.taskItem.focusItem();
             $(this.wrapSelector()).show();
         }
 
         hide() {
-            this.taskItem.blurItem();
+            this.taskItem && this.taskItem.blurItem();
             $(this.wrapSelector()).hide();
         }
 
@@ -647,11 +656,8 @@ define([
         }
 
         getCodemirror(key) {
-            let filteredCm = this.cmCodeList.filter(cmObj => cmObj.key == key);
-            if (filteredCm && filteredCm.length > 0) {
-                return filteredCm[0];
-            }
-            return null;
+            let filteredCm = this.cmCodeList.find(cmObj => cmObj.key == key);
+            return filteredCm;
         }
 
         //========================================================================
@@ -662,17 +668,19 @@ define([
         }
 
         getTaskType() {
-            if (this.taskItem.constructor.name == 'Block') {
-                return 'block';
-            }
-            if (this.taskItem.constructor.name == 'TaskItem') {
-                return 'task';
+            if (this.taskItem) {
+                if (this.taskItem.constructor.name == 'Block') {
+                    return 'block';
+                }
+                if (this.taskItem.constructor.name == 'TaskItem') {
+                    return 'task';
+                }
             }
             return null;
         }
 
         removeBlock() {
-            this.taskItem.removeItem();
+            this.taskItem && this.taskItem.removeItem();
         }
     }
 
