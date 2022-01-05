@@ -257,6 +257,7 @@
 }
 /* popup frame input, select */
 .vp-popup-frame input[type=text] {
+    min-width: 150px;
     font-size: 14px;
     line-height: 16px;
     height: 30px;
@@ -272,6 +273,7 @@
 }
 
 .vp-popup-frame select {
+    min-width: 150px;
 	height: 30px;
 	font-style: normal;
 	font-weight: normal;
