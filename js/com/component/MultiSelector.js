@@ -52,14 +52,14 @@ define([
          * @param {Object} config  parent:[], selectedList=[], includeList=[]
          */
         constructor(frameSelector, config) {
-            super({ frameSelector: frameSelector, config: config }, {});
+            super(frameSelector, config, {});
         }
 
         _init() {
-            this.frameSelector = this.state.frameSelector;
+            this.frameSelector = this.$target;
 
             // configuration
-            this.config = this.state.config;
+            this.config = this.state;
 
             var { mode, type, parent, selectedList=[], includeList=[], excludeList=[] } = this.config;
             this.mode = mode;
@@ -87,9 +87,9 @@ define([
             }
         }
 
-        render() {
-            ;
-        }
+        // render() {
+        //     ;
+        // }
 
         _executeCallback(dataList) {
             if (this.includeList && this.includeList.length > 0) {
@@ -105,7 +105,8 @@ define([
         }
 
         _getVariableList(type, callback) {
-            kernelApi.searchVarList(type, function(result) {
+            vpKernel.getDataList(type).then(function(resultObj) {
+                let { result } = resultObj;
                 try {
                     var dataList = JSON.parse(result);
                     dataList = dataList.map(function(x, idx) {
@@ -126,7 +127,8 @@ define([
         
         _getColumnList(parent, callback) {
             if (parent && parent.length > 1) {
-                kernelApi.getCommonColumnList(parent, function(result) {
+                vpKernel.getColumnList(parent).then(function(resultObj) {
+                    let { result } = resultObj;
                     try {
                         var colList = JSON.parse(result);
                         colList = colList.map(function(x) {
@@ -143,7 +145,8 @@ define([
                     }
                 });
             } else {
-                kernelApi.getColumnList(parent, function(result) {
+                vpKernel.getColumnList(parent).then(function(resultObj) {
+                    let { result } = resultObj;
                     try {
                         var colList = JSON.parse(result);
                         colList = colList.map(function(x) {
@@ -163,7 +166,7 @@ define([
         }
 
         load() {
-            $(com_util.wrapSelector(this.frameSelector)).html(this.render());
+            $(this.frameSelector).html(this.render());
             this.bindEvent();
             this.bindDraggable();
         }
@@ -211,13 +214,13 @@ define([
             // select - buttons
             tag.appendFormatLine('<div class="{0}">', APP_SELECT_BTN_BOX);
             tag.appendFormatLine('<button type="button" class="{0}" title="{1}">{2}</button>'
-                                , APP_SELECT_ADD_ALL_BTN, 'Add all items', '<img src="/nbextensions/visualpython/resource/arrow_right_double.svg"/></i>');
+                                , APP_SELECT_ADD_ALL_BTN, 'Add all items', '<img src="/nbextensions/visualpython/img/arrow_right_double.svg"/></i>');
             tag.appendFormatLine('<button type="button" class="{0}" title="{1}">{2}</button>'
-                                ,  APP_SELECT_ADD_BTN, 'Add selected items', '<img src="/nbextensions/visualpython/resource/arrow_right.svg"/></i>');
+                                ,  APP_SELECT_ADD_BTN, 'Add selected items', '<img src="/nbextensions/visualpython/img/arrow_right.svg"/></i>');
             tag.appendFormatLine('<button type="button" class="{0}" title="{1}">{2}</button>'
-                                , APP_SELECT_DEL_BTN, 'Remove selected items', '<img src="/nbextensions/visualpython/resource/arrow_left.svg"/>');
+                                , APP_SELECT_DEL_BTN, 'Remove selected items', '<img src="/nbextensions/visualpython/img/arrow_left.svg"/>');
             tag.appendFormatLine('<button type="button" class="{0}" title="{1}">{2}</button>'
-                                , APP_SELECT_DEL_ALL_BTN, 'Remove all items', '<img src="/nbextensions/visualpython/resource/arrow_left_double.svg"/>');
+                                , APP_SELECT_DEL_ALL_BTN, 'Remove all items', '<img src="/nbextensions/visualpython/img/arrow_left_double.svg"/>');
             tag.appendLine('</div>');  // APP_SELECT_BTNS
             // select - right
             tag.appendFormatLine('<div class="{0}">', APP_SELECT_RIGHT);
