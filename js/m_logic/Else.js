@@ -1,54 +1,38 @@
 /*
  *    Project Name    : Visual Python
  *    Description     : GUI-based Python code generator
- *    File Name       : Try.js
+ *    File Name       : Else.js
  *    Author          : Black Logic
- *    Note            : Logic > try
+ *    Note            : Logic > else
  *    License         : GNU GPLv3 with Visual Python special exception
  *    Date            : 2021. 11. 18
  *    Change Date     :
  */
 
 //============================================================================
-// [CLASS] Try
+// [CLASS] Else
 //============================================================================
 define([
-    'vp_base/js/com/com_String',
     'vp_base/js/com/component/PopupComponent'
-], function(com_String, PopupComponent) {
+], function(PopupComponent) {
 
     /**
-     * Try
+     * Else
      */
-    class Try extends PopupComponent {
+    class Else extends PopupComponent {
         _init() {
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
             this.config.codeview = false;
             this.config.saveOnly = true;
-
-            this.state = {
-                ...this.state
-            }
-            
-            this._addCodemirror('code', this.wrapSelector('#code'));
-        }
-
-        _bindEvent() {
-            super._bindEvent();
-            /** Implement binding events */
-        }
-
-        templateForBody() {
-            return '';
         }
 
         generateCode() {
-            return 'try:';
+            return 'else:';
         }
 
     }
 
-    return Try;
+    return Else;
 });

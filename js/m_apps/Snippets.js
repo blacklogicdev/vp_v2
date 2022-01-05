@@ -574,21 +574,7 @@ define([
         }
 
         generateCode() {
-            var sbCode = new com_String();
-
-            // selected snippet
-            var selected = $(this.wrapSelector('.vp-sn-item-header.selected'));
-            if (selected) {
-                var item = $(selected).closest('.vp-sn-item');
-                var title = $(item).data('title');
-
-                // get codemirror
-                this.codemirrorList[title].save();
-                var code = this.codemirrorList[title].getValue();
-                sbCode.append(code);
-            }
-
-            return sbCode.toString();
+            return '';
         }
 
         loadUdfList() {

@@ -66,6 +66,9 @@ define([
                     end: 0
                 }
             }
+
+            this.headBlocks = ['lgCtrl_if', 'lgCtrl_for', 'lgCtrl_try'];
+            this.subBlocks = ['lgCtrl_elif', 'lgCtrl_else', 'lgCtrl_except', 'lgCtrl_finally'];
         }
 
         _bindEvent() {
@@ -144,6 +147,7 @@ define([
             let groupedBlocks = null;
             let parentBlock = null;
             let depth = 0;
+            let revert = false;
             $('.vp-board-body').sortable({
                 items: '> .vp-block',
                 axis: 'y',
@@ -188,6 +192,10 @@ define([
                     position = ui.item.index();
                     targetBlock = that.blockList[position];
                     if (targetBlock) {
+                        if (targetBlock.isSubBlock) {
+                            revert = true;
+                            return;
+                        }
                         // hide grouped item
                         groupedBlocks = targetBlock.getGroupedBlocks();
                         groupedBlocks.forEach(block => {
@@ -207,12 +215,21 @@ define([
                         tmpPos += (1 - groupedBlocks.length);
                     }
 
+                    // sorting is not allowed for sub blocks (elif, else, except, finally)
+                    if (revert) {
+                        ui.placeholder.removeClass('vp-block-group');
+                        ui.placeholder.insertAfter($('.vp-block:not(.vp-draggable-helper):not(.vp-sortable-placeholder):nth('+(position - 1)+')'));
+                        return;
+                    }
+
                     let befBlockTag = $('.vp-block:not(.vp-draggable-helper):not(.vp-sortable-placeholder):nth('+(tmpPos - 1)+')');
                     if (befBlockTag && befBlockTag.length > 0) {
                         let befBlock = befBlockTag.data('block');
+                        let befGroupBlock = befBlock.getGroupBlock();
                         let rect = befBlockTag[0].getBoundingClientRect();
                         let befStart = rect.y;
                         let befRange = rect.y + rect.height;
+                        let befGroupRange = befRange + (rect.height/2);
                         let befDepth = befBlock.getChildDepth();
                         
                         let isMarkdown = false; // if befBlock or thisBlock is markdown
@@ -222,7 +239,7 @@ define([
                         }
                         
                         if (isMarkdown) {
-                            let befGroupedBlocks = befBlock.getGroupedBlocks();
+                            let befGroupedBlocks = befGroupBlock.getGroupedBlocks();
                             let befGroupLastBlock = befGroupedBlocks[befGroupedBlocks.length - 1]; // last block of previous group
                             if (!befBlock.equals(befGroupLastBlock)) {
                                 ui.placeholder.insertAfter(befGroupLastBlock.getTag());
@@ -230,26 +247,42 @@ define([
                             }
                         }
 
-                        if (!isMarkdown && currCursorY < befRange && befStart < currCursorY) {
-                            // sort as child of befBlock (except Markdown)
-                            parentBlock = befBlock;
-                            depth = befDepth;
-                            ui.placeholder.removeClass('vp-block-group');
-                            ui.placeholder.css({ 'padding-left': befDepth*BLOCK_PADDING + 'px'});
-                        } else {
-                            // sort after befBlock
-                            parentBlock = null;
-                            if (!ui.placeholder.hasClass('vp-block-group')) {
-                                ui.placeholder.addClass('vp-block-group');
+                        if (!isMarkdown) {
+                            if (befBlock.isSubBlock || (befStart < currCursorY && currCursorY < befRange)) {
+                                // sort as child of befBlock (except Markdown)
+                                // - if befBlock is subBlock, no group block is allowed
+                                parentBlock = befBlock;
+                                depth = befDepth;
+                                ui.placeholder.removeClass('vp-block-group');
+                                ui.placeholder.css({ 'padding-left': depth*BLOCK_PADDING + 'px'});
+                                return;
                             }
-                            ui.placeholder.css({ 'padding-left': 0});
-                            depth = 0;
+                            if (befRange <= currCursorY && currCursorY < befGroupRange) {
+                                // sort as child of befGroupBlock (except Markdown)
+                                parentBlock = befGroupBlock;
+                                depth = befGroupBlock.getChildDepth();
+                                ui.placeholder.removeClass('vp-block-group');
+                                ui.placeholder.css({ 'padding-left': depth*BLOCK_PADDING + 'px'});
+                                return;
+                            }
                         }
+                        // sort after befBlock
+                        parentBlock = null;
+                        if (!ui.placeholder.hasClass('vp-block-group')) {
+                            ui.placeholder.addClass('vp-block-group');
+                        }
+                        ui.placeholder.css({ 'padding-left': 0});
+                        depth = 0;
                     }
                 },
                 stop: function(evt, ui) {
                     var spos = position;
                     var epos = ui.item.index();
+
+                    if (revert) {
+                        revert = false;
+                        return;
+                    }
 
                     if (spos < epos && groupedBlocks) {
                         epos += (1 - groupedBlocks.length);
@@ -532,10 +565,14 @@ define([
                         { 
                             id: 'lgDef_def', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth, 
-                                v1: '__init__', 
-                                v2: [{ param: 'self' }] 
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                },
+                                taskState: {
+                                    v1: '__init__', 
+                                    v2: [{ param: 'self' }] 
+                                }
                             }
                         }
                     ]
@@ -545,15 +582,19 @@ define([
                         { 
                             id: 'lgExe_code', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                }
                             }
                         },
                         { 
                             id: 'lgCtrl_return', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                }
                             }
                         }
                     ]
@@ -562,12 +603,18 @@ define([
                 case 'lgCtrl_while':
                 case 'lgCtrl_if':
                 case 'lgCtrl_try':
+                case 'lgCtrl_elif':
+                case 'lgCtrl_except':
+                case 'lgCtrl_else':
+                case 'lgCtrl_finally':
                     childBlocks = [
                         { 
                             id: 'lgCtrl_pass', 
                             state: { 
-                                isGroup: false, 
-                                depth: childDepth
+                                blockState: {
+                                    isGroup: false, 
+                                    depth: childDepth
+                                }
                             }
                         }
                     ];
@@ -577,18 +624,30 @@ define([
             // create blocks
             let that = this;
             childBlocks.forEach((cfg, idx)=> {
-                that.prop.parent.createPopup('block', cfg.id, { blockState: cfg.state }, true, position + idx + 1);
+                that.prop.parent.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
             });
         }
 
         removeBlock(blockToRemove) {
             let that = this;
-            // remove grouped blocks
+            // if sub block, change group block's state
+            let groupBlock = blockToRemove.getGroupBlock();
+            if (blockToRemove.id === 'lgCtrl_else') {
+                groupBlock.state.elseFlag = false;
+            }
+            if (blockToRemove.id === 'lgCtrl_finally') {
+                groupBlock.state.finallyFlag = false;
+            }
+
+            // remove grouped blocks (under this depth)
             let groupedBlocks = blockToRemove.getGroupedBlocks();
             groupedBlocks.forEach(block => {
-                const blockIdx = that.blockList.indexOf(block);
-                block.popup.remove();
-                that.blockList.splice(blockIdx, 1);
+                // remove block
+                if (blockToRemove.isGroup || blockToRemove.equals(block) || block.depth > blockToRemove.depth) {
+                    const blockIdx = that.blockList.indexOf(block);
+                    block.popup.remove();
+                    that.blockList.splice(blockIdx, 1);
+                }
             });
             // render block list  
             this.reloadBlockList();
@@ -643,13 +702,20 @@ define([
         getGroupedBlocks(parentBlock) {
             const parentIdx = this.blockList.indexOf(parentBlock);
             let nextGroupIdx = parentIdx + 1;
-            while (nextGroupIdx < this.blockList.length) {
-                let isGroup = this.blockList[nextGroupIdx].isGroup;
-                if (isGroup) {
-                    // find next group block
-                    break;
+            if (parentBlock.canMakeChild()) {
+                while (nextGroupIdx < this.blockList.length) {
+                    let block = this.blockList[nextGroupIdx];
+                    let isGroup = block.isGroup;
+                    if (isGroup) {
+                        // find next group block
+                        break;
+                    }
+                    let isSubBlock = (this.headBlocks.includes(parentBlock.id) && block.depth == parentBlock.depth && this.subBlocks.includes(block.id));
+                    if (!parentBlock.isGroup && !isSubBlock && block.depth <= parentBlock.depth) {
+                        break;
+                    }
+                    nextGroupIdx++;
                 }
-                nextGroupIdx++;
             }
             // grouped blocks (include this parentBlock)
             let groupedBlocks = this.blockList.slice(parentIdx, nextGroupIdx);
@@ -679,6 +745,122 @@ define([
 
         scrollToBlock(block) {
             $(this.wrapSelector('#vp_boardBody')).animate({scrollTop: $(block.getTag()).position().top}, "fast");
+        }
+        //========================================================================
+        // Block sub block control
+        //========================================================================
+        checkFlag(block) {
+            let groupedBlocks = block.getGroupedBlocks();
+            let elseBlock = groupedBlocks.filter(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+            let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+            block.state.elseFlag = elseBlock!=undefined?true:false;
+            block.state.finallyFlag = finallyBlock!=undefined?true:false;
+        }
+        toggleElseBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            // check if it has else block
+            let elseFlag = block.state.elseFlag;
+            if (!elseFlag) {
+                // if finally is available, change add position
+                if (block.state.finallyFlag) {
+                    let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+                    let finallyPosition = this.blockList.indexOf(finallyBlock);
+                    position = finallyPosition;
+                }
+                // add else
+                let blockState = {
+                    isGroup: false,
+                    depth: block.depth
+                }
+                this.prop.parent.createPopup('block', 'lgCtrl_else', { blockState: blockState }, true, position);
+                block.state.elseFlag = true;
+                setTimeout(function() {
+                    block.focusItem();
+                }, 100);
+            } else {
+                // remove else
+                let elseBlock = groupedBlocks.filter(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+                if (elseBlock.length > 0) {
+                    this.removeBlock(elseBlock[0]);
+                }
+            }
+        }
+
+        toggleFinallyBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            
+            // check if it has finally block
+            let finallyFlag = block.state.finallyFlag;
+            if (!finallyFlag) {
+                // add finally
+                let blockState = {
+                    isGroup: false,
+                    depth: block.depth
+                }
+                this.prop.parent.createPopup('block', 'lgCtrl_finally', { blockState: blockState }, true, position);
+                block.state.finallyFlag = true;
+                setTimeout(function() {
+                    block.focusItem();
+                }, 100);
+            } else {
+                // remove finally
+                let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+                if (finallyBlock) {
+                    this.removeBlock(finallyBlock);
+                }
+            }
+        }
+
+        addElifBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            // if else is available, change add position
+            if (block.state.elseFlag) {
+                let elseBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+                let elsePosition = this.blockList.indexOf(elseBlock);
+                position = elsePosition;
+            }
+            // add elif
+            let blockState = {
+                isGroup: false,
+                depth: block.depth
+            }
+            this.prop.parent.createPopup('block', 'lgCtrl_elif', { blockState: blockState }, true, position);
+            setTimeout(function() {
+                block.focusItem();
+            }, 100);
+        }
+
+        addExceptBlock(block) {
+            const blockIdx = this.blockList.indexOf(block);
+            let groupedBlocks = block.getGroupedBlocks();
+            let position = blockIdx + groupedBlocks.length; // add position
+            // if finally is available, change add position
+            if (block.state.finallyFlag) {
+                let finallyBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_finally' && obj.depth === block.depth));
+                let finallyPosition = this.blockList.indexOf(finallyBlock);
+                position = finallyPosition;
+            }
+            // if else is available, change add position
+            if (block.state.elseFlag) {
+                let elseBlock = groupedBlocks.find(obj => (obj.id === 'lgCtrl_else' && obj.depth === block.depth));
+                let elsePosition = this.blockList.indexOf(elseBlock);
+                position = elsePosition;
+            }
+            // add except
+            let blockState = {
+                isGroup: false,
+                depth: block.depth
+            }
+            this.prop.parent.createPopup('block', 'lgCtrl_except', { blockState: blockState }, true, position);
+            setTimeout(function() {
+                block.focusItem();
+            }, 100);
         }
 
         //========================================================================

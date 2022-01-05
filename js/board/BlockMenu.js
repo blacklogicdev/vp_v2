@@ -89,8 +89,14 @@ define([
                 left: left,
                 top: top
             };
+            
             $(this.wrapSelector()).css(this.position);
             $(this.wrapSelector()).show();
+            // filter menu depends on block
+            if (this.block.isSubBlock) {
+                // no duplicate
+                $(this.wrapSelector('#vp_block_menu_duplicate')).hide();
+            }
         }
         
         close() {

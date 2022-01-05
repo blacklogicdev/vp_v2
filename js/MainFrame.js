@@ -46,7 +46,6 @@ define([
             this.$pageDom = null;
             this._menuFrame = null;
             this._boardFrame = null;
-            this._events = null;
             this._nowTask = null;
             this._focusedPage = null;
             
@@ -75,7 +74,7 @@ define([
                 that._resizeNotebook(vpWidth);
             });
 
-            this._events = new com_Event(this);
+            window.vpEvent = new com_Event(this);
         }
 
         /**
@@ -263,9 +262,10 @@ define([
                 config: menuConfig
             }
             let option = new OptionComponent(state);
+            let newBlock = null;
             if (blockType === 'block') {
                 // add to block list
-                let newBlock = this.addBlock(option, position, createChild, blockState);
+                newBlock = this.addBlock(option, position, createChild, blockState);
             } else {
                 // add to task list
                 this.addTask(option);
@@ -417,8 +417,6 @@ define([
 
             // render task bar
             this.menuFrame.renderTaskBar(this._taskPopupList);
-            // focus added task
-
         }
 
         /**

@@ -44,6 +44,7 @@ define([
         }
 
         _init() {
+            this.eventTarget = '#vp_wrapper';
             this.id = this.state.config.id;
             this.name = this.state.config.name;
             this.path = this.state.config.path;
@@ -57,7 +58,8 @@ define([
                 // show footer
                 footer: true,
                 position: { right: 10, top: 120 },
-                size: { width: 400, height: 400 }
+                size: { width: 400, height: 400 },
+                saveOnly: false
             };
 
             // check BoardFrame width and set initial position of popup
@@ -89,6 +91,22 @@ define([
             this.cmCodeview = null;
 
             this.cmCodeList = [];
+        }
+
+        wrapSelector(selector='') {
+            var sbSelector = new com_String();
+            var cnt = arguments.length;
+            if (cnt < 2) {
+                // if there's no more arguments
+                sbSelector.appendFormat(".vp-popup-frame.{0} {1}", this.uuid, selector);
+            } else {
+                // if there's more arguments
+                sbSelector.appendFormat(".vp-popup-frame.{0}", this.uuid);
+                for (var idx = 0; idx < cnt; idx++) {
+                    sbSelector.appendFormat(" {0}", arguments[idx]);
+                }
+            }
+            return sbSelector.toString();
         }
 
         /**
@@ -164,7 +182,9 @@ define([
                 cmCode = codemirror.fromTextArea(targetTag[0], cmConfig);
                 if (cmCode) {
                     // add class on text area
-                    $(selector).parent().find('.CodeMirror').addClass('vp-writable-codemirror');
+                    if (type != 'readonly') {
+                        $(selector).parent().find('.CodeMirror').addClass('vp-writable-codemirror');
+                    }
                     cmCode.on('focus', function() {
                         // disable other shortcuts
                         com_interface.disableOtherShortcut();
@@ -190,18 +210,32 @@ define([
             return cmCode;
         }
 
+        setCmValue(key, value) {
+            let targetCmObj = this.cmCodeList.filter(obj => obj.key == key);
+            if (targetCmObj.length > 0) {
+                let cm = targetCmObj[0].cm;
+                if (cm) {
+                    cm.setValue(value);
+                    cm.save();
+                    setTimeout(function () {
+                        cm.refresh();
+                    }, 1);
+                }
+            }
+        }
+
         _bindEvent() {
             var that = this;
             // Close popup event
             $(this.wrapSelector('.vp-popup-close')).on('click', function(evt) {
                 if (that.getTaskType() === 'task') {
-                    $('#vp_wrapper').trigger({
+                    $(that.eventTarget).trigger({
                         type: 'remove_option_page',
                         component: that
                     });
                 } else {
                     // if it's block, just hide it
-                    $('#vp_wrapper').trigger({
+                    $(that.eventTarget).trigger({
                         type: 'close_option_page',
                         component: that
                     });
@@ -210,14 +244,14 @@ define([
             // Toggle operation (minimize)
             $(this.wrapSelector('.vp-popup-toggle')).on('click', function(evt) {
                 // that.toggle();
-                $('#vp_wrapper').trigger({
+                $(that.eventTarget).trigger({
                     type: 'close_option_page',
                     component: that
                 });
             });
             // Focus recognization
             $(this.wrapSelector()).on('click', function() {
-                $('#vp_wrapper').trigger({
+                $(that.eventTarget).trigger({
                     type: 'focus_option_page',
                     component: that
                 });
@@ -264,29 +298,28 @@ define([
                         break;
                     case 'cancel':
                         if (that.getTaskType() === 'task') {
-                            $('#vp_wrapper').trigger({
+                            $(that.eventTarget).trigger({
                                 type: 'remove_option_page',
                                 component: that
                             });
                         } else {
                             // if it's block, just hide it
-                            $('#vp_wrapper').trigger({
+                            $(that.eventTarget).trigger({
                                 type: 'close_option_page',
                                 component: that
                             });
                         }
                         break;
                     case 'run':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         that.run();
                         break;
                     case 'show-detail':
                         $(that.wrapSelector('.vp-popup-run-detailbox')).show();
                         evt.stopPropagation();
+                        break;
+                    case 'save':
+                        that.save();
                         break;
                 }
             });
@@ -295,19 +328,29 @@ define([
                 var btnType = $(this).data('type');
                 switch(btnType) {
                     case 'apply':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         break;
                     case 'add':
-                        $('#vp_wrapper').trigger({
-                            type: 'apply_option_page', 
-                            blockType: 'block',
-                            component: that
-                        });
+                        that.save();
                         that.run(false);
+                        break;
+                }
+            });
+            // Close event for inner popup
+            $(this.wrapSelector('.vp-inner-popup-close')).on('click', function(evt) {
+                that.handleInnerCancel();
+                that.closeInnerPopup();
+            });
+            // Click button event for inner popup
+            $(this.wrapSelector('.vp-inner-popup-button')).on('click', function(evt) {
+                let btnType = $(this).data('type');
+                switch(btnType) {
+                    case 'cancel':
+                        that.handleInnerCancel();
+                        that.closeInnerPopup();
+                        break;
+                    case 'ok':
+                        that.handleInnerOk();
                         break;
                 }
             });
@@ -324,7 +367,7 @@ define([
                 containment: 'body',
                 start: function(evt, ui) {
                     // check focused
-                    $('#vp_wrapper').trigger({
+                    $(that.eventTarget).trigger({
                         type: 'focus_option_page',
                         component: that
                     });
@@ -399,6 +442,7 @@ define([
                     break;
             }
 
+            // set detailed size
             $(this.wrapSelector()).css({
                 width: this.config.size.width + 'px',
                 height: this.config.size.height + 'px'
@@ -407,8 +451,26 @@ define([
             // position
             $(this.wrapSelector()).css({ top: position.top, right: position.right });
 
+            // set apply mode
+            if (this.config.saveOnly) {
+                this.setSaveOnlyMode();
+            }
+
             this._bindDraggable();
             this._bindResizable();
+        }
+        
+        templateForInnerPopup() {
+            /** Implementation needed */
+            return '';
+        }
+        
+        /**
+         * Render inner popup for selecting columns
+         * @returns Inner popup page dom
+         */
+        renderInnerPopup() {
+            $(this.wrapSelector('.vp-inner-popup-body')).html(this.templateForInnerPopup());
         }
 
         templateForDataView() {
@@ -463,6 +525,12 @@ define([
             this._bindCodemirror();
         }
 
+        setSaveOnlyMode() {
+            // show save button only
+            $(this.wrapSelector('.vp-popup-runadd-box')).hide();
+            $(this.wrapSelector('.vp-popup-save-button')).show();
+        }
+
         /**
          * Close popup
          * - remove popup
@@ -472,6 +540,14 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'close popup', this);
             this.saveState();
             this.hide();
+        }
+
+        save() {
+            $(this.eventTarget).trigger({
+                type: 'apply_option_page', 
+                blockType: 'block',
+                component: this
+            });
         }
 
         remove() {
@@ -492,12 +568,12 @@ define([
         }
 
         show() {
-            this.taskItem.focusItem();
+            this.taskItem && this.taskItem.focusItem();
             $(this.wrapSelector()).show();
         }
 
         hide() {
-            this.taskItem.blurItem();
+            this.taskItem && this.taskItem.blurItem();
             $(this.wrapSelector()).hide();
         }
 
@@ -536,8 +612,10 @@ define([
                 setTimeout(function() {
                     that.cmCodeview.refresh();
                 }, 1);
+                $(this.wrapSelector('.vp-popup-dataview-box')).hide();
             } else {
                 this.renderDataView();
+                $(this.wrapSelector('.vp-popup-codeview-box')).hide();
             }
 
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).show();
@@ -545,6 +623,29 @@ define([
 
         closeView(viewType) {
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).hide();
+        }
+
+        /**
+         * Open inner popup box
+         */
+        openInnerPopup(title) {
+            $(this.wrapSelector('.vp-inner-popup-title')).text(title);
+            $(this.wrapSelector('.vp-inner-popup-box')).show();
+        }
+        
+        /**
+         * Close inner popup box
+         */
+        closeInnerPopup() {
+            $(this.wrapSelector('.vp-inner-popup-box')).hide();
+        }
+
+        handleInnerCancel() {
+            /** Implementation needed */
+        }
+
+        handleInnerOk() {
+            /** Implementation needed */
         }
 
         //========================================================================
@@ -555,11 +656,8 @@ define([
         }
 
         getCodemirror(key) {
-            let filteredCm = this.cmCodeList.filter(cmObj => cmObj.key == key);
-            if (filteredCm && filteredCm.length > 0) {
-                return filteredCm[0];
-            }
-            return null;
+            let filteredCm = this.cmCodeList.find(cmObj => cmObj.key == key);
+            return filteredCm;
         }
 
         //========================================================================
@@ -570,17 +668,19 @@ define([
         }
 
         getTaskType() {
-            if (this.taskItem.constructor.name == 'Block') {
-                return 'block';
-            }
-            if (this.taskItem.constructor.name == 'TaskItem') {
-                return 'task';
+            if (this.taskItem) {
+                if (this.taskItem.constructor.name == 'Block') {
+                    return 'block';
+                }
+                if (this.taskItem.constructor.name == 'TaskItem') {
+                    return 'task';
+                }
             }
             return null;
         }
 
         removeBlock() {
-            this.taskItem.removeItem();
+            this.taskItem && this.taskItem.removeItem();
         }
     }
 

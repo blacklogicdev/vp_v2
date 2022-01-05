@@ -26,6 +26,7 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
+            this.config.saveOnly = true;
 
             this.state = {
                 v1: '',

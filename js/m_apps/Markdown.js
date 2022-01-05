@@ -113,9 +113,9 @@ define([
                         break;
                 }
                 
-                // 이미지 로드의 경우 처리단계에서 랜더링 호출 하므로 이곳에서 호출하면 중복
+                // image renders on the process of opening image
                 if (menu != 'image') {
-                    // 마크다운 렌더링 시행
+                    // render markdown
                     that.previewRender();
                 }
             });
@@ -278,22 +278,22 @@ define([
          * @param {object} cm CodeMirror Object
          */
         adjustTitle(cm) {
-            // 커서 위치
+            // cursor position
             var { line, ch, sticky } = cm.getCursor();
 
-            // 커서 기준 현재 라인
+            // cursor line text
             var lineText = cm.getLine(line);
-            // 빈 라인이면 default text로 변경해준다.
+            // set default text
             if (lineText.trim() == "") {
                 lineText = VP_MARKDOWN_DEFAULT_NEW_TITLE_TEXT;
             }
             var adjustText;
-            // 현재 라인이 타이틀 마크다운으로 되어 있는지 확인
-            if (/^[#]{6}\s{1,}/i.test(lineText)) { // #이 6개면 1개로 되돌린다.
+            // check if this line is using title markdown
+            if (/^[#]{6}\s{1,}/i.test(lineText)) { // ######(6) -> #(1)
                 adjustText = "#" + lineText.replace("######", "");
-            } else if (/^[#]{1,5}\s{1,}/i.test(lineText)) { // #이 1개에서 5개사이면 #한개 추가한다
+            } else if (/^[#]{1,5}\s{1,}/i.test(lineText)) { // #(1~5) -> # + #(add 1 #)
                 adjustText = "#" + lineText
-            } else { // #이 6개를 초과했거나 없으면 #과 1공백문자를 추가한다. 
+            } else { // #(>6 or =0) -> add # and whitespace('# ')
                 adjustText = "# " + lineText
             }
     
@@ -567,7 +567,7 @@ define([
          * @param {object} cm Codemirror Object
          */
         adjustLink(cm) {
-            // 선택된 텍스트
+            // selected text
             let { line, ch } = cm.getCursor();
             var selectedText = cm.getSelection();
             var linkText;

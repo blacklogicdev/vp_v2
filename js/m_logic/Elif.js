@@ -174,7 +174,7 @@ define([
                 }
                 parameters.push(line);
             });
-            return com_util.formatString('if ({0}):', parameters.join(''));
+            return com_util.formatString('elif ({0}):', parameters.join(''));
         }
 
     }

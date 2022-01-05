@@ -226,20 +226,6 @@
                             "color": 4,
                             "icon": "apps/apps_profiling.svg"
                         }
-                    },
-                    {
-                        "id"   : "apps_sample",
-                        "type" : "function",
-                        "level": 1,
-                        "name" : "Sample",
-                        "tag"  : "SAMPLE,APPS",
-                        "path" : "visualpython - apps - sample",
-                        "desc" : "Sample app for testing",
-                        "file" : "m_apps/SampleApp",
-                        "apps" : {
-                            "color": 4,
-                            "icon": "apps/apps_white.svg"
-                        }
                     }
                 ]
             },
@@ -258,6 +244,7 @@
                         "name" : "Define",
                         "path" : "visualpython - logic - define",
                         "desc" : "Define class or function",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "lgDef_class",
@@ -288,6 +275,7 @@
                         "name" : "Control",
                         "path" : "visualpython - logic - control",
                         "desc" : "Control grammars",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "lgCtrl_for",
@@ -368,6 +356,50 @@
                                 "path" : "visualpython - logic - execute - pass",
                                 "desc" : "pass",
                                 "file" : "m_logic/Pass"
+                            },
+                            {
+                                "id"   : "lgCtrl_except",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "except",
+                                "tag"  : "TRY CATCH EXCEPT,FINALLY,EXCEPTION,HANDLE ERROR,LOGIC",
+                                "path" : "visualpython - logic - control - except",
+                                "desc" : "try except",
+                                "file" : "m_logic/Except",
+                                "hide" : true
+                            },
+                            {
+                                "id"   : "lgCtrl_finally",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "finally",
+                                "tag"  : "TRY CATCH EXCEPT,FINALLY,EXCEPTION,HANDLE ERROR,LOGIC",
+                                "path" : "visualpython - logic - control - finally",
+                                "desc" : "try finally",
+                                "file" : "m_logic/Finally",
+                                "hide" : true
+                            },
+                            {
+                                "id"   : "lgCtrl_elif",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "elif",
+                                "tag"  : "ELSE,LOGIC",
+                                "path" : "visualpython - logic - control - elif",
+                                "desc" : "elif",
+                                "file" : "m_logic/Elif",
+                                "hide" : true
+                            },
+                            {
+                                "id"   : "lgCtrl_else",
+                                "type" : "function",
+                                "level": 1,
+                                "name" : "else",
+                                "tag"  : "ELSE,LOGIC",
+                                "path" : "visualpython - logic - control - else",
+                                "desc" : "else",
+                                "file" : "m_logic/Else",
+                                "hide" : true
                             }
                         ]
                     },
@@ -378,6 +410,7 @@
                         "name" : "Execute",
                         "path" : "visualpython - logic - execute",
                         "desc" : "Executing codes",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "lgExe_lambda",
@@ -1421,6 +1454,7 @@
                         "name" : "Pandas",
                         "path" : "visualpython - library - pandas",
                         "desc" : "Pandas operations",
+                        "open" : true,
                         "item" : [
                             {
                                 "id"   : "pd_plot",

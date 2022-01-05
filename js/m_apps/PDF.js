@@ -125,6 +125,8 @@ nltk.download('punkt')`;
 
         render() {
             super.render();
+
+            this.checkInstalled();
         }
 
         generateCode() {

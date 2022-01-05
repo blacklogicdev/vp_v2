@@ -26,25 +26,11 @@ define([
             /** Write codes executed before rendering */
             this.config.dataview = false;
             this.config.codeview = false;
-
-            this.state = {
-                ...this.state
-            }
-            
-            this._addCodemirror('code', this.wrapSelector('#code'));
-        }
-
-        _bindEvent() {
-            super._bindEvent();
-            /** Implement binding events */
-        }
-
-        templateForBody() {
-            return '';
+            this.config.saveOnly = true;
         }
 
         generateCode() {
-            return 'except';
+            return 'except :';
         }
 
     }

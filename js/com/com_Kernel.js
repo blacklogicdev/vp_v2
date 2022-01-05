@@ -54,13 +54,13 @@ define([
                     {
                         iopub: {
                             output: function (msg) {
+                                var result = '';
+                                var type = '';
                                 if (msg.content) {
                                     try {
                                         if (msg.content['name'] == 'stderr') {
                                             reject(msg);
                                         } else {
-                                            var result = '';
-                                            var type = '';
                                             if (msg.content['text']) {
                                                 result = String(msg.content['text']);
                                                 type = 'text';
@@ -81,6 +81,8 @@ define([
                                     } catch(ex) {
                                         reject(ex);
                                     }
+                                } else {
+                                    resolve({result: result, type: type, msg: msg});
                                 }
                             }
                         }

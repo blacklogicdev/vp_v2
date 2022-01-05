@@ -27,7 +27,7 @@ define([], function() {
             var that = this;
 
             /** GLOBAL keyBoardManager */
-            this._keyManager = {
+            this.keyManager = {
                 keyCode : {
                     ctrlKey: 17,
                     cmdKey: 91,
@@ -162,10 +162,28 @@ define([], function() {
 
             this._keyEvent = [
                 {
+                    method: 'keydown',
+                    selector: document,
+                    operation: (evt) => {
+                        if (evt.keyCode == that.keyManager.keyCode.ctrlKey || evt.keyCode == that.keyManager.keyCode.cmdKey) {
+                            that.keyManager.keyCheck.ctrlKey = true;
+                        }
+                        if (evt.keyCode == that.keyManager.keyCode.shiftKey) {
+                            that.keyManager.keyCheck.shiftKey = true;
+                        }
+                    }
+                },
+                {
                     method: 'keyup',
                     selector: document,
                     operation: (evt) => {
-                        if (evt.keyCode == this._keyManager.keyCode.escKey) {
+                        if (evt.keyCode == that.keyManager.keyCode.ctrlKey || evt.keyCode == that.keyManager.keyCode.cmdKey) {
+                            that.keyManager.keyCheck.ctrlKey = false;
+                        }
+                        if (evt.keyCode == that.keyManager.keyCode.shiftKey) {
+                            that.keyManager.keyCheck.shiftKey = false;
+                        }
+                        if (evt.keyCode == that.keyManager.keyCode.escKey) {
                             // close popup on esc
                             $('#vp_wrapper').trigger({
                                 type: 'close_option_page',
