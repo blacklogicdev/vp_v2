@@ -118,8 +118,20 @@ define([
             page.appendFormatLine('<th>{0}</th>', idx);
             page.appendFormatLine('<td><input type="text" class="vp-input w100 {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v1-i1', v.i1, 'Variable');
-            page.appendFormatLine('<td><input type="text" class="vp-input w100 {0}" value="{1}" placeholder="{2}"/></td>'
-                                , 'v1-i2', v.i2, 'Operator');
+            // suggestInput for operator
+            let operList = ['', '==', '!=', 'in', 'not in', '<', '<=', '>', '>='];
+            var suggestInput = new SuggestInput();
+            suggestInput.addClass('vp-input w100 v1-i2');
+            suggestInput.setSuggestList(function() { return operList; });
+            suggestInput.setPlaceholder('Operator');
+            suggestInput.setNormalFilter(false);
+            suggestInput.setValue(v.i2);
+            suggestInput.setSelectEvent(function(selectedValue) {
+                // trigger change
+                $(this.wrapSelector()).val(selectedValue);
+                $(this.wrapSelector()).trigger('change');
+            });
+            page.appendFormatLine('<td>{0}</td>', suggestInput.toTagString());
             page.appendFormatLine('<td><input type="text" class="vp-input w100 {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v1-i3', v.i3, 'Variable');
             page.appendFormatLine('<td><select class="vp-select w100 {0}">', 'v1-i4');
