@@ -347,7 +347,7 @@ define([
                     that.renderVariableList('vp_bdRightDataframe', varList, prevValue);
                     $(that.wrapSelector('#vp_bdRightDataframe')).trigger('change');
                 } catch (ex) {
-                    console.log('Bind:', result);
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'Bind:', result);
                 }
             });
         }
