@@ -313,6 +313,12 @@ define([
         get isGroup() {
             return this.state.isGroup;
         }
+        get isHeadBlock() {
+            return this.prop.parent.headBlocks.includes(this.id);
+        }
+        get isSubBlock() {
+            return this.prop.parent.subBlocks.includes(this.id);
+        }
         get blockNumber() {
             return this.state.blockNumber;
         }
@@ -322,14 +328,20 @@ define([
         get popup() {
             return this.task;
         }
-        getChildDepth() {
-            let depth = this.depth;
+        canMakeChild() {
             let innerList = [
                 'lgDef_class', 'lgDef_def', 
                 'lgCtrl_for', 'lgCtrl_while', 'lgCtrl_if', 'lgCtrl_try',
                 'lgCtrl_elif', 'lgCtrl_else', 'lgCtrl_except', 'lgCtrl_finally'
             ];
             if (innerList.includes(this.id)) {
+                return true;
+            }
+            return false;
+        }
+        getChildDepth() {
+            let depth = this.depth;
+            if (this.canMakeChild()) {
                 return depth + 1;
             }
             return depth;
