@@ -29,7 +29,7 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
-            this.config.size = { width: 760, height: 550 };
+            this.config.size = { width: 700, height: 550 };
 
             this.periodList = [
                 { label: 'business day', value: 'B'},
