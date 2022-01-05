@@ -31,7 +31,12 @@ define([
             super._init();
             this.config.size = { width: 760, height: 500 };
             /** Write codes executed before rendering */
+            this.targetSelector = this.prop.targetSelector;
+            this.pageThis = this.prop.pageThis;
             this.useInputVariable = this.prop.useInputVariable;
+            if (this.useInputVariable) {
+                this.eventTarget = this.targetSelector;
+            }
 
             // use Run/Add cell
             this.useCell = true;
@@ -75,12 +80,7 @@ define([
 
         render() {
             super.render();
-
-            // set readonly
-            if (this.useInputVariable) {
-                $(this.wrapSelector('.' + VP_DS_PANDAS_OBJECT)).attr('disabled', true);
-            }
-
+            
             this.loadVariables();
             let { subsetType, rowList, columnList } = this.state;
             // set subset type
@@ -90,11 +90,21 @@ define([
             this.renderRowIndexing(rowList);
             this.renderRowSlicingBox(rowList);
             this.renderColumnConditionList(columnList);
-
+            
             this.renderColumnSubsetType(subsetType);
             this.renderColumnIndexing(columnList);
             this.renderColumnSlicingBox(columnList);
+            
+            // render button
+            if (this.useInputVariable) {
+                // set readonly
+                $(this.wrapSelector('.' + VP_DS_PANDAS_OBJECT)).attr('disabled', true);
+                // render button
+                this.renderButton();
 
+                // hide allocate to
+                $(this.wrapSelector('.vp-ds-allocate-to')).closest('tr').hide();
+            }
         }
 
         generateCode() {
@@ -118,6 +128,15 @@ define([
             return this.pdObjTypes;
         }
         ///////////////////////// render //////////////////////////////////////////////////////
+        renderButton() {
+            // set button next to input tag
+            var buttonTag = new com_String();
+            buttonTag.appendFormat('<button type="button" class="{0} {1} {2}">{3}</button>',
+                VP_DS_BTN, this.uuid, 'vp-button', 'Edit');
+            if (this.pageThis) {
+                $(this.targetSelector).parent().append(buttonTag.toString());
+            }
+        }
         renderRowSubsetType(subsetType, timestamp = false) {
             var tag = new com_String();
             tag.appendFormatLine('<select class="{0} {1}">', VP_DS_ROWTYPE, 'vp-select m');
@@ -928,6 +947,17 @@ define([
         _bindEvent() {
             super._bindEvent();
             var that = this;
+
+            if (this.targetSelector && this.targetSelector != '') {
+                // open popup
+                $(document).on('click', com_util.formatString('.{0}.{1}', VP_DS_BTN, this.uuid), function (event) {
+                    if (!$(this).hasClass('disabled')) {
+                        that.useCell = false; // show apply button only
+                        that.open();
+                    }
+                });
+            }
+
             // df selection/change
             $(document).on('var_changed change', this.wrapSelector('.' + VP_DS_PANDAS_OBJECT), function (event) {
                 var varName = $(that.wrapSelector('.' + VP_DS_PANDAS_OBJECT)).val();
@@ -1595,6 +1625,48 @@ define([
         }
         setPreview(previewCodeStr) {
             this.setCmValue('previewCode', previewCodeStr);
+        }
+
+        open() {
+            super.open();
+
+            if (this.useInputVariable) {
+                this.loadVariables();
+                this.reloadSubsetData();
+                // show save button only
+                this.setSaveOnlyMode();
+                this.generateCode();
+            }            
+        }
+
+        //====================================================================
+        // Button to open Subset from other popup
+        //====================================================================
+
+        hideButton() {
+            if (this.useInputVariable) {
+                $(this.pageThis.wrapSelector('.' + VP_DS_BTN + '.' + this.uuid)).hide();
+            }
+        }
+
+        disableButton() {
+            if (this.useInputVariable) {
+                var buttonEle = $(this.pageThis.wrapSelector('.' + VP_DS_BTN + '.' + this.uuid));
+                if (!buttonEle.hasClass('disabled')) {
+                    buttonEle.addClass('disabled');
+                }
+            }
+        }
+
+        enableButton() {
+            if (this.useInputVariable) {
+                $(this.pageThis.wrapSelector('.' + VP_DS_BTN + '.' + this.uuid)).removeClass('disabled');
+            }
+        }
+        showButton() {
+            if (this.useInputVariable) {
+                $(this.pageThis.wrapSelector('.' + VP_DS_BTN + '.' + this.uuid)).show();
+            }
         }
     }
 
