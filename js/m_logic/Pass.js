@@ -26,6 +26,7 @@ define([
             /** Write codes executed before rendering */
             this.config.dataview = false;
             this.config.codeview = false;
+            this.config.saveOnly = true;
 
             this.state = {
                 code: 'pass',

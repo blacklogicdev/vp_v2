@@ -57,7 +57,8 @@ define([
                 // show footer
                 footer: true,
                 position: { right: 10, top: 120 },
-                size: { width: 400, height: 400 }
+                size: { width: 400, height: 400 },
+                saveOnly: false
             };
 
             // check BoardFrame width and set initial position of popup
@@ -304,6 +305,13 @@ define([
                         $(that.wrapSelector('.vp-popup-run-detailbox')).show();
                         evt.stopPropagation();
                         break;
+                    case 'save':
+                        $('#vp_wrapper').trigger({
+                            type: 'apply_option_page', 
+                            blockType: 'block',
+                            component: that
+                        });
+                        break;
                 }
             });
             // Click detail buttons
@@ -433,6 +441,7 @@ define([
                     break;
             }
 
+            // set detailed size
             $(this.wrapSelector()).css({
                 width: this.config.size.width + 'px',
                 height: this.config.size.height + 'px'
@@ -440,6 +449,11 @@ define([
 
             // position
             $(this.wrapSelector()).css({ top: position.top, right: position.right });
+
+            // set apply mode
+            if (this.config.saveOnly) {
+                this.setSaveOnlyMode();
+            }
 
             this._bindDraggable();
             this._bindResizable();
@@ -508,6 +522,12 @@ define([
             this.show();
             this.focus();
             this._bindCodemirror();
+        }
+
+        setSaveOnlyMode() {
+            // show save button only
+            $(this.wrapSelector('.vp-popup-runadd-box')).hide();
+            $(this.wrapSelector('.vp-popup-save-button')).show();
         }
 
         /**

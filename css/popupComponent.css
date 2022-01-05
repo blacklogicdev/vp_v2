@@ -158,7 +158,8 @@
     border: 0.25px solid var(--border-gray-color);
     position: absolute;
     bottom: 35px;
-    width: 84px;
+    right: 0px;
+    width: 120px;
     text-align: center;
     line-height: 30px;
 }
@@ -168,6 +169,12 @@
 .vp-popup-detail-button:hover {
     color: var(--font-hightlight);
     background: var(--light-gray-color);
+}
+.vp-popup-save-button {
+    position: absolute;
+    top: 9px;
+    right: 15px;
+    height: 30px;
 }
 /* writable codemirror style*/
 /* Code Option Codemirror */
