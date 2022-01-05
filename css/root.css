@@ -260,6 +260,12 @@ hr.vp-extra-menu-line {
 .w100 {
     width: 100px !important;
 }
+.w80 {
+    width: 80px !important;
+}
+.w50 {
+    width: 50px !important;
+}
 /* jquery auto-complete */
 .ui-autocomplete {
     z-index: 999;

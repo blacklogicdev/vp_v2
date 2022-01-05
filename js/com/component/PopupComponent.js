@@ -327,6 +327,24 @@ define([
                         break;
                 }
             });
+            // Close event for inner popup
+            $(this.wrapSelector('.vp-inner-popup-close')).on('click', function(evt) {
+                that.handleInnerCancel();
+                that.closeInnerPopup();
+            });
+            // Click button event for inner popup
+            $(this.wrapSelector('.vp-inner-popup-button')).on('click', function(evt) {
+                let btnType = $(this).data('type');
+                switch(btnType) {
+                    case 'cancel':
+                        that.handleInnerCancel();
+                        that.closeInnerPopup();
+                        break;
+                    case 'ok':
+                        that.handleInnerOk();
+                        break;
+                }
+            });
         }
 
         _unbindEvent() {
@@ -425,6 +443,19 @@ define([
 
             this._bindDraggable();
             this._bindResizable();
+        }
+        
+        templateForInnerPopup() {
+            /** Implementation needed */
+            return '';
+        }
+        
+        /**
+         * Render inner popup for selecting columns
+         * @returns Inner popup page dom
+         */
+        renderInnerPopup() {
+            $(this.wrapSelector('.vp-inner-popup-body')).html(this.templateForInnerPopup());
         }
 
         templateForDataView() {
@@ -563,6 +594,29 @@ define([
 
         closeView(viewType) {
             $(this.wrapSelector('.vp-popup-'+viewType+'view-box')).hide();
+        }
+
+        /**
+         * Open inner popup box
+         */
+        openInnerPopup(title) {
+            $(this.wrapSelector('.vp-inner-popup-title')).text(title);
+            $(this.wrapSelector('.vp-inner-popup-box')).show();
+        }
+        
+        /**
+         * Close inner popup box
+         */
+        closeInnerPopup() {
+            $(this.wrapSelector('.vp-inner-popup-box')).hide();
+        }
+
+        handleInnerCancel() {
+            /** Implementation needed */
+        }
+
+        handleInnerOk() {
+            /** Implementation needed */
         }
 
         //========================================================================
