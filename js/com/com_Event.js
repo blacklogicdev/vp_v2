@@ -57,7 +57,8 @@ define([], function() {
                             });
                         }
                         // Close on blur
-                        if (!$(target).hasClass('vp-close-on-blur') && !$(target).hasClass('vp-close-on-blur-btn')) {
+                        // if (!$(target).hasClass('vp-close-on-blur-btn') && !$(target).hasClass('vp-close-on-blur')) {
+                        if ($('.vp-close-on-blur-btn').find(target).length == 0 && $('.vp-close-on-blur').find(target).length == 0) {
                             $('.vp-close-on-blur').hide();
                         }
                     }

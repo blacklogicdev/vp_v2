@@ -289,11 +289,19 @@ define([
                 var btnType = $(this).data('type');
                 switch(btnType) {
                     case 'code':
-                        that.openView('code');
+                        if ($(that.wrapSelector('.vp-popup-codeview-box')).is(':hidden')) {
+                            that.openView('code');
+                        } else {
+                            that.closeView('code');
+                        }
                         evt.stopPropagation();
                         break;
                     case 'data':
-                        that.openView('data');
+                        if ($(that.wrapSelector('.vp-popup-dataview-box')).is(':hidden')) {
+                            that.openView('data');
+                        } else {
+                            that.closeView('data');
+                        }
                         evt.stopPropagation();
                         break;
                     case 'cancel':

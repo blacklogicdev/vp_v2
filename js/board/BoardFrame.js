@@ -74,8 +74,9 @@ define([
         _bindEvent() {
             let that = this;
             // board menu toggle button
-            $(this.wrapSelector('.vp-board-header-button')).on('click', function() {
+            $(this.wrapSelector('.vp-board-header-button')).on('click', function(evt) {
                 $(that.wrapSelector('.vp-board-header-button-inner')).toggle();
+                evt.stopPropagation();
             });
             // board menu button click
             $(this.wrapSelector('.vp-board-header-button-inner ul li')).on('click', function() {
@@ -154,6 +155,7 @@ define([
                 scroll: true,
                 revert: false,
                 cursor: 'move',
+                handle: '.vp-block-header',
                 helper: function(evt, currentItem) {
                     let header = currentItem.data('name');
                     let tag = new com_String();
