@@ -95,11 +95,12 @@ define([
             page.appendLine('<table class="v1 wp100" style="margin: 10px 0">');
             // page.appendLine('<thead><tr><td></td><td>Parameter</td><td></td><td>Default Value</td></tr></thead>');
             page.appendLine('<tbody><colgroup><col width="20px"><col width="100px"><col width="100px"><col width="100px"><col width="100px"><col width="30px"></colgroup>');
+            let that = this;
             this.state.v1.forEach((v, idx) => {
                 if (v.type == 'condition') {
-                    page.appendLine(this.templateForList(idx + 1, v.value));
+                    page.appendLine(that.templateForList(idx + 1, v.value));
                 } else {
-                    page.appendLine(this.templateForInput(idx + 1, v.value));
+                    page.appendLine(that.templateForInput(idx + 1, v.value));
                 }
             });
             page.appendLine('</tbody></table>');

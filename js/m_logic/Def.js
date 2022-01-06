@@ -33,8 +33,6 @@ define([
                 v2: [],
                 ...this.state
             }
-            
-            this._addCodemirror('code', this.wrapSelector('#code'));
         }
 
         _bindEvent() {
@@ -92,8 +90,9 @@ define([
             page.appendLine('<table class="v2 wp100 vp-tbl-gap5" style="margin: 10px 0">');
             page.appendLine('<thead><tr><td></td><td>Parameter</td><td></td><td>Default Value</td><td></td></tr></thead>');
             page.appendLine('<tbody><colgroup><col width="20px"><col width="100px"><col width="30px"><col width="100px"><col width="*"></colgroup>');
+            let that = this;
             this.state.v2.forEach((v, idx) => {
-                this.templateForList(idx + 1, v.param, v.value);
+                page.appendLine(that.templateForList(idx + 1, v.param, v.value));
             });
             page.appendLine('</tbody></table>');
             page.appendFormatLine('<button class="vp-button w100" id="{0}">+ Parameter</button>', 'vp_addParam');
