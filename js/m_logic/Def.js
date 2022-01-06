@@ -77,8 +77,6 @@ define([
 
         loadState() {
             let { v1, v2 } = this.state;
-
-            console.log('DEF', v1, v2);
         }
 
         templateForBody() {
