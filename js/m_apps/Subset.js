@@ -117,10 +117,10 @@ define([
         templateForDataView() {
             let tag = new com_String();
             // data view type
-            tag.appendFormatLine('<div class="{0}"><label><input type="checkbox" class="{1}"/><span>{2}</span></label></div>',
-                VP_DS_DATA_VIEW_ALL_DIV, VP_DS_DATA_VIEW_ALL, "view all");
+            tag.appendFormatLine('<div class="{0} vp-close-on-blur-btn"><label><input type="checkbox" class="{1}" {2}/><span>{3}</span></label></div>',
+                VP_DS_DATA_VIEW_ALL_DIV, VP_DS_DATA_VIEW_ALL, (this.state.viewAll?'checked':''), "view all");
             // data view
-            tag.appendFormatLine('<div class="{0} {1}"></div>', VP_DS_DATA_VIEW_BOX,
+            tag.appendFormatLine('<div class="{0} {1} vp-scrollbar"></div>', VP_DS_DATA_VIEW_BOX,
                 'rendered_html'); // 'rendered_html' style from jupyter output area
             return tag.toString();
         }
@@ -493,23 +493,24 @@ define([
             }
             return vpCondSuggest.toTagString();
         }
+        renderDataView() {
+            super.renderDataView();
+
+            this.loadDataPage();
+            $(this.wrapSelector('.vp-popup-dataview-box')).css('height', '300px');
+        }
         /**
          * Render Data Tab Page
          * @param {String} renderedText
          */
         renderDataPage(renderedText, isHtml = true) {
             var tag = new com_String();
-            tag.appendFormatLine('<div class="{0} {1}">', VP_DS_DATA_VIEW_BOX,
-                'rendered_html'); // 'rendered_html' style from jupyter output area
             if (isHtml) {
                 tag.appendLine(renderedText);
             } else {
                 tag.appendFormatLine('<pre>{0}</pre>', renderedText);
             }
-            tag.appendLine('</div>');
-            $(this.wrapSelector('.' + VP_DS_DATA_VIEW_BOX)).replaceWith(function () {
-                return tag.toString();
-            });
+            $(this.wrapSelector('.' + VP_DS_DATA_VIEW_BOX)).html(tag.toString());
         }
         ///////////////////////// render end //////////////////////////////////////////////////////
         ///////////////////////// load ///////////////////////////////////////////////////////////
