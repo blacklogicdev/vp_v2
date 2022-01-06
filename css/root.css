@@ -47,6 +47,9 @@
 .vp-bold {
     font-weight: bold;
 }
+.vp-center {
+    text-align: center;
+}
 /* Body */
 body {
     overflow: hidden;
@@ -265,6 +268,14 @@ hr.vp-extra-menu-line {
 }
 .w50 {
     width: 50px !important;
+}
+.w30 {
+    width: 30px !important;
+}
+/* table style */
+.vp-tbl-gap5 {
+    border-spacing: 5px;
+    border-collapse: separate;
 }
 /* jquery auto-complete */
 .ui-autocomplete {

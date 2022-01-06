@@ -1475,16 +1475,6 @@
                                 "desc" : "Pandas file input & output",
                                 "item" : [
                                     {
-                                        "id"   : "pdIo_sampleFile",
-                                        "type" : "function",
-                                        "level": 3,
-                                        "name" : "Sample csv",
-                                        "tag"  : "SAMPLE FILE,LOAD SAMPLE DATASET",
-                                        "path" : "visualpython - library - pandas - input output - sample file",
-                                        "desc" : "Load sample data file",
-                                        "file" : "m_pandas/sampleFile"
-                                    },
-                                    {
                                         "id"   : "pdIo_readFile",
                                         "type" : "function",
                                         "level": 3,
