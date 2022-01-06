@@ -1,7 +1,9 @@
+.vp-fe-container {
+    height: 100%;
+}
 .vp-fe-body {
     width: 100%;
-    height: calc(98% - 80px);
-    padding: 10px;
+    height: 100%;
     display: grid;
     grid-row-gap: 5px;
     /* grid-template-rows: 35px 30px 60% calc(40% - 80px); */

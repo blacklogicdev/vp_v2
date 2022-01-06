@@ -518,7 +518,7 @@ define([
         renderTable(renderedText, isHtml=true) {
             var tag = new com_String();
             // Table
-            tag.appendFormatLine('<div class="{0} {1} {2}">', VP_FE_TABLE, 'rendered_html', 'vp-apiblock-scrollbar');
+            tag.appendFormatLine('<div class="{0} {1} {2}">', VP_FE_TABLE, 'rendered_html', 'vp-scrollbar');
             if (isHtml) {
                 tag.appendFormatLine('<table class="dataframe">{0}</table>', renderedText);
                 // More button
@@ -660,7 +660,7 @@ define([
             content.appendLine('</div>'); // end of vp-inner-popup-tab calculation
     
             // tab 3. replace
-            content.appendFormatLine('<div class="{0} {1} {2}" style="display: none;">', 'vp-inner-popup-tab', 'replace', 'vp-apiblock-scrollbar');
+            content.appendFormatLine('<div class="{0} {1} {2}" style="display: none;">', 'vp-inner-popup-tab', 'replace', 'vp-scrollbar');
             content.appendLine(this.renderReplacePage());
             content.appendLine('</div>'); // end of vp-inner-popup-tab replace
             
@@ -901,9 +901,20 @@ define([
             return content;
         }
 
+        templateForDataView() {
+            return this.renderInfoPage('');
+        }
+
+        renderDataView() {
+            super.renderDataView();
+
+            this.loadInfo();
+            $(this.wrapSelector('.vp-popup-dataview-box')).css('height', '300px');
+        }
+
         renderInfoPage = function(renderedText, isHtml = true) {
             var tag = new com_String();
-            tag.appendFormatLine('<div class="{0} {1}">', VP_FE_INFO_CONTENT
+            tag.appendFormatLine('<div class="{0} {1} vp-close-on-blur vp-scrollbar">', VP_FE_INFO_CONTENT
                                 , 'rendered_html'); // 'rendered_html' style from jupyter output area
             if (isHtml) {
                 tag.appendLine(renderedText);
@@ -914,7 +925,7 @@ define([
             return tag.toString();
         }
 
-        loadInfo = function() {
+        loadInfo() {
             var that = this;
     
             // get selected columns/indexes
