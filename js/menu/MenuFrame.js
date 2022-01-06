@@ -79,11 +79,13 @@ define([
                 let menuWidth = $('#vp_menuFrame')[0].getBoundingClientRect().width;
                 let showBoard = $('#vp_boardFrame').is(':visible');
                 if (showBoard) {
+                    $(this).removeClass('vp-hide');
                     $('#vp_boardFrame').width(BOARD_MIN_WIDTH);
                     $('#vp_wrapper').width(vpWidth + BOARD_MIN_WIDTH + MENU_BOARD_SPACING);
                     $('#vp_wrapper').resizable({ minWidth: VP_MIN_WIDTH });
                     that._bindResizable();
                 } else {
+                    $(this).addClass('vp-hide');
                     $('#vp_boardFrame').width(0);
                     $('#vp_menuFrame').width(menuWidth);
                     $('#vp_wrapper').width(menuWidth + MENU_BOARD_SPACING);
