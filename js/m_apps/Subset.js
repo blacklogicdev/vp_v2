@@ -94,6 +94,8 @@ define([
             this.renderColumnSubsetType(subsetType);
             this.renderColumnIndexing(columnList);
             this.renderColumnSlicingBox(columnList);
+
+            this.loadStateAfterRender();
             
             // render button
             if (this.useInputVariable) {
@@ -187,7 +189,6 @@ define([
             //                         , VP_DS_SELECT_SEARCH, 'Search Row');
             var vpSearchSuggest = new SuggestInput();
             vpSearchSuggest.addClass(VP_DS_SELECT_SEARCH);
-            vpSearchSuggest.addClass('vp-input');
             vpSearchSuggest.setPlaceholder('Search Row');
             vpSearchSuggest.setSuggestList(function () { return that.state.rowList; });
             vpSearchSuggest.setSelectEvent(function (value) {
@@ -302,7 +303,6 @@ define([
             //                         , VP_DS_SELECT_SEARCH, 'Search Column');
             var vpSearchSuggest = new SuggestInput();
             vpSearchSuggest.addClass(VP_DS_SELECT_SEARCH);
-            vpSearchSuggest.addClass('vp-input');
             vpSearchSuggest.setPlaceholder('Search Column');
             vpSearchSuggest.setSuggestList(function () { return that.state.columnList; });
             vpSearchSuggest.setSelectEvent(function (value) {
@@ -772,7 +772,7 @@ define([
             this.state.rowPageDom = $(this.wrapSelector('.' + VP_DS_ROWTYPE_BOX + '.' + this.state.rowType)).html();
             this.state.colPageDom = $(this.wrapSelector('.' + VP_DS_COLTYPE_BOX + '.' + this.state.colType)).html();
         }
-        loadState() {
+        loadStateAfterRender() {
             var {
                 dataType, pandasObject, useCopy, toFrame, subsetType, allocateTo, rowType, colType, rowPageDom, colPageDom
             } = this.state;
@@ -1636,8 +1636,10 @@ define([
                 this.reloadSubsetData();
                 // show save button only
                 this.setSaveOnlyMode();
-                this.generateCode();
-            }            
+            }        
+            // generate code after displaying page
+            // - codemirror can be set after display    
+            this.generateCode();
         }
 
         //====================================================================
