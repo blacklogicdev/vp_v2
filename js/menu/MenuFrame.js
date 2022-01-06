@@ -68,8 +68,9 @@ define([
          */
         _bindEvent() {
             var that = this;
-            $(this.wrapSelector('#vp_headerExtraMenuBtn')).on('click', function() {
+            $(this.wrapSelector('#vp_headerExtraMenuBtn')).on('click', function(evt) {
                 $('#vp_headerExtraMenu').toggle();
+                evt.stopPropagation();
             });
             $(this.wrapSelector('#vp_toggleBoard')).on('click', function() {
                 $('#vp_boardFrame').toggle();
