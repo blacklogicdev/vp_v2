@@ -52,6 +52,12 @@
 }
 .vp-menu-search-box {
     width: calc(100% - 35px);
+    height: 35px;
+    background: #FFFFFF;
+    border: 0.25px solid #e4e4e4;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 1px rgb(0 0 0 / 10%);
+    border-radius: 2px;
     padding-right: 25px;
 }
 .vp-menu-search-icon {
@@ -65,12 +71,17 @@
     width: 25px;
     height: 25px;
     position: absolute;
-    top: 62px;
+    top: 66px;
     right: 8px;
     cursor: pointer;
-    background: white;
+    background-image: url(../img/toggleNote.svg);
+    background-position: center;
+    background-size: contain;
+    background-color: white;
     border-radius: 5px;
-    padding: 4px;
+}
+.vp-board-toggle-icon.vp-hide {
+    background-image: url(../img/toggleNote_hide.svg);
 }
 .vp-menu-footer {
     width: 100%;
@@ -232,35 +243,36 @@
 .vp-menu-task-item {
     display: inline-block;
     position: relative;
-    width: 100px;
+    width: 90px;
     height: 30px;
     line-height: 30px;
-    border-radius: 15px;
-    background: var(--border-gray-color);
+    background: var(--light-gray-color);
     margin-left: 5px;
     padding-left: 10px;
     cursor: pointer;
+    border: 0.24px solid #E4E4E4;
+    box-sizing: border-box;
+    border-radius: 2px 2px 0px 0px;
 }
 .vp-menu-task-item.vp-focus{
-    background: var(--font-hightlight);
-    color: white;
+    color: var(--font-hightlight);
+    background: white;
+    border-bottom: 2px solid var(--font-hightlight); 
 }
-.vp-menu-task-item:hover img.vp-menu-task-remove,
-.vp-menu-task-item img.vp-menu-task-icon {
+.vp-menu-task-item img.vp-menu-task-remove {
     display: inline-block;
     position: absolute;
-    left: 10px;
-    top: 2px;
+    right: 8px;
+    top: 6px;
 }
-.vp-menu-task-item img.vp-menu-task-remove,
+/* .vp-menu-task-item img.vp-menu-task-remove,
 .vp-menu-task-item:hover img.vp-menu-task-icon {
     display: none;
-}
+} */
 .vp-menu-task-item span {
     display: inline-block;
-    width: calc(100% - 5px);
+    width: calc(100% - 25px);
     line-height: 30px;
-    padding-left: 30px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
