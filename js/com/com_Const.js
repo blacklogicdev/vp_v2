@@ -33,7 +33,7 @@ define ([
     Constants.PATH_SEPARATOR = "/";
     Constants.BASE_PATH = Jupyter.notebook.base_url + "nbextensions" + Constants.PATH_SEPARATOR + "visualpython" + Constants.PATH_SEPARATOR;
     Constants.SOURCE_PATH   = Constants.BASE_PATH + "js" + Constants.PATH_SEPARATOR;
-    Constants.RESOURCE_PATH = Constants.BASE_PATH + "resource" + Constants.PATH_SEPARATOR;
+    Constants.IMAGE_PATH = Constants.BASE_PATH + "img" + Constants.PATH_SEPARATOR;
     Constants.STYLE_PATH    = Constants.BASE_PATH + "css" + Constants.PATH_SEPARATOR;
     Constants.DATA_PATH     = Constants.BASE_PATH + "data" + Constants.PATH_SEPARATOR;
     Constants.PYTHON_PATH   = Constants.BASE_PATH + "python" + Constants.PATH_SEPARATOR;

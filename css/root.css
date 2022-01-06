@@ -277,6 +277,61 @@ hr.vp-extra-menu-line {
     border-spacing: 5px;
     border-collapse: separate;
 }
+/* Table Layout */
+.vp-option-vertical-table-layout {
+	/* width: 100%; */
+	border-collapse: collapse;
+	table-layout: fixed;
+	color: var(--font-primary);
+}
+.vp-option-vertical-table-layout th {
+	min-width: 130px;
+	max-width: 300px;
+	vertical-align: middle;
+	text-align: left;
+	height: 30px;
+	padding: 2px 5px 2px 16px;
+}
+.vp-option-vertical-table-layout.vp-th-highlight th {
+	color: var(--font-hightlight);
+} 
+.vp-option-vertical-table-layout td {
+	min-width: 200px;
+	vertical-align: middle;
+	text-align: left;
+	height: 30px;
+	padding: 2px 5px;
+}
+.vp-option-vertical-table-layout .vp-center-align {
+	text-align: center;
+}
+.vp-option-horizontal-table-layout {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	color: var(--font-primary);
+}
+.vp-option-horizontal-table-layout th {
+	min-width: 150px;
+	max-width: 300px;
+	vertical-align: middle;
+	text-align: left;
+	height: 30px;
+	padding: 2px 5px 2px 5px;
+}
+.vp-option-horizontal-table-layout.vp-th-highlight th {
+	color: var(--font-hightlight);
+} 
+.vp-option-horizontal-table-layout td {
+	min-width: 200px;
+	vertical-align: middle;
+	text-align: left;
+	height: 30px;
+	padding: 2px 5px;
+}
+.vp-option-horizontal-table-layout .vp-center-align {
+	text-align: center;
+}
 /* jquery auto-complete */
 .ui-autocomplete {
     z-index: 999;
