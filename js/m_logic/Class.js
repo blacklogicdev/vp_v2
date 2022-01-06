@@ -48,7 +48,7 @@ define([
             page.appendLine('<div class="vp-orange-text vp-bold">Class Name</div>');
             page.appendFormatLine('<input type="text" id="v1" class="vp-input wp100 vp-state" value="{0}" placeholder="{1}">'
                                 , this.state.v1, 'Input class name');
-            page.appendLine('<div class="vp-bold">Super Class Name</div>');
+            page.appendLine('<div class="vp-bold" style="margin-top:5px;">Super Class Name</div>');
             page.appendFormatLine('<input type="text" id="v2" class="vp-input wp100 vp-state" value="{0}" placeholder="{1}">'
                                 , this.state.v2, 'Input super class name');
             return page.toString();

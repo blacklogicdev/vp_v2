@@ -33,8 +33,6 @@ define([
                 v2: [],
                 ...this.state
             }
-            
-            this._addCodemirror('code', this.wrapSelector('#code'));
         }
 
         _bindEvent() {
@@ -77,17 +75,22 @@ define([
             this.state.v2 = v2;
         }
 
+        loadState() {
+            let { v1, v2 } = this.state;
+        }
+
         templateForBody() {
             /** Implement generating template */
             var page = new com_String();
             page.appendLine('<div class="vp-orange-text vp-bold">Function Name</div>');
             page.appendFormatLine('<input type="text" id="v1" class="vp-input wp100 vp-state" value="{0}" placeholder="{1}">'
                                 , this.state.v1, 'Input code line');
-            page.appendLine('<table class="v2 wp100" style="margin: 10px 0">');
-            page.appendLine('<thead><tr><td></td><td>Parameter</td><td></td><td>Default Value</td></tr></thead>');
-            page.appendLine('<tbody><colgroup><col width="20px"><col width="100px"><col width="5px"><col width="*"></colgroup>');
+            page.appendLine('<table class="v2 wp100 vp-tbl-gap5" style="margin: 10px 0">');
+            page.appendLine('<thead><tr><td></td><td>Parameter</td><td></td><td>Default Value</td><td></td></tr></thead>');
+            page.appendLine('<tbody><colgroup><col width="20px"><col width="100px"><col width="30px"><col width="100px"><col width="*"></colgroup>');
+            let that = this;
             this.state.v2.forEach((v, idx) => {
-                this.templateForList(idx + 1, v.param, v.value);
+                page.appendLine(that.templateForList(idx + 1, v.param, v.value));
             });
             page.appendLine('</tbody></table>');
             page.appendFormatLine('<button class="vp-button w100" id="{0}">+ Parameter</button>', 'vp_addParam');
@@ -101,10 +104,10 @@ define([
             var page = new com_String();
             page.appendFormatLine('<tr class="{0}">', 'v2-tr');
             page.appendFormatLine('<th>{0}</th>', idx);
-            page.appendFormatLine('<td><input type="text" class="vp-input {0}" value="{1}" placeholder="{2}"/></td>'
+            page.appendFormatLine('<td><input type="text" class="vp-input w100 {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v2-param', param, 'Variable');
-            page.appendLine('<td>=</td>');
-            page.appendFormatLine('<td><input type="text" class="vp-input {0}" value="{1}" placeholder="{2}"/></td>'
+            page.appendLine('<td class="w30 vp-center">=</td>');
+            page.appendFormatLine('<td><input type="text" class="vp-input w100 {0}" value="{1}" placeholder="{2}"/></td>'
                                 , 'v2-value', value, 'Value');
             page.appendFormatLine('<td class="{0} vp-cursor"><img src="/nbextensions/visualpython/img/close_big.svg"/></td>', 'v2-del');
             page.appendLine('</tr>');

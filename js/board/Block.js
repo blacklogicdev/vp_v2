@@ -410,12 +410,15 @@ define([
         // Block load/save
         //========================================================================
         toJson() {
+            let state = this.task.getState();
+            // delete config info
+            delete state['config'];
             let jsonBlock = {
                 isGroup: this.isGroup,
                 depth: this.depth,
                 blockNumber: this.blockNumber,
                 taskId: this.id,
-                taskState: this.task.getState()
+                taskState: state
             };
             return jsonBlock;
         }

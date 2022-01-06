@@ -184,6 +184,7 @@
     border-radius: 2px;
     padding: 12px 0px;
     cursor: pointer;
+    margin: 0;
 }
 .vp-menuitem.apps.vp-color-apps1 {
     background: #F9B52A;

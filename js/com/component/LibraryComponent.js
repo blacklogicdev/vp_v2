@@ -38,9 +38,15 @@ define([
             // deep copy package info
             this.package = null;
             try {
-                this.package = JSON.parse(JSON.stringify(pandasLibrary.PANDAS_FUNCTION[this.packageId]));
+                let findPackage = pandasLibrary.PANDAS_FUNCTION[this.packageId];
+                if (findPackage) {
+                    this.package = JSON.parse(JSON.stringify(findPackage)); // deep copy of package
+                } else {
+                    throw 'Cannot find package';
+                }
             } catch(err) {
                 vpLog.display(VP_LOG_TYPE.ERROR, 'Cannot find package id from library: ' + this.packageId);
+                return;
             }
 
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'loading state', this.state);

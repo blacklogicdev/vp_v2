@@ -245,7 +245,7 @@ define([
             searchBox.setComponentID('vp_menuSearchBox');
             searchBox.addClass('vp-input vp-menu-search-box');
             searchBox.setPlaceholder('Search libraries');
-            searchBox.setMinSearchLength(1);
+            searchBox.setMinSearchLength(2);
             searchBox.setSuggestList(function () { return functionList; });
             searchBox.setSelectEvent(function (value) {
                 $(this.wrapSelector()).val(value);
@@ -260,8 +260,9 @@ define([
                     menuId: item.id,
                     menuState: {}
                 });
+                $(this.wrapSelector()).trigger('change');
                 // clear search box
-                $(that.wrapSelector('#vp_menuSearchBox')).val('');
+                $(this.wrapSelector()).val('');
             });
             searchBox.setNormalFilter(true);
             // replace searchbox
