@@ -1,7 +1,7 @@
 .vp-grid-box {
     display: grid;
     grid-column-gap: 5px;
-    grid-template-columns: 30px calc(100% - 70px);
+    grid-template-columns: 30px calc(100% - 30px);
 }
 .vp-for-sub-box {
     display: grid;
