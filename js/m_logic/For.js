@@ -29,10 +29,11 @@ define([
             /** Write codes executed before rendering */
             this.config.dataview = false;
             this.config.saveOnly = true;
+            this.config.sizeLevel = 1;
 
             this.state = {
-                v1: '', // index
-                v2: '', // item
+                v1: 'idx', // index
+                v2: 'item', // item
                 v3: 'range', // Type : range/variable/typing
                 v4: '', // Range - start
                 v5: '', //       - stop
