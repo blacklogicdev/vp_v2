@@ -4,7 +4,7 @@
     grid-row-gap: 5px;
 }
 .vp-bd-grid-box label {
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 .vp-bd-grid-box select,
 .vp-bd-grid-box input {

@@ -10,7 +10,7 @@
  */
 /* frame parts */
 .vp-board-frame {
-    width: 50%;
+    width: 49%;
     height: 100%;
     overflow: hidden;
     position: relative;
@@ -42,8 +42,8 @@
     font-family: AppleSDGothicNeo;
     font-weight: 500;
     font-size: 16px !important;
-    width: calc(100% - 50px);
-    margin: 10px;
+    width: calc(100% - 65px);
+    margin: 13px 10px 6px 10px;
     border: 0.5px solid white;
 }
 .vp-board-title input:focus {
@@ -56,10 +56,10 @@
 }
 .vp-board-header-button {
     cursor: pointer;
-    right: 10px;
-    top: 13px;
-    width: 20px;
-    height: 20px;
+    right: 16px;
+    top: 20px;
+    width: 15px;
+    height: 15px;
     position: absolute;
     background: url(../../visualpython/img/hamburger.svg) center center no-repeat transparent;
     z-index: 10;
@@ -67,7 +67,7 @@
 .vp-board-body {
     width: 100%;
     height: calc(100% - 100px);
-    padding: 5px 5px 50px 5px;
+    padding: 15px 15px 50px 15px;
     box-sizing: border-box;
     position: relative;
     color: #000;
@@ -91,9 +91,8 @@
 .vp-board-header-button-inner {
     display: none;
     cursor: auto;
-    margin: 17px 14px 0px 0px;
     margin-top: 25px;
-    width: 140px;
+    width: 150px;
     float: right;
     background: #FFFFFF;
     border: 0.25px solid #C4C4C4;
@@ -113,10 +112,10 @@
     overflow: hidden;
     cursor: pointer;
     width: calc(100% - 10px);
-    height: 20px;
+    height: 25px;
     margin-left: 10px;
-    font-size: 13.5px;
-    line-height: 18px;
+    font-size: 14px;
+    line-height: 25px;
     text-align: left;
     vertical-align: middle;
     color: var(--font-primary);
@@ -126,7 +125,7 @@
 }
 .vp-board-header-button-inner ul li:hover {
     color: var(--font-hightlight);
-    background-color: rgb(229, 229, 229);
+    /* background-color: var(--light-gray-color); */
 }
 
 /* block */
@@ -145,7 +144,9 @@
     justify-content: center;
     touch-action: none;
     cursor: pointer;
-    font-family: Consolas;
+    color: var(--font-primary);
+    font-family: 'AppleSDGothicNeo';
+    
 }
 .vp-block.vp-block-group {
     margin-top: 15px;
@@ -154,7 +155,7 @@
     height: 25px;
     width: calc(100% - 30px);
     margin-left: 30px;
-    padding: 1px 10px;
+    padding: 3px 10px;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -165,6 +166,7 @@
     word-wrap: normal;
     overflow: hidden;
     border: 2px solid transparent;
+    border-radius: 2px;
 }
 .vp-block-left-holder {
     display: none;
@@ -190,14 +192,15 @@
     text-align: center;
     width: 25px;
     height: 25px;
-    line-height: 24px;
+    line-height: 26px;
     background-color: #E5E5E5;
 }
 /* block number hovering */
 .vp-block-num-info:hover {
     background-image: url(../img/circle_play\(actived\).svg);
     background-color: transparent;
-    background-size: contain;
+    background-size: unset;
+    background-position: center;
     background-repeat: no-repeat; 
     color: transparent;
 }

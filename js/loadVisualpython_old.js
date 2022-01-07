@@ -81,7 +81,7 @@
     // Internal call function
     //========================================================================
     /**
-     * Read dejault config
+     * Read default config
      * TODO: 하드코딩이 아닌 file read 로 변경 되어야 할듯.
      */
     var _readDefaultConfig = function() {

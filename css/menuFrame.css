@@ -10,7 +10,7 @@
  */
 /* frame parts */
 .vp-menu-frame {
-    width: 50%;
+    width: 51%;
     height: 100%;
     overflow: hidden;
 
@@ -29,9 +29,9 @@
 .vp-menu-header-button {
     cursor: pointer;
 	background-image: url(../../visualpython/img/dot_menu.svg);
-	width: 16px;
-	height: 16px;
-	margin: 7px 4px 0px 0px;
+	width: 20px;
+	height: 20px;
+	margin: 6px 5px 0px 0px;
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center;
@@ -48,31 +48,32 @@
 }
 .vp-menu-search-div {
     box-sizing: border-box;
-    padding: 5px 0 10px 0px;
+    padding: 5px 0 5px 0px;
 }
 .vp-menu-search-box {
-    width: calc(100% - 35px);
-    height: 35px;
+    width: 211px;
+    height: 30px;
     background: #FFFFFF;
     border: 0.25px solid #e4e4e4;
     box-sizing: border-box;
-    box-shadow: 2px 2px 1px rgb(0 0 0 / 10%);
+    box-shadow: 1px 1px 2px rgb(0 0 0 / 8%);
     border-radius: 2px;
+    margin-left: 5px;
     padding-right: 25px;
+    font-size: 13px;
 }
 .vp-menu-search-icon {
     width: 20px;
     height: 20px;
     position: relative;
-    /* top: 5px; */
-    right: 28px;
+    right: 32px;
 }
 .vp-board-toggle-icon {
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     position: absolute;
-    top: 66px;
-    right: 8px;
+    top: 63px;
+    right: 15px;
     cursor: pointer;
     background-image: url(../img/toggleNote.svg);
     background-position: center;
@@ -115,10 +116,10 @@
     overflow: hidden;
     cursor: pointer;
     width: calc(100% - 7px);
-    height: 18px;
+    height: 25px;
     margin-left: 7px;
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 14px;
+    line-height: 25px;
     text-align: left;
     vertical-align: middle;
     color: var(--font-primary);
@@ -128,7 +129,6 @@
 }
 #vp_headerExtraMenu .vp-header-extra-menu-list li:hover {
     color: var(--font-hightlight);
-    background-color: #F5F5F5;
 }
 /* resizing handle */
 .vp-menu-frame .ui-resizable-handle {
@@ -143,57 +143,58 @@
     
 .vp-logo {
     float: left;
-    width: 138px;
-    height: 30px;
-    margin-left: 5px;
+    width: 163px;
+    margin-top: 1px;
 }
 
 /* Menu Group */
 .vp-menugroup-root {
+    width: 245px;
     background: var(--light-gray-color);
     padding: 5px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin: 5px;
     cursor: pointer;
 }
 .vp-menugroup-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, 58px);
-    grid-template-rows: repeat(auto-fill, 58px);
+    grid-template-rows: repeat(auto-fill, 57px);
     grid-column-gap: 5px;
     grid-row-gap: 5px;
-    margin: 5px 0px;
+    margin: 10px 5px;
 }
 .vp-menugroup {
     font-weight: bold;
+    margin: 5px;
 }
 .vp-menugroup-box:empty::after {
     content: '(Empty)';
     color: var(--gray-color);
 }
 :not(.apps) > .vp-menugroup-box {
-    padding-left: 20px;
+    padding-left: 8px;
 }
 /* Menu Items */
 .vp-menuitem {
-    padding: 3px 3px 3px 5px;
-    width: 95%;
+    padding: 3px 10px;
+    width: 90%;
     cursor: pointer;
-    box-shadow: 2px 2px 1px rgb(0 0 0 / 10%);
-    margin-bottom: 5px;
-    background-color: rgb(196, 196, 196);
+    box-shadow: 1px 1px 1px rgb(0 0 0 / 5%);
+    margin: 5px 0px 0px 10px;
+    background-color: var(--border-gray-color);
+    border-radius: 2px;
 }
 
 /* Menu Items - App */
 .vp-menuitem.apps {
-    width: 58px;
-    height: 58px;
+    width: 56px;
+    height: 56px;
     text-align: center;
-    /* border: 0.25px solid #C4C4C4; */
     box-sizing: border-box;
-    box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 2px rgb(0 0 0 / 10%);
     border-radius: 2px;
-    padding: 12px 0px;
+    padding: 10px 0px;
     cursor: pointer;
     margin: 0;
 }
@@ -213,12 +214,13 @@
     background: var(--gray-color);
 }
 .vp-menuitem.apps img {
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
 }
 .vp-menuitem-apps-name {
     color: #FFFFFF;
     font-size: 11px;
+    margin-top: 3px;
 }
 /* MenuItem - Logic */
 .vp-menuitem.logic-define {
