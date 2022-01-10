@@ -87,13 +87,12 @@
 
     /**
      * Add toolbar button
-     * @param {Object} cfg configuration
      */
-    var _addToolBarVpButton = function (cfg) {
+    var _addToolBarVpButton = function () {
         // Call notebookApp initialize event, if toolbar is not yet ready
         if (!Jupyter.toolbar) {
             events.on('app_initialized.NotebookApp', function (evt) {
-                _addToolBarVpButton(cfg);
+                _addToolBarVpButton();
             });
             return;
         }
@@ -226,7 +225,7 @@
         vpConfig.resetMetadata();
 
         Object.keys(defaultMetadata).forEach(key => {
-            let value = (metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
+            let value = (metadata && metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
             vpConfig.setMetadata({ [key]: value });
             cfg[key] = value;
         })
@@ -243,7 +242,7 @@
         let cfg = readConfig();
 
         _readKernelFunction();
-        _addToolBarVpButton(cfg);
+        _addToolBarVpButton();
         _loadVpResource(cfg);
 
         if (cfg.vp_section_display && vpFrame) {
