@@ -114,6 +114,7 @@ define([], function() {
             };
             // default values for per-notebook configurable parameters
             this.metadataSettings = {
+                vp_config_version: '1.0.0',
                 vp_signature: 'VisualPython',
                 vp_position: {},
                 vp_section_display: true,

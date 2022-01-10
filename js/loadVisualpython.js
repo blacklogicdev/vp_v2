@@ -204,16 +204,21 @@
 
         // config may be specified at system level or at document level. first, update
         // defaults with config loaded from server
-        let defaultMetadata = vpConfig.metadataSettings;
+        let defaultMetadata = JSON.parse(JSON.stringify(vpConfig.metadataSettings));
         let metadata = vpConfig.getMetadata();
         
         vpConfig.resetMetadata();
 
-        Object.keys(defaultMetadata).forEach(key => {
-            let value = (metadata && metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
-            vpConfig.setMetadata({ [key]: value });
-            cfg[key] = value;
-        })
+        if (metadata && defaultMetadata.vp_config_version == metadata.vp_config_version) {
+            Object.keys(defaultMetadata).forEach(key => {
+                let value = (metadata && metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
+                vpConfig.setMetadata({ [key]: value });
+                cfg[key] = value;
+            });
+        } else {
+            // if config version is different, overwrite config
+            vpConfig.setMetadata(defaultMetadata);
+        }
         
         return cfg;
     };
