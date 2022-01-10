@@ -31,6 +31,7 @@ define([
     const { 
         JUPYTER_HEADER_SPACING,
         VP_MIN_WIDTH, 
+        MENU_MIN_WIDTH,
         BOARD_MIN_WIDTH,
         MENU_BOARD_SPACING
     } = com_Config;
@@ -52,6 +53,10 @@ define([
             // Task bar options list
             this._taskPopupList = [];
             this._blockPopupList = [];
+
+            // page info
+            this.minWidth = VP_MIN_WIDTH;
+            this.width = VP_MIN_WIDTH;
         }
         //========================================================================
         // Internal call function
@@ -92,7 +97,7 @@ define([
                 helper: 'vp-wrapper-resizer',
                 handles: 'w',
                 // resizeHeight: false,
-                minWidth: VP_MIN_WIDTH,
+                minWidth: this.minWidth,
                 // maxWidth: 0,
                 start: function(event, ui) {
                     
@@ -104,7 +109,7 @@ define([
                 },
                 stop: function(event, ui) {
                     $('#vp_wrapper').css({'left': '', 'height': ''});
-                },
+                }
             });  
         }
 
@@ -116,8 +121,8 @@ define([
             if (showBoard) {
                 boardWidth = currentWidth - menuWidth - MENU_BOARD_SPACING;
                 if (boardWidth < BOARD_MIN_WIDTH + MENU_BOARD_SPACING) {
-                    menuWidth -= (BOARD_MIN_WIDTH + MENU_BOARD_SPACING - boardWidth);
                     boardWidth = BOARD_MIN_WIDTH;
+                    menuWidth = currentWidth - (BOARD_MIN_WIDTH + MENU_BOARD_SPACING);
                 }
             } else {
                 // resize menuWidth if board is hidden
@@ -129,6 +134,14 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'resizing wrapper to ', currentWidth, 'with', menuWidth, boardWidth);
 
             $('#vp_wrapper').width(currentWidth);
+
+            // save current page info
+            vpConfig.setMetadata({
+                vp_position: { width: currentWidth },
+                vp_menu_width: menuWidth,
+                vp_note_width: boardWidth
+            });
+
             this._resizeNotebook(currentWidth);
         }
 
@@ -171,16 +184,30 @@ define([
             $(this.$pageDom).prependTo(document.body);
 
             // set vp width using metadata
-            let metadata = vpConfig.getMetadata('vp_position');
-            $('#vp_wrapper').width(metadata.width);
+            let metadata = vpConfig.getMetadata();
+            let { vp_position, vp_note_display, vp_menu_width, vp_note_width } = metadata;
+            if (vp_position) {
+                $('#vp_wrapper').width(vp_position.width);
+            }
+
+            if (!vp_note_display) {
+                this.minWidth = MENU_MIN_WIDTH + MENU_BOARD_SPACING;
+            }
 
             // resize jupyterNotebook area
             let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
-            this._resizeNotebook(vpWidth);
             
             // load menu & board
-            this._menuFrame = new MenuFrame($('#vp_wrapper'), {});
-            this._boardFrame = new BoardFrame($('#vp_wrapper'), {}, { parent: this });
+            this._menuFrame = new MenuFrame($('#vp_wrapper'), 
+                { vp_menu_width: vp_menu_width }, 
+                { parent: this }
+            );
+            this._boardFrame = new BoardFrame($('#vp_wrapper'), 
+                { vp_note_display: vp_note_display, vp_note_width: vp_note_width }, 
+                { parent: this }
+            );
+            
+            this._resizeNotebook(vpWidth);
             
             // bind event
             this._bindEvent();
@@ -190,12 +217,30 @@ define([
         }
 
         toggleVp() {
-            $('#vp_wrapper').toggle();
-
             let vpDisplay = $('#vp_wrapper').is(':visible');
-            vpConfig.setMetadata({ vp_section_display: vpDisplay });
-
             let vpWidth = $('#vp_wrapper')[0].clientWidth;
+
+            let metadata = vpConfig.getMetadata();
+            let { vp_position, vp_menu_width, vp_note_width } = metadata;
+            let newMetadata = { vp_section_display: !vpDisplay };
+            if (vpDisplay) {
+                // hide
+                vpWidth = 0;
+                $('#vp_wrapper').hide();
+            } else {
+                // show
+                vpWidth = vp_position.width;
+                if (vp_position.width == 0) {
+                    vpWidth = (vp_menu_width + vp_note_width + MENU_BOARD_SPACING) + 'px';
+                    newMetadata['vp_position'] = { width: vpWidth };
+                    $('#vp_wrapper').css({ width: vpWidth });
+                }
+                $('#vp_wrapper').show();
+            }
+
+            // set current width
+            vpConfig.setMetadata(newMetadata);
+
             this._resizeNotebook(vpWidth);
 
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'vp toggled');
@@ -213,6 +258,39 @@ define([
         //========================================================================
         // Child components control function
         //========================================================================
+
+        toggleNote() {
+            let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
+            let newVpWidth = vpWidth;
+            let menuWidth = $('#vp_menuFrame')[0].getBoundingClientRect().width;
+
+            let isNoteVisible = $('#vp_boardFrame').is(':visible');
+            if (isNoteVisible) {
+                // hide note
+                this.boardFrame.hide();
+                newVpWidth = menuWidth + MENU_BOARD_SPACING;
+                $('#vp_wrapper').width(newVpWidth);
+                $('#vp_wrapper').resizable({ minWidth: MENU_MIN_WIDTH + MENU_BOARD_SPACING });
+                this.menuFrame._unbindResizable();
+                
+            } else {
+                // show note
+                this.boardFrame.show();
+                newVpWidth = vpWidth + BOARD_MIN_WIDTH + MENU_BOARD_SPACING;
+                $('#vp_wrapper').width(newVpWidth);
+                $('#vp_wrapper').resizable({ minWidth: VP_MIN_WIDTH });
+                this.menuFrame._bindResizable();
+            }
+            // save current page info
+            vpConfig.setMetadata({
+                // vp_note_display: !isNoteVisible, // save in boardFrame.show/hide()
+                vp_position: { width: newVpWidth },
+                vp_menu_width: menuWidth
+            });
+
+            // $('#vp_wrapper').trigger('resize');
+            this._resizeVp(newVpWidth);
+        }
 
         /**
          * Create popup

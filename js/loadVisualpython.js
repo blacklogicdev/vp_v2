@@ -67,33 +67,17 @@
     }
 
     //========================================================================
-    // Event: Add browser history event
-    //========================================================================
-    // window.addEventListener('popstate', function (e) {
-    //     if (e.state != null && e.state.back != null) {
-    //         var backId = e.state.back;
-    //         document.getElementById(backId).scrollIntoView(true);
-    //         if (liveNotebook) {
-    //             var cell = $(document.getElementById(backId)).closest('.cell').data('cell');
-    //             Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
-    //             //highlight_vp_item('vp_link_click', {cell: cell});
-    //         }
-    //     }
-    // });
-
-    //========================================================================
     // Internal call function
     //========================================================================
 
     /**
      * Add toolbar button
-     * @param {Object} cfg configuration
      */
-    var _addToolBarVpButton = function (cfg) {
+    var _addToolBarVpButton = function () {
         // Call notebookApp initialize event, if toolbar is not yet ready
         if (!Jupyter.toolbar) {
             events.on('app_initialized.NotebookApp', function (evt) {
-                _addToolBarVpButton(cfg);
+                _addToolBarVpButton();
             });
             return;
         }
@@ -220,16 +204,21 @@
 
         // config may be specified at system level or at document level. first, update
         // defaults with config loaded from server
-        let defaultMetadata = vpConfig.metadataSettings;
+        let defaultMetadata = JSON.parse(JSON.stringify(vpConfig.metadataSettings));
         let metadata = vpConfig.getMetadata();
         
         vpConfig.resetMetadata();
 
-        Object.keys(defaultMetadata).forEach(key => {
-            let value = (metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
-            vpConfig.setMetadata({ [key]: value });
-            cfg[key] = value;
-        })
+        if (metadata && defaultMetadata.vp_config_version == metadata.vp_config_version) {
+            Object.keys(defaultMetadata).forEach(key => {
+                let value = (metadata && metadata.hasOwnProperty(key) ? metadata : defaultMetadata)[key];
+                vpConfig.setMetadata({ [key]: value });
+                cfg[key] = value;
+            });
+        } else {
+            // if config version is different, overwrite config
+            vpConfig.setMetadata(defaultMetadata);
+        }
         
         return cfg;
     };
@@ -243,7 +232,7 @@
         let cfg = readConfig();
 
         _readKernelFunction();
-        _addToolBarVpButton(cfg);
+        _addToolBarVpButton();
         _loadVpResource(cfg);
 
         if (cfg.vp_section_display && vpFrame) {

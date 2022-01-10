@@ -15,6 +15,7 @@
 define([
     'text!../../html/boardFrame.html!strip',
     'css!../../css/boardFrame.css',
+    '../com/com_Config',
     '../com/com_String',
     '../com/com_util',
     '../com/com_interface',
@@ -22,7 +23,7 @@ define([
     '../com/component/FileNavigation',
     './Block',
     './BlockMenu'
-], function(boardFrameHtml, boardFrameCss, com_String, com_util, com_interface, Component, FileNavigation, Block, BlockMenu) {
+], function(boardFrameHtml, boardFrameCss, com_Config, com_String, com_util, com_interface, Component, FileNavigation, Block, BlockMenu) {
 	'use strict';
     //========================================================================
     // Define Variable
@@ -39,6 +40,8 @@ define([
         constructor($target, state, prop) {
             super($target, state, prop);
             /*
+             * state.vp_note_display
+             * state.vp_note_width
              * prop.parent: MainFrame
              */
         }
@@ -53,9 +56,11 @@ define([
 
             // state
             this.state = {
+                vp_note_display: true,
                 viewDepthNumber: false,
-                indentCount: 4
-            }
+                indentCount: 4,
+                ...this.state
+            };
 
             // temporary state
             this.tmpState = {
@@ -328,6 +333,14 @@ define([
         render() {
             super.render();
 
+            // display note
+            if (!this.state.vp_note_display) {
+                this.hide();
+            }
+
+            // set width using metadata
+            $(this.wrapSelector()).width(this.state.vp_note_width);
+
             // render taskBar
             this.renderBlockList([]);
             this._bindSortable();
@@ -374,6 +387,30 @@ define([
                 let numInfo = $(block).find('.vp-block-num-info');
                 $(numInfo).html(num++);
             });
+        }
+
+        show() {
+            // show note area
+            $(this.wrapSelector()).show();
+            $('#vp_toggleBoard').removeClass('vp-hide');
+            // set width 
+            let boardWidth = com_Config.BOARD_MIN_WIDTH;
+            $(this.wrapSelector()).width(boardWidth);
+            // save as metadata
+            vpConfig.setMetadata({ vp_note_display: true, vp_note_width: boardWidth });
+        }
+        
+        hide() {
+            // hide note area
+            $(this.wrapSelector()).hide();
+            if (!$('#vp_toggleBoard').hasClass('vp-hide')) {
+                $('#vp_toggleBoard').addClass('vp-hide');
+            }
+            // set width
+            let boardWidth = 0;
+            $(this.wrapSelector()).width(boardWidth);
+            // save as metadata
+            vpConfig.setMetadata({ vp_note_display: false, vp_note_width: boardWidth });
         }
         //========================================================================
         // Note control

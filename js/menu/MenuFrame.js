@@ -52,6 +52,10 @@ define([
         //========================================================================
         constructor($target, state, prop={}) {
             super($target, state, prop);
+            /**
+             * state.vp_menu_width : menu width (metadata)
+             * prop.parent : MainFrame
+             */
         }
 
         //========================================================================
@@ -73,26 +77,7 @@ define([
                 evt.stopPropagation();
             });
             $(this.wrapSelector('#vp_toggleBoard')).on('click', function() {
-                $('#vp_boardFrame').toggle();
-                    
-                let vpWidth = $('#vp_wrapper')[0].getBoundingClientRect().width;
-                let menuWidth = $('#vp_menuFrame')[0].getBoundingClientRect().width;
-                let showBoard = $('#vp_boardFrame').is(':visible');
-                if (showBoard) {
-                    $(this).removeClass('vp-hide');
-                    $('#vp_boardFrame').width(BOARD_MIN_WIDTH);
-                    $('#vp_wrapper').width(vpWidth + BOARD_MIN_WIDTH + MENU_BOARD_SPACING);
-                    $('#vp_wrapper').resizable({ minWidth: VP_MIN_WIDTH });
-                    that._bindResizable();
-                } else {
-                    $(this).addClass('vp-hide');
-                    $('#vp_boardFrame').width(0);
-                    $('#vp_menuFrame').width(menuWidth);
-                    $('#vp_wrapper').width(menuWidth + MENU_BOARD_SPACING);
-                    $('#vp_wrapper').resizable({ minWidth: MENU_MIN_WIDTH + MENU_BOARD_SPACING });
-                    that._unbindResizable();
-                }
-                $('#vp_wrapper').trigger('resize');
+                that.prop.parent.toggleNote();
             });
         }
 
@@ -126,13 +111,9 @@ define([
     
                         // check board minimum width
                         if (newBoardWidth < BOARD_MIN_WIDTH + MENU_BOARD_SPACING) {
-                            currentWidth -= (BOARD_MIN_WIDTH + MENU_BOARD_SPACING - newBoardWidth);
-                            if (currentWidth < MENU_MIN_WIDTH) {
-                                currentWidth = MENU_MIN_WIDTH;
-                            }
                             newBoardWidth = BOARD_MIN_WIDTH;
-                            // change maxWidth
-                            // $('#vp_menuFrame').resizable('option', 'maxWidth', currentWidth);
+                            currentWidth = parentWidth - (BOARD_MIN_WIDTH + MENU_BOARD_SPACING);
+                            // change current width
                             ui.size.width = currentWidth;
                         } 
                     } 
@@ -141,10 +122,16 @@ define([
                     // resize board frame with left space
                     $('#vp_boardFrame').width(newBoardWidth); 
 
+                    vpConfig.setMetadata({
+                        vp_position: { width: parentWidth },
+                        vp_menu_width: currentWidth,
+                        vp_note_width: newBoardWidth
+                    });
+
                     vpLog.display(VP_LOG_TYPE.DEVELOP, 'resizing menuFrame');
                 },
                 stop: function(event, ui) {
-                    
+
                 },
             });
         }
@@ -224,6 +211,9 @@ define([
             var that = this;
 
             this._bindResizable();
+
+            // set width using metadata
+            $(this.wrapSelector()).width(this.state.vp_menu_width);
 
             // render menuItem
             var menuLibraries = this.menuLibraries;
