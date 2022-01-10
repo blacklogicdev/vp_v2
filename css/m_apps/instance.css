@@ -22,7 +22,7 @@
 }
 .vp-instance-label {
     grid-column: 1/2;
-    font-weight: 700;
+    font-weight: bold;
     margin: 0px;
 
     line-height: 30px;
@@ -52,7 +52,14 @@
     overflow: hidden;
 }
 .vp-instance-box .CodeMirror.selected {
-    border: 1px solid var(--highlight-color);
+    display: inline-block;
+    border: 1px solid silver;
+    overflow: hidden;
+    width: 88%;
+    height: 31px;
+    background-image: repeating-linear-gradient( to right, var(--grid-line-color) 0, var(--grid-line-color) 0.25px, transparent 1px, transparent 5px ), repeating-linear-gradient( to bottom, var(--grid-line-color) 0, var(--grid-line-color) 0.25px, transparent 1px, transparent 5px );
+    background-color: white;
+    border: 0.25px solid #E4E4E4;
 }
 .vp-instance-box .CodeMirror-empty { outline: none; }
 .vp-instance-box .CodeMirror-empty.CodeMirror-focused { outline: none; }
