@@ -117,15 +117,18 @@ define([], function() {
                 vp_signature: 'VisualPython',
                 vp_position: {},
                 vp_section_display: true,
-                vp_board_display: true,
+                vp_note_display: true,
+                vp_menu_width: Config.MENU_MIN_WIDTH,
+                vp_note_width: Config.BOARD_MIN_WIDTH
             };
             
-            let vp_width = Config.MENU_MIN_WIDTH + (this.metadataSettings.vp_board_display? Config.BOARD_MIN_WIDTH: 0) + Config.MENU_BOARD_SPACING;
+            let vp_width = Config.MENU_MIN_WIDTH + (this.metadataSettings.vp_note_display? Config.BOARD_MIN_WIDTH: 0) + Config.MENU_BOARD_SPACING;
             this.metadataSettings['vp_position'] = {
-                height: 'calc(100% - 110px)',
-                width: vp_width + 'px',
-                right: '0px',
-                top: '110px'
+                // height: 'calc(100% - 110px)',
+                // width: vp_width + 'px',
+                // right: '0px',
+                // top: '110px',
+                width: vp_width
             }
         
             // merge default config
@@ -217,10 +220,20 @@ define([], function() {
          * @param {String} configKey 
          */
         getMetadata(dataKey='', configKey='vp') {
-            if (dataKey == '') {
-                return Jupyter.notebook.metadata[configKey];
+            let metadata = Jupyter.notebook.metadata[configKey];
+            if (metadata) {
+                // update this metadataSetting
+                this.metadataSettings = {
+                    ...this.metadataSettings,
+                    ...metadata
+                };
+                // no datakey, return all metadata
+                if (dataKey == '') {
+                    return metadata;
+                }
+                return metadata[dataKey];
             }
-            return Jupyter.notebook.metadata[configKey][dataKey];
+            return {};
         }
 
         /**
@@ -235,6 +248,13 @@ define([], function() {
                 ...dataObj
             };
             Jupyter.notebook.set_dirty();
+
+            // update this metadataSetting
+            this.metadataSettings = {
+                ...this.metadataSettings,
+                ...dataObj
+            };
+
         }
 
         /**
@@ -244,7 +264,6 @@ define([], function() {
         resetMetadata(configKey='vp') {
             Jupyter.notebook.metadata[configKey] = {};
         }
-
 
     }
 

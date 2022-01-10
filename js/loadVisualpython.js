@@ -67,21 +67,6 @@
     }
 
     //========================================================================
-    // Event: Add browser history event
-    //========================================================================
-    // window.addEventListener('popstate', function (e) {
-    //     if (e.state != null && e.state.back != null) {
-    //         var backId = e.state.back;
-    //         document.getElementById(backId).scrollIntoView(true);
-    //         if (liveNotebook) {
-    //             var cell = $(document.getElementById(backId)).closest('.cell').data('cell');
-    //             Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
-    //             //highlight_vp_item('vp_link_click', {cell: cell});
-    //         }
-    //     }
-    // });
-
-    //========================================================================
     // Internal call function
     //========================================================================
 
