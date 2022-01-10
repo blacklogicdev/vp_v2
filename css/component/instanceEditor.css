@@ -7,7 +7,7 @@
     padding-right: 15px;
 }
 .vp-ins-select-title {
-    font-weight: 700;
+    font-weight: bold;
     color: var(--font-hightlight);
     padding: 5px 5px 5px 0px;
 }

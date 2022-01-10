@@ -29,9 +29,9 @@
 .vp-menu-header-button {
     cursor: pointer;
 	background-image: url(../../visualpython/img/dot_menu.svg);
-	width: 20px;
-	height: 20px;
-	margin: 6px 5px 0px 0px;
+	width: 19px;
+	height: 19px;
+	margin: 7px 10px 0px 0px;
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center;
@@ -72,8 +72,8 @@
     width: 26px;
     height: 26px;
     position: absolute;
-    top: 63px;
-    right: 15px;
+    top: 62px;
+    right: 18px;
     cursor: pointer;
     background-image: url(../img/toggleNote.svg);
     background-position: center;
@@ -143,8 +143,8 @@
     
 .vp-logo {
     float: left;
-    width: 163px;
-    margin-top: 1px;
+    width: 150px;
+    margin: 2px 2px;
 }
 
 /* Menu Group */
@@ -152,6 +152,7 @@
     width: 245px;
     background: var(--light-gray-color);
     padding: 5px;
+    font-size: 14px;
     font-weight: bold;
     margin: 5px;
     cursor: pointer;
@@ -245,11 +246,11 @@
 .vp-menu-task-item {
     display: inline-block;
     position: relative;
-    width: 90px;
+    width: 85px;
     height: 30px;
     line-height: 30px;
     background: var(--light-gray-color);
-    margin-left: 5px;
+    margin-left: 3px;
     padding-left: 10px;
     cursor: pointer;
     border: 0.24px solid #E4E4E4;
@@ -259,7 +260,7 @@
 .vp-menu-task-item.vp-focus{
     color: var(--font-hightlight);
     background: white;
-    border-bottom: 2px solid var(--font-hightlight); 
+    border-bottom: 3px solid #FFCF73;
 }
 .vp-menu-task-item img.vp-menu-task-remove {
     display: inline-block;

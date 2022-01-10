@@ -105,7 +105,7 @@ define([
 
             // create variable input
             tag.appendFormatLine('<div class="{0}">', VP_CREATE_VAR_BOX);
-            tag.appendFormatLine('<input class="vp-input {0}" type="text" placeholder="Create Variable" />', VP_CREATE_VAR);
+            tag.appendFormatLine('<input class="vp-input {0}" type="text" placeholder="Create new variable" />', VP_CREATE_VAR);
             tag.appendFormatLine('<div class="{0}"><img src="{1}"/></div>', VP_CREATE_VAR_BTN, '/nbextensions/visualpython/img/plus.svg');
             tag.appendLine('</div>');
 

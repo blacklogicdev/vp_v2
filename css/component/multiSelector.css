@@ -20,7 +20,8 @@
     overflow-x: hidden;
 }
 .vp-cs-select-box.left {
-    height: calc(100% - 30px);
+    width: 160px;
+    height: calc(100% - 32px);
 }
 .vp-cs-select-item {
     width: 100%;

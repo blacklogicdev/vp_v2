@@ -158,7 +158,7 @@
     overflow-x: hidden;
 }
 .vp-ds-select-box.left {
-    height: calc(100% - 30px);
+    height: calc(100% - 32px);
 }
 .vp-ds-select-item {
     width: 100%;

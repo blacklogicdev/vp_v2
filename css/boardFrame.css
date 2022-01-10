@@ -57,7 +57,7 @@
 .vp-board-header-button {
     cursor: pointer;
     right: 16px;
-    top: 20px;
+    top: 19px;
     width: 15px;
     height: 15px;
     position: absolute;
@@ -112,10 +112,10 @@
     overflow: hidden;
     cursor: pointer;
     width: calc(100% - 10px);
-    height: 25px;
+    height: 22px;
     margin-left: 10px;
     font-size: 14px;
-    line-height: 25px;
+    line-height: 22px;
     text-align: left;
     vertical-align: middle;
     color: var(--font-primary);
