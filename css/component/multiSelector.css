@@ -10,7 +10,7 @@
 }
 .vp-cs-select-search::after {
     content: '';
-    background-image: url(../../../img/close_big.svg);
+    background-image: url(../../img/close_big.svg);
 }
 .vp-cs-select-box {
     width: 100%;
