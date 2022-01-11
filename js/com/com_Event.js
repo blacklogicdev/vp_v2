@@ -198,6 +198,13 @@ define([], function() {
                                 component: that.mainFrame.focusedPage
                             });
                         }
+                        if (evt.keyCode == that.keyManager.keyCode.enter) {
+                            // blur on enter
+                            var target = evt.target;
+                            if ($(target).hasClass('vp-blur-on-enter')) {
+                                $(target).blur();
+                            }
+                        }
                     }
                 }
             ]
