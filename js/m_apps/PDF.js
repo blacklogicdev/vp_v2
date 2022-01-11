@@ -16,9 +16,10 @@ define([
     'text!vp_base/html/m_apps/pdf.html!strip',
     'css!vp_base/css/m_apps/pdf.css',
     'vp_base/js/com/com_String',
+    'vp_base/js/com/com_interface',
     'vp_base/js/com/component/PopupComponent',
     'vp_base/js/com/component/FileNavigation'
-], function(pdfHtml, pdfCss, com_String, PopupComponent, FileNavigation) {
+], function(pdfHtml, pdfCss, com_String, com_interface, PopupComponent, FileNavigation) {
 
     const PDF_SHOW     = '!pip show PyMuPDF nltk'
     const PDF_INSTALL1 = '!pip install PyMuPDF'
@@ -84,8 +85,9 @@ nltk.download('punkt')`;
             let that = this;
             // click install
             $(this.wrapSelector('.vp-pdf-install-btn:not(.disabled)')).on('click', function () {
-                vpKernel.execute(PDF_INSTALL1);
-                vpKernel.execute(PDF_INSTALL2);
+                com_interface.insertCell('code', PDF_INSTALL1);
+                com_interface.insertCell('code', PDF_INSTALL2);
+
             });
 
             // click check installed
@@ -95,8 +97,8 @@ nltk.download('punkt')`;
 
             // click import
             $(this.wrapSelector('.vp-pdf-import-btn')).on('click', function () {
-                vpKernel.execute(PDF_IMPORT);
-                vpKernel.execute(PDF_FUNC);
+                com_interface.insertCell('code', PDF_IMPORT);
+                com_interface.insertCell('code', PDF_FUNC);
             });
 
             // click file navigation button
