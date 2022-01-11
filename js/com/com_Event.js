@@ -58,7 +58,9 @@ define([], function() {
                         }
                         // Close on blur
                         // if (!$(target).hasClass('vp-close-on-blur-btn') && !$(target).hasClass('vp-close-on-blur')) {
-                        if ($('.vp-close-on-blur-btn').find(target).length == 0 && $('.vp-close-on-blur').find(target).length == 0) {
+                        if ($('.vp-close-on-blur-btn').find(target).length == 0 
+                            && !$(target).hasClass('vp-close-on-blur') 
+                            && $('.vp-close-on-blur').find(target).length == 0) {
                             $('.vp-close-on-blur').hide();
                         }
                     }
@@ -85,13 +87,20 @@ define([], function() {
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         // blockType: block/task / menuItem: menu id / menuState: saved state
-                        let { blockType, menuId, menuState, background, position, createChild, afterAction } = evt;
+                        let { blockType, menuId, menuState, position, createChild, afterAction } = evt;
                         let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
                         if (blockType == 'task' && dupTask) {
                             // if duplicated, open its task
                             that.mainFrame.openPopup(dupTask);
                         } else {
-                            that.mainFrame.createPopup(blockType, menuId, menuState, background, position, createChild, afterAction);
+                            that.mainFrame.createPopup([{
+                                blockType: blockType, 
+                                menuId: menuId, 
+                                menuState: menuState, 
+                                position: position, 
+                                createChild: createChild, 
+                                afterAction: afterAction
+                            }]);
                         }
                     }
                 },
@@ -190,6 +199,13 @@ define([], function() {
                                 type: 'close_option_page',
                                 component: that.mainFrame.focusedPage
                             });
+                        }
+                        if (evt.keyCode == that.keyManager.keyCode.enter) {
+                            // blur on enter
+                            var target = evt.target;
+                            if ($(target).hasClass('vp-blur-on-enter')) {
+                                $(target).blur();
+                            }
                         }
                     }
                 }

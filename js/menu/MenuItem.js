@@ -91,7 +91,8 @@ define([
                     type: 'create_option_page', 
                     blockType: 'task',
                     menuId: that.state.id,
-                    menuState: {}
+                    menuState: {},
+                    afterAction: 'open'
                 });
             });
         }
@@ -133,7 +134,6 @@ define([
                         blockType: 'block',
                         menuId: that.state.id,
                         menuState: {},
-                        background: true,
                         position: position
                     });
                 }

@@ -122,8 +122,7 @@ define([
                         type: 'create_option_page',
                         blockType: 'block',
                         menuId: 'lgExe_code',
-                        menuState: {},
-                        background: true
+                        menuState: {}
                     });
                 } else if (menu === 'text') {
                     // text
@@ -131,8 +130,7 @@ define([
                         type: 'create_option_page',
                         blockType: 'block',
                         menuId: 'apps_markdown',
-                        menuState: {},
-                        background: true
+                        menuState: {}
                     });
                 }
             });
@@ -141,6 +139,10 @@ define([
                 let fileName = $(this).val();
                 that.tmpState.boardTitle = fileName;
                 that.tmpState.boardPath = null;
+            });
+            // click board - blur block
+            $(this.wrapSelector()).on('click', function() {
+                that.blurAllblock();
             });
         }
 
@@ -412,6 +414,14 @@ define([
             // save as metadata
             vpConfig.setMetadata({ vp_note_display: false, vp_note_width: boardWidth });
         }
+        
+        showLoadingBar() {
+            $(this.wrapSelector('#vp_boardLoading')).show();
+        }
+
+        hideLoadingBar() {
+            $(this.wrapSelector('#vp_boardLoading')).hide();
+        }
         //========================================================================
         // Note control
         //========================================================================
@@ -576,7 +586,7 @@ define([
             return createdBlock;
         }
 
-        addBlock(option, position=-1, createChild=true, blockState={}) {
+        addBlock(option, position=-1, blockState={}) {
             let block = new Block(this, { task: option, ...blockState });
             option.setTaskItem(block);
             if (position < 0) {
@@ -587,84 +597,7 @@ define([
                 // add to specific position
                 this.blockList.splice(position, 0, block);
             }
-            if (createChild) {
-                this.createChildBlocks(block, position);
-            }
-            
             return block;
-        }
-
-        createChildBlocks(newBlock, position) {
-            let menuId = newBlock.id;
-            let childDepth = newBlock.getChildDepth();
-            let childBlocks = [];
-            switch (menuId) {
-                case 'lgDef_class':
-                    childBlocks = [
-                        { 
-                            id: 'lgDef_def', 
-                            state: { 
-                                blockState: {
-                                    isGroup: false, 
-                                    depth: childDepth
-                                },
-                                taskState: {
-                                    v1: '__init__', 
-                                    v2: [{ param: 'self' }] 
-                                }
-                            }
-                        }
-                    ]
-                    break;
-                case 'lgDef_def':
-                    childBlocks = [
-                        { 
-                            id: 'lgExe_code', 
-                            state: { 
-                                blockState: {
-                                    isGroup: false, 
-                                    depth: childDepth
-                                }
-                            }
-                        },
-                        { 
-                            id: 'lgCtrl_return', 
-                            state: { 
-                                blockState: {
-                                    isGroup: false, 
-                                    depth: childDepth
-                                }
-                            }
-                        }
-                    ]
-                    break;
-                case 'lgCtrl_for':
-                case 'lgCtrl_while':
-                case 'lgCtrl_if':
-                case 'lgCtrl_try':
-                case 'lgCtrl_elif':
-                case 'lgCtrl_except':
-                case 'lgCtrl_else':
-                case 'lgCtrl_finally':
-                    childBlocks = [
-                        { 
-                            id: 'lgCtrl_pass', 
-                            state: { 
-                                blockState: {
-                                    isGroup: false, 
-                                    depth: childDepth
-                                }
-                            }
-                        }
-                    ];
-                    break;
-            }
-
-            // create blocks
-            let that = this;
-            childBlocks.forEach((cfg, idx)=> {
-                that.prop.parent.createPopup('block', cfg.id, cfg.state, true, position + idx + 1);
-            });
         }
 
         removeBlock(blockToRemove) {
@@ -719,19 +652,25 @@ define([
             const blockIdx = this.blockList.indexOf(block);
             let groupedBlocks = block.getGroupedBlocks();
             let dupPosition = blockIdx + groupedBlocks.length;
+            let groupedBlockStateList = [];
             groupedBlocks.forEach((groupBlock, idx) => {
                 let menuId = groupBlock.id;
                 let popupState = groupBlock.popup.state;
-                $('#vp_wrapper').trigger({
-                    type: 'create_option_page',
+                groupedBlockStateList.push({
                     blockType: 'block',
                     menuId: menuId,
-                    menuState: { taskState: JSON.parse(JSON.stringify(popupState)) },
-                    background: true,
+                    menuState: { 
+                        taskState: JSON.parse(JSON.stringify(popupState)),
+                        blockState: {
+                            isGroup: groupBlock.isGroup,
+                            depth: groupBlock.depth
+                        }
+                    },
                     position: dupPosition + idx,
                     createChild: false
                 });
             });
+            this.prop.parent.createPopup(groupedBlockStateList);
         }
 
         showMenu(block, left, top) {
@@ -813,7 +752,12 @@ define([
                     isGroup: false,
                     depth: block.depth
                 }
-                this.prop.parent.createPopup('block', 'lgCtrl_else', { blockState: blockState }, true, position);
+                this.prop.parent.createPopup([{ 
+                    blockType: 'block', 
+                    menuId: 'lgCtrl_else', 
+                    menuState: { blockState: blockState }, 
+                    position: position
+                }]);
                 block.state.elseFlag = true;
                 setTimeout(function() {
                     block.focusItem();
@@ -840,7 +784,12 @@ define([
                     isGroup: false,
                     depth: block.depth
                 }
-                this.prop.parent.createPopup('block', 'lgCtrl_finally', { blockState: blockState }, true, position);
+                this.prop.parent.createPopup([{
+                    blockType: 'block', 
+                    menuId: 'lgCtrl_finally', 
+                    menuState: { blockState: blockState }, 
+                    position: position
+                }]);
                 block.state.finallyFlag = true;
                 setTimeout(function() {
                     block.focusItem();
@@ -869,7 +818,12 @@ define([
                 isGroup: false,
                 depth: block.depth
             }
-            this.prop.parent.createPopup('block', 'lgCtrl_elif', { blockState: blockState }, true, position);
+            this.prop.parent.createPopup([{
+                blockType: 'block', 
+                menuId: 'lgCtrl_elif', 
+                menuState: { blockState: blockState },
+                position: position
+            }]);
             setTimeout(function() {
                 block.focusItem();
             }, 100);
@@ -896,7 +850,12 @@ define([
                 isGroup: false,
                 depth: block.depth
             }
-            this.prop.parent.createPopup('block', 'lgCtrl_except', { blockState: blockState }, true, position);
+            this.prop.parent.createPopup([{
+                blockType: 'block', 
+                menuId: 'lgCtrl_except', 
+                menuState: { blockState: blockState },
+                position: position
+            }]);
             setTimeout(function() {
                 block.focusItem();
             }, 100);
@@ -916,6 +875,7 @@ define([
 
         jsonToBlock(jsonList) {
             let parent = this.prop.parent; // MainFrame
+            let blockList = [];
             jsonList && jsonList.forEach((obj, idx) => {
                 let {
                     isGroup, depth, blockNumber, taskId, taskState
@@ -928,8 +888,15 @@ define([
                         blockNumber: blockNumber
                     }
                 };
-                parent.createPopup('block', taskId, state, true, idx, false);
+                blockList.push({
+                    blockType: 'block', 
+                    menuId: taskId, 
+                    menuState: state, 
+                    position: idx, 
+                    createChild: false
+                });
             });
+            parent.createPopup(blockList);
         }
     } // class
 

@@ -72,10 +72,12 @@ define([
          */
         _bindEvent() {
             var that = this;
+            // Click extra menu button
             $(this.wrapSelector('#vp_headerExtraMenuBtn')).on('click', function(evt) {
                 $('#vp_headerExtraMenu').toggle();
                 evt.stopPropagation();
             });
+            // Click toggle board icon
             $(this.wrapSelector('#vp_toggleBoard')).on('click', function() {
                 that.prop.parent.toggleNote();
             });
@@ -251,11 +253,13 @@ define([
                     type:"create_option_page",
                     blockType: 'task',
                     menuId: item.id,
-                    menuState: {}
+                    menuState: {},
+                    afterAction: 'open'
                 });
                 $(this.wrapSelector()).trigger('change');
                 // clear search box
-                $(this.wrapSelector()).val('');
+                $(that.wrapSelector('#vp_menuSearchBox')).val('');
+                return false;
             });
             searchBox.setNormalFilter(true);
             // replace searchbox

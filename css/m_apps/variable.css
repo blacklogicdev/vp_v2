@@ -9,6 +9,11 @@
 #vp_var_variableBox table tbody tr td:hover {
     cursor: pointer;
 }
+#vp_var_variableBox table tbody:empty::after {
+    content: '(No variables available.)';
+    color: var(--highlight-color);
+    font-style: italic;
+}
 #vp_var_variableBox table thead {
     position: sticky;
     top: 0;

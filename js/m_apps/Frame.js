@@ -28,7 +28,7 @@ define([
     class Frame extends PopupComponent {
         _init() {
             super._init();
-            this.config.size = { width: 700, height: 600 };
+            this.config.sizeLevel = 3;
 
             // state
             this.state = {

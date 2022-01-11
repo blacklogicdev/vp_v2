@@ -12,7 +12,7 @@
 .vp-menu-frame {
     width: 51%;
     height: 100%;
-    min-width: 270px;
+    min-width: 273px;
     overflow: hidden;
 
     position: relative;
@@ -44,12 +44,18 @@
 .vp-menu-body {
     width: 100%;
     height: calc(100% - 100px);
-    padding: 5px;
+    padding: 0 5px 5px 5px;
     box-sizing: border-box;
+}
+.vp-menu-body > div:nth-child(2) {
+    margin-top: 50px;
 }
 .vp-menu-search-div {
     box-sizing: border-box;
-    padding: 5px 0 5px 0px;
+    padding: 10px 0 10px 0px;
+    position: absolute;
+    width: calc(100% - 10px);
+    background: white;
 }
 .vp-menu-search-box {
     width: calc(100% - 50px);
@@ -73,14 +79,15 @@
     width: 26px;
     height: 26px;
     position: absolute;
-    top: 62px;
-    right: 18px;
+    top: 11px;
+    right: 8px;
     cursor: pointer;
     background-image: url(../img/toggleNote.svg);
     background-position: center;
     background-size: contain;
     background-color: white;
     border-radius: 5px;
+    display: inline-block;
 }
 .vp-board-toggle-icon.vp-hide {
     background-image: url(../img/toggleNote_hide.svg);

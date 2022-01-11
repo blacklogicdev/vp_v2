@@ -58,7 +58,7 @@ define([
                 // show footer
                 footer: true,
                 position: { right: 10, top: 120 },
-                size: { width: 400, height: 400 },
+                size: { width: 400, height: 550 },
                 saveOnly: false
             };
 
@@ -260,6 +260,7 @@ define([
             // save state values
             $(document).on('change', this.wrapSelector('.vp-state'), function() {
                 let id = $(this)[0].id;
+                let customKey = $(this).data('key');
                 let tagName = $(this).prop('tagName'); // returns with UpperCase
                 let newValue = '';
                 switch(tagName) {
@@ -281,7 +282,18 @@ define([
                         break;
                 }
                 
-                that.state[id] = newValue;
+                // if custom key is available, use it
+                if (customKey && customKey != '') {
+                    // allow custom key until level 2
+                    let customKeys = customKey.split('.');
+                    if (customKeys.length == 2) {
+                        that.state[customKeys[0]][customKeys[1]] = newValue;
+                    } else {
+                        that.state[customKey] = newValue;
+                    }
+                } else {
+                    that.state[id] = newValue;
+                }
             });
 
             // Click buttons
@@ -440,13 +452,13 @@ define([
             // popup-frame size
             switch (sizeLevel) {
                 case 1: 
-                    this.config.size = { width: 500, height: 500 };
+                    this.config.size = { width: 500, height: 550 };
                     break;
                 case 2: 
-                    this.config.size = { width: 600, height: 500 };
+                    this.config.size = { width: 600, height: 550 };
                     break;
                 case 3: 
-                    this.config.size = { width: 750, height: 500 };
+                    this.config.size = { width: 760, height: 550 };
                     break;
             }
 
