@@ -29,7 +29,7 @@ define([
     class Subset extends PopupComponent {
         _init() {
             super._init();
-            this.config.size = { width: 760, height: 500 };
+            this.config.sizeLevel = 3;
             /** Write codes executed before rendering */
             this.targetSelector = this.prop.targetSelector;
             this.pageThis = this.prop.pageThis;

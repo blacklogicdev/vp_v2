@@ -58,7 +58,7 @@ define([
                 // show footer
                 footer: true,
                 position: { right: 10, top: 120 },
-                size: { width: 400, height: 400 },
+                size: { width: 400, height: 450 },
                 saveOnly: false
             };
 
@@ -440,13 +440,13 @@ define([
             // popup-frame size
             switch (sizeLevel) {
                 case 1: 
-                    this.config.size = { width: 500, height: 500 };
+                    this.config.size = { width: 500, height: 550 };
                     break;
                 case 2: 
-                    this.config.size = { width: 600, height: 500 };
+                    this.config.size = { width: 600, height: 550 };
                     break;
                 case 3: 
-                    this.config.size = { width: 750, height: 500 };
+                    this.config.size = { width: 760, height: 550 };
                     break;
             }
 

@@ -27,6 +27,7 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.dataview = false;
+            this.config.sizeLevel = 3;
 
             this.state = {
                 variable: '',

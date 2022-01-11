@@ -29,6 +29,7 @@ define([
             super._init();
             /** Write codes executed before rendering */
             this.config.footer = false;
+            this.config.sizeLevel = 3;
 
             this.state = {
                 vp_userCode: '',
