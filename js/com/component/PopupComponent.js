@@ -58,7 +58,7 @@ define([
                 // show footer
                 footer: true,
                 position: { right: 10, top: 120 },
-                size: { width: 400, height: 450 },
+                size: { width: 400, height: 550 },
                 saveOnly: false
             };
 
