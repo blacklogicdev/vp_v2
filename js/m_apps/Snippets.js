@@ -426,7 +426,6 @@ define([
                         blockType: 'block',
                         menuId: 'lgExe_code',
                         menuState: { taskState: { code: code } },
-                        background: true,
                         afterAction: 'run'
                     });
                 } else if (menu == 'duplicate') {

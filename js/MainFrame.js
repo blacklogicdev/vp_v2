@@ -294,73 +294,218 @@ define([
 
         /**
          * Create popup
-         * @param {String} blockType task, block (task:TaskBlock / block:Block)
-         * @param {String} menuId com_library
-         * @param {Object} menuState { ...states to load }
+         * @param {Array} popupStateList [{ menuId, menuState, blockType, position, createChild, afterAction }]
+         * - {String} menuId
+         * - {Object} menuState   : { blockState, taskState }
+         * -------- optional parameters ---------------------------
+         * - {String} blockType   : task / block
+         * - {int}    position    : 0 ~ n
+         * - {bool}   createChild : true / false
+         * - {String} afterAction : run / add / open
          */
-        createPopup(blockType, menuId, menuState, background=false, position=-1, createChild=true, afterAction='') {
+        createPopup(popupStateList) {
+            // set popup state's default values
+            let defaultPopupState = {
+                blockType: 'task',
+                position: -1,
+                createChild: true,
+                menuId: '',
+                menuState: {}, // taskState, blockState
+                afterAction: ''
+            };
             let that = this;
-            // get specific menu configuration
-            let menuConfig = this.menuFrame.getMenuLibrary(menuId);
-            if (!menuConfig) {
-                vpLog.display(VP_LOG_TYPE.ERROR, 'Menu is not found (menu id: '+menuId+')');
-                return;
-            }
-            let menuGroupRootType = this._getMenuGroupRootType(menuConfig);
-            try {
-                // open component
-                require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                    that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild, afterAction);
-                }, function (err) {
-                    // if it's library menu, call LibraryComponent
-                    if (menuGroupRootType == 'library') {
-                        menuConfig.file = 'com/component/LibraryComponent'
-                        require(['vp_base/js/' + menuConfig.file], function(OptionComponent) {
-                            that.callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild, afterAction);
-                        });
-                    } else {
-                        vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
+            let loadMenuList = [];  // menu list to require
+            let loadStateList = []; // menu state list
+            // get menu configurations
+            for (let i=0; i<popupStateList.length; i++) {
+                let popupState = popupStateList[i];
+                let menuConfig = this.menuFrame.getMenuLibrary(popupState.menuId);
+                if (menuConfig) {
+                    let fileName = menuConfig.file;
+                    if (menuConfig.useAuto) {
+                        // if useAuto is true, use LibraryComponent to auto-generate page
+                        fileName = 'com/component/LibraryComponent';
                     }
+                    // add to menu list
+                    let filePath = 'vp_base/js/' + fileName;
+                    let menuArgIdx = loadMenuList.indexOf(filePath);
+                    if (menuArgIdx < 0) {
+                        loadMenuList.push(filePath);
+                        menuArgIdx = loadMenuList.length - 1;
+                    }
+                    let tmpState = {};
+                    Object.keys(defaultPopupState).forEach(key => {
+                        if (popupState.hasOwnProperty(key) && popupState[key] != undefined) {
+                            tmpState[key] = popupState[key];
+                        } else {
+                            tmpState[key] = defaultPopupState[key];
+                        }
+                    });
+                    tmpState = {
+                        ...tmpState,
+                        file: fileName, // set fileName 
+                        argIdx: menuArgIdx,
+                        menuConfig: menuConfig
+                    }
+                    loadStateList.push(tmpState);
+                    // if createChild, get childStateInfo
+                    if (tmpState.createChild) {
+                        let childStates = this.getChildState(tmpState.menuId, tmpState.position);
+                        popupStateList.splice(i+1, 0, ...childStates);
+                    }
+                } else {
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'Menu is not found (menu id: '+menuId+')');
+                }
+            }
+
+            try {
+                // create components
+                require(loadMenuList, function() {
+                    let parentBlock = null;
+                    let prevBlock = null;
+                    loadStateList.forEach(obj => {
+                        let { blockType, menuId, menuState, menuConfig, argIdx, position, afterAction } = obj;
+                        // get OptionComponent Object
+                        let OptionComponent = arguments[argIdx];
+                        if (OptionComponent) {
+                            let taskState = menuState.taskState;
+                            let blockState = menuState.blockState;
+                            let state = {
+                                ...taskState,
+                                config: menuConfig
+                            };
+                            // create popup instance
+                            let popup = new OptionComponent(state);
+                            let newBlock = null;
+                            if (blockType === 'block') {
+                                // add to block list
+                                newBlock = that.addBlock(popup, position, blockState);
+                                if (parentBlock == null) {
+                                    parentBlock = newBlock; // set parent block of created block
+                                } else {
+                                    newBlock.setDepth(prevBlock.getChildDepth());
+                                }
+                                prevBlock = newBlock;
+                            } else {
+                                // add to task list
+                                that.addTask(popup);
+                            }
+                            // after action
+                            if (afterAction && afterAction != '') {
+                                switch (afterAction) {
+                                    case 'run':
+                                        popup.run();
+                                        break;
+                                    case 'add':
+                                        popup.run(false);
+                                        break;
+                                    case 'open':
+                                        that.openPopup(popup);
+                                        break;
+                                }
+                            }
+                        } else {
+                            vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuConfig.id+')');
+                        }
+                    });
+                    // focus created popup
+                    if (parentBlock && parentBlock.isGroup) {
+                        parentBlock.focusItem();
+                        // scroll to new block
+                        that.boardFrame.scrollToBlock(parentBlock);
+                    }
+                    that.boardFrame.reloadBlockList();
+                }, function (err) {
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
                 });
             } catch(err) {
                 ;
             }
         }
 
-        callPopupComponent(blockType, OptionComponent, menuConfig, menuState, background, position, createChild, afterAction) {
-            if (!OptionComponent) {
-                vpLog.display(VP_LOG_TYPE.ERROR, 'Not implemented or available menu. (menu id: '+menuConfig.id+')');
-                return;
+        getChildState(parentId, position) {
+            let menuId = parentId;
+            let childBlocks = [];
+            switch (menuId) {
+                case 'lgDef_class':
+                    childBlocks = [
+                        { 
+                            menuId: 'lgDef_def', 
+                            menuState: { 
+                                blockState: {
+                                    isGroup: false
+                                },
+                                taskState: {
+                                    v1: '__init__', 
+                                    v2: [{ param: 'self' }] 
+                                }
+                            }
+                        },
+                        { 
+                            menuId: 'lgExe_code', 
+                            menuState: { 
+                                blockState: {
+                                    isGroup: false
+                                }
+                            }
+                        },
+                        { 
+                            menuId: 'lgCtrl_return', 
+                            menuState: { 
+                                blockState: {
+                                    isGroup: false
+                                }
+                            }
+                        }
+                    ]
+                    break;
+                case 'lgDef_def':
+                    childBlocks = [
+                        { 
+                            menuId: 'lgExe_code', 
+                            menuState: { 
+                                blockState: {
+                                    isGroup: false
+                                }
+                            }
+                        },
+                        { 
+                            menuId: 'lgCtrl_return', 
+                            menuState: { 
+                                blockState: {
+                                    isGroup: false
+                                }
+                            }
+                        }
+                    ]
+                    break;
+                case 'lgCtrl_for':
+                case 'lgCtrl_while':
+                case 'lgCtrl_if':
+                case 'lgCtrl_try':
+                case 'lgCtrl_elif':
+                case 'lgCtrl_except':
+                case 'lgCtrl_else':
+                case 'lgCtrl_finally':
+                    childBlocks = [
+                        { 
+                            menuId: 'lgCtrl_pass', 
+                            menuState: { 
+                                blockState: {
+                                    isGroup: false
+                                }
+                            }
+                        }
+                    ];
+                    break;
             }
-            // pass configuration inside state
-            let taskState = menuState.taskState;
-            let blockState = menuState.blockState;
-            let state = {
-                ...taskState,
-                config: menuConfig
+
+            for (let i = 0; i < childBlocks.length; i++) {
+                childBlocks[i]['blockType'] = 'block';
+                childBlocks[i]['position'] = position + i + 1;
+                childBlocks[i]['createChild'] = false;
             }
-            let option = new OptionComponent(state);
-            let newBlock = null;
-            if (blockType === 'block') {
-                // add to block list
-                newBlock = this.addBlock(option, position, createChild, blockState);
-            } else {
-                // add to task list
-                this.addTask(option);
-            }
-            if (!background) {
-                this.openPopup(option);
-            }
-            if (afterAction && afterAction != '') {
-                switch (afterAction) {
-                    case 'run':
-                        option.run();
-                        break;
-                    case 'add':
-                        option.run(false);
-                        break;
-                }
-            }
+            return childBlocks;
         }
         
         /**
@@ -400,9 +545,14 @@ define([
             if (taskType == 'task') {
                 // remove from taskBlockList
                 this.removeTask(component);
-                this.addBlock(component);
+                let newBlock = this.addBlock(component);
+
+                // close and focus block (sequence is important)
+                component.close();
+                newBlock.focusItem();
+            } else {
+                component.close();
             }
-            component.close();
             // render board frame
             this.boardFrame.reloadBlockList();
         }
@@ -476,13 +626,11 @@ define([
             return null;
         }
 
-        addBlock(option, position=-1, createChild=true, blockState={}) {
+        addBlock(option, position=-1, blockState={}) {
             this._blockPopupList.push(option);
-            let newBlock = this.boardFrame.addBlock(option, position, createChild, blockState);
+            let newBlock = this.boardFrame.addBlock(option, position, blockState);
             // render board frame
             this.boardFrame.reloadBlockList();
-            // scroll to new block
-            this.boardFrame.scrollToBlock(newBlock);
             return newBlock;
         }
 

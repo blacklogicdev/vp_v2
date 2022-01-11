@@ -85,13 +85,20 @@ define([], function() {
                     selector: '#vp_wrapper',
                     operation: (evt) => {
                         // blockType: block/task / menuItem: menu id / menuState: saved state
-                        let { blockType, menuId, menuState, background, position, createChild, afterAction } = evt;
+                        let { blockType, menuId, menuState, position, createChild, afterAction } = evt;
                         let dupTask = that.mainFrame.checkDuplicatedTask(menuId);
                         if (blockType == 'task' && dupTask) {
                             // if duplicated, open its task
                             that.mainFrame.openPopup(dupTask);
                         } else {
-                            that.mainFrame.createPopup(blockType, menuId, menuState, background, position, createChild, afterAction);
+                            that.mainFrame.createPopup([{
+                                blockType: blockType, 
+                                menuId: menuId, 
+                                menuState: menuState, 
+                                position: position, 
+                                createChild: createChild, 
+                                afterAction: afterAction
+                            }]);
                         }
                     }
                 },

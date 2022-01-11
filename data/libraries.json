@@ -1464,7 +1464,8 @@
                                 "tag"  : "PANDAS PLOT,PANDAS",
                                 "path" : "visualpython - library - pandas - plot",
                                 "desc" : "Pandas Plot",
-                                "file" : "m_pandas/plot"
+                                "file" : "m_pandas/plot",
+                                "useAuto" : true
                             },
                             {
                                 "id"   : "pdPkg_inputOutput",
@@ -1512,7 +1513,8 @@
                                         "path": "visualpython - library - pandas - pandas objects - series",
                                         "desc": "Series",
                                         "tag": "CREATE SERIES",
-                                        "file": "m_pandas/series.js"
+                                        "file": "m_pandas/series.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdPdo_dataframe",
@@ -1522,7 +1524,8 @@
                                         "path": "visualpython - library - pandas - pandas objects - dataframe",
                                         "desc": "DataFrame",
                                         "tag": "CREATE DATAFRAME",
-                                        "file": "m_pandas/dataframe.js"
+                                        "file": "m_pandas/dataframe.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdPdo_index",
@@ -1532,7 +1535,8 @@
                                         "path": "visualpython - library - pandas - pandas objects - index",
                                         "desc": "Index",
                                         "tag": "CREATE INDEX",
-                                        "file": "m_pandas/index.js"
+                                        "file": "m_pandas/index.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdPdo_copy",
@@ -1542,7 +1546,8 @@
                                         "path": "visualpython - library - pandas - pandas objects - copy",
                                         "desc": "Copy pandas object",
                                         "tag": "COPY PANDAS OBJECT, COPY",
-                                        "file": "m_pandas/copy.js"
+                                        "file": "m_pandas/copy.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             },
@@ -1562,7 +1567,8 @@
                                         "path": "visualpython - library - pandas - data info - head",
                                         "desc": "Search head data",
                                         "tag": "SEARCH HEAD DATA, HEAD",
-                                        "file": "m_pandas/head.js"
+                                        "file": "m_pandas/head.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_tail",
@@ -1572,7 +1578,8 @@
                                         "path": "visualpython - library - pandas - data info - tail",
                                         "desc": "Search tail data",
                                         "tag": "SEARCH TAIL DATA, TAIL",
-                                        "file": "m_pandas/tail.js"
+                                        "file": "m_pandas/tail.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_take",
@@ -1582,7 +1589,8 @@
                                         "path": "visualpython - library - pandas - data info - take",
                                         "desc": "Search part of data",
                                         "tag": "TAKE DATA, TAKE",
-                                        "file": "m_pandas/take.js"
+                                        "file": "m_pandas/take.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_values",
@@ -1592,7 +1600,8 @@
                                         "path": "visualpython - library - pandas - data info - get values",
                                         "desc": "Get pandas object's values",
                                         "tag": "GET VALUES, .VALUES",
-                                        "file": "m_pandas/getValues.js"
+                                        "file": "m_pandas/getValues.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_index",
@@ -1602,7 +1611,8 @@
                                         "path": "visualpython - library - pandas - data info - get index",
                                         "desc": "Get indexes",
                                         "tag": "GET INDEX, .INDEX",
-                                        "file": "m_pandas/getIndex.js"
+                                        "file": "m_pandas/getIndex.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_columns",
@@ -1612,7 +1622,8 @@
                                         "path": "visualpython - library - pandas - data info - get columns",
                                         "desc": "Get columns",
                                         "tag": "GET COLUMNS, .COLUMNS",
-                                        "file": "m_pandas/getColumns.js"
+                                        "file": "m_pandas/getColumns.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_len",
@@ -1622,7 +1633,8 @@
                                         "path": "visualpython - library - pandas - data info - get length",
                                         "desc": "Get length",
                                         "tag": "GET LENGTH, LEN",
-                                        "file": "m_pandas/getLength.js"
+                                        "file": "m_pandas/getLength.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_valueCounts",
@@ -1632,7 +1644,8 @@
                                         "path": "visualpython - library - pandas - data info - get value counts",
                                         "desc": "values counts",
                                         "tag": "GET VALUE COUNTS, .VALUE_COUNTS",
-                                        "file": "m_pandas/getValueCounts.js"
+                                        "file": "m_pandas/getValueCounts.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_info",
@@ -1642,7 +1655,8 @@
                                         "path": "visualpython - library - pandas - data info - get info",
                                         "desc": "Dataframe's basic information",
                                         "tag": "GET BASIC INFO FROM DATAFRAME, INFO",
-                                        "file": "m_pandas/getInfo.js"
+                                        "file": "m_pandas/getInfo.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_describe",
@@ -1652,7 +1666,8 @@
                                         "path": "visualpython - library - pandas - data info - get described info",
                                         "desc": "Pandas object details",
                                         "tag": "GET DETAILED INFO FROM DATAFRAME OR SERIES, DESCRIBE",
-                                        "file": "m_pandas/getDescribedInfo.js"
+                                        "file": "m_pandas/getDescribedInfo.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_transpose",
@@ -1662,7 +1677,8 @@
                                         "path": "visualpython - library - pandas - data info - transpose",
                                         "desc": "Transpose",
                                         "tag": "TRANSPOSE, .T",
-                                        "file": "m_pandas/transpose.js"
+                                        "file": "m_pandas/transpose.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_unique",
@@ -1672,7 +1688,8 @@
                                         "path": "visualpython - library - pandas - data info - get unique",
                                         "desc": "Get unique values",
                                         "tag": "GET UNIQUE DATA, UNIQUE",
-                                        "file": "m_pandas/getUnique.js"
+                                        "file": "m_pandas/getUnique.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdIdt_size",
@@ -1682,7 +1699,8 @@
                                         "path": "visualpython - library - pandas - data info - get size",
                                         "desc": "Get size",
                                         "tag": "GET SIZE, SIZE",
-                                        "file": "m_pandas/getSize.js"
+                                        "file": "m_pandas/getSize.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             },
@@ -1702,7 +1720,8 @@
                                         "path": "visualpython - library - pandas - general functions - object calculation",
                                         "desc": "",
                                         "tag": "OBJECT CALCULATION",
-                                        "file": "m_pandas/objCal.js"
+                                        "file": "m_pandas/objCal.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_basicCal",
@@ -1712,7 +1731,8 @@
                                         "path": "visualpython - library - pandas - general functions - basic calculation",
                                         "desc": "",
                                         "tag": "BASIC CALCULATION",
-                                        "file": "m_pandas/basicCal.js"
+                                        "file": "m_pandas/basicCal.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_merge",
@@ -1722,7 +1742,8 @@
                                         "path": "visualpython - library - pandas - general functions - merge",
                                         "desc": "",
                                         "tag": "MERGE, JOIN, MERGE",
-                                        "file": "m_pandas/merge.js"
+                                        "file": "m_pandas/merge.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_concat",
@@ -1732,7 +1753,8 @@
                                         "path": "visualpython - library - pandas - general functions - concat",
                                         "desc": "",
                                         "tag": "CONCATENATE, CONCAT",
-                                        "file": "m_pandas/concat.js"
+                                        "file": "m_pandas/concat.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_reindex",
@@ -1742,7 +1764,8 @@
                                         "path": "visualpython - library - pandas - general functions - reindex",
                                         "desc": "",
                                         "tag": "REINDEX",
-                                        "file": "m_pandas/reindex.js"
+                                        "file": "m_pandas/reindex.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_setIndex",
@@ -1752,7 +1775,8 @@
                                         "path": "visualpython - library - pandas - general functions - set index",
                                         "desc": "",
                                         "tag": "SET INDEX",
-                                        "file": "m_pandas/setIndex.js"
+                                        "file": "m_pandas/setIndex.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_resetIndex",
@@ -1762,7 +1786,8 @@
                                         "path": "visualpython - library - pandas - general functions - reset index",
                                         "desc": "",
                                         "tag": "RESET INDEX",
-                                        "file": "m_pandas/resetIndex.js"
+                                        "file": "m_pandas/resetIndex.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_stack",
@@ -1772,7 +1797,8 @@
                                         "path": "visualpython - library - pandas - general functions - stack",
                                         "desc": "",
                                         "tag": "STACK",
-                                        "file": "m_pandas/stack.js"
+                                        "file": "m_pandas/stack.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_unstack",
@@ -1782,7 +1808,8 @@
                                         "path": "visualpython - library - pandas - general functions - unstack",
                                         "desc": "",
                                         "tag": "UNSTACK",
-                                        "file": "m_pandas/unstack.js"
+                                        "file": "m_pandas/unstack.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_pivot",
@@ -1792,7 +1819,8 @@
                                         "path": "visualpython - library - pandas - general functions - pivot",
                                         "desc": "",
                                         "tag": "PIVOT",
-                                        "file": "m_pandas/pivot.js"
+                                        "file": "m_pandas/pivot.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_melt",
@@ -1802,7 +1830,8 @@
                                         "path": "visualpython - library - pandas - general functions - melt",
                                         "desc": "",
                                         "tag": "MELT",
-                                        "file": "m_pandas/melt.js"
+                                        "file": "m_pandas/melt.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_pivotTable",
@@ -1812,7 +1841,8 @@
                                         "path": "visualpython - library - pandas - general functions - pivot table",
                                         "desc": "",
                                         "tag": "PIVOT TABLE",
-                                        "file": "m_pandas/pivotTable.js"
+                                        "file": "m_pandas/pivotTable.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_replace",
@@ -1822,7 +1852,8 @@
                                         "path": "visualpython - library - pandas - general functions - replace",
                                         "desc": "",
                                         "tag": "REPLACE VALUE, REPLACE",
-                                        "file": "m_pandas/replace.js"
+                                        "file": "m_pandas/replace.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_isDuplicated",
@@ -1832,7 +1863,8 @@
                                         "path": "visualpython - library - pandas - general functions - is duplicated",
                                         "desc": "",
                                         "tag": "CHECK IF DUPLICATED, DUPLICATED",
-                                        "file": "m_pandas/isDuplicated.js"
+                                        "file": "m_pandas/isDuplicated.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_dropDuplicates",
@@ -1842,7 +1874,8 @@
                                         "path": "visualpython - library - pandas - general functions - drop duplicates",
                                         "desc": "",
                                         "tag": "DROP DUPLICATES, REMOVE DUPLICATES, DROP_DUPICATES",
-                                        "file": "m_pandas/dropDuplicates.js"
+                                        "file": "m_pandas/dropDuplicates.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_isNull",
@@ -1852,7 +1885,8 @@
                                         "path": "visualpython - library - pandas - general functions - is null",
                                         "desc": "",
                                         "tag": "IS NULL, IS MISSING VALUE, ISNULL",
-                                        "file": "m_pandas/isNull.js"
+                                        "file": "m_pandas/isNull.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_notNull",
@@ -1862,7 +1896,8 @@
                                         "path": "visualpython - library - pandas - general functions - not null",
                                         "desc": "",
                                         "tag": "NOT NULL, NOTNULL",
-                                        "file": "m_pandas/notNull.js"
+                                        "file": "m_pandas/notNull.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_dropNA",
@@ -1872,7 +1907,8 @@
                                         "path": "visualpython - library - pandas - general functions - drop na",
                                         "desc": "",
                                         "tag": "DROP NA, REMOVE MISSING VALUES, DROPNA",
-                                        "file": "m_pandas/dropNA.js"
+                                        "file": "m_pandas/dropNA.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_fillNA",
@@ -1882,7 +1918,8 @@
                                         "path": "visualpython - library - pandas - general functions - fill na",
                                         "desc": "",
                                         "tag": "FILL NA, REPLACE AND FILL MISSING VALUES, FILLNA",
-                                        "file": "m_pandas/fillNA.js"
+                                        "file": "m_pandas/fillNA.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdFunc_combineFirst",
@@ -1892,7 +1929,8 @@
                                         "path": "visualpython - library - pandas - general functions - combine first",
                                         "desc": "",
                                         "tag": "COMBINE FIRST, REPLACE MISSING VALUES WITH OTHER DATA, COMBINE_FIRST",
-                                        "file": "m_pandas/combineFirst.js"
+                                        "file": "m_pandas/combineFirst.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             },
@@ -1912,7 +1950,8 @@
                                         "path": "visualpython - library - pandas - pandas arrays - period",
                                         "desc": "",
                                         "tag": "CREATE PERIOD",
-                                        "file": "m_pandas/period.js"
+                                        "file": "m_pandas/period.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdParr_periodIndex",
@@ -1922,7 +1961,8 @@
                                         "path": "visualpython - library - pandas - pandas arrays - period index",
                                         "desc": "",
                                         "tag": "CREATE PERIOD INDEX",
-                                        "file": "m_pandas/periodIndex.js"
+                                        "file": "m_pandas/periodIndex.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdParr_timestamp",
@@ -1932,7 +1972,8 @@
                                         "path": "visualpython - library - pandas - pandas arrays - timestamp",
                                         "desc": "",
                                         "tag": "CREATE TIMESTAMP",
-                                        "file": "m_pandas/timestamp.js"
+                                        "file": "m_pandas/timestamp.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             },
@@ -1952,7 +1993,8 @@
                                         "path": "visualpython - library - pandas - groupby - groupby",
                                         "desc": "",
                                         "tag": "GROUP BY DATA, GROUPBY",
-                                        "file": "m_pandas/groupby.js"
+                                        "file": "m_pandas/groupby.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_groups",
@@ -1962,7 +2004,8 @@
                                         "path": "visualpython - library - pandas - groupby - groups",
                                         "desc": "",
                                         "tag": "GROUPS INFORMATION, .GROUPS",
-                                        "file": "m_pandas/groups.js"
+                                        "file": "m_pandas/groups.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_agg",
@@ -1972,7 +2015,8 @@
                                         "path": "visualpython - library - pandas - groupby - agg",
                                         "desc": "",
                                         "tag": "AGG",
-                                        "file": "m_pandas/agg.js"
+                                        "file": "m_pandas/agg.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_sum",
@@ -1982,7 +2026,8 @@
                                         "path": "visualpython - library - pandas - groupby - sum",
                                         "desc": "",
                                         "tag": "SUM",
-                                        "file": "m_pandas/agg_sum.js"
+                                        "file": "m_pandas/agg_sum.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_mean",
@@ -1992,7 +2037,8 @@
                                         "path": "visualpython - library - pandas - groupby - mean",
                                         "desc": "",
                                         "tag": "MEAN",
-                                        "file": "m_pandas/agg_mean.js"
+                                        "file": "m_pandas/agg_mean.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_count",
@@ -2002,7 +2048,8 @@
                                         "path": "visualpython - library - pandas - groupby - count",
                                         "desc": "",
                                         "tag": "COUNT",
-                                        "file": "m_pandas/agg_count.js"
+                                        "file": "m_pandas/agg_count.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_max",
@@ -2012,7 +2059,8 @@
                                         "path": "visualpython - library - pandas - groupby - max",
                                         "desc": "",
                                         "tag": "MAX",
-                                        "file": "m_pandas/agg_max.js"
+                                        "file": "m_pandas/agg_max.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_min",
@@ -2022,7 +2070,8 @@
                                         "path": "visualpython - library - pandas - groupby - min",
                                         "desc": "",
                                         "tag": "MIN",
-                                        "file": "m_pandas/agg_min.js"
+                                        "file": "m_pandas/agg_min.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_median",
@@ -2032,7 +2081,8 @@
                                         "path": "visualpython - library - pandas - groupby - median",
                                         "desc": "",
                                         "tag": "MEDIAN",
-                                        "file": "m_pandas/agg_median.js"
+                                        "file": "m_pandas/agg_median.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_std",
@@ -2042,7 +2092,8 @@
                                         "path": "visualpython - library - pandas - groupby - std",
                                         "desc": "",
                                         "tag": "STD, STANDARD DEVIATION",
-                                        "file": "m_pandas/agg_std.js"
+                                        "file": "m_pandas/agg_std.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_size",
@@ -2052,7 +2103,8 @@
                                         "path": "visualpython - library - pandas - groupby - size",
                                         "desc": "",
                                         "tag": "SIZE",
-                                        "file": "m_pandas/agg_size.js"
+                                        "file": "m_pandas/agg_size.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdGrp_quantile",
@@ -2062,7 +2114,8 @@
                                         "path": "visualpython - library - pandas - groupby - quantile",
                                         "desc": "",
                                         "tag": "QUANTILE",
-                                        "file": "m_pandas/agg_quantile.js"
+                                        "file": "m_pandas/agg_quantile.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             },
@@ -2082,7 +2135,8 @@
                                         "path": "visualpython - library - pandas - sort data - sort by index",
                                         "desc": "",
                                         "tag": "SORT BY INDEX, SORT_INDEX",
-                                        "file": "m_pandas/sortByIndex.js"
+                                        "file": "m_pandas/sortByIndex.js",
+                                        "useAuto" : true
                                     },
                                     {
                                         "id": "pdSdt_sortByValues",
@@ -2092,7 +2146,8 @@
                                         "path": "visualpython - library - pandas - sort data - sort by values",
                                         "desc": "",
                                         "tag": "SORT BY VALUES, SORT_VALUES",
-                                        "file": "m_pandas/sortByValues.js"
+                                        "file": "m_pandas/sortByValues.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             },
@@ -2105,26 +2160,6 @@
                                 "desc": "",
                                 "item": [
                                     {
-                                        "id": "pdEdtRC_insertRow",
-                                        "type": "function",
-                                        "level": 3,
-                                        "name": "Add row value",
-                                        "path": "visualpython - library - pandas - rowcol - insert row",
-                                        "desc": "",
-                                        "tag": "INSERT ROW VALUE",
-                                        "file": "m_pandas/insertRow.js"
-                                    },
-                                    {
-                                        "id": "pdEdtRC_insertColumn",
-                                        "type": "function",
-                                        "level": 3,
-                                        "name": "Add column value",
-                                        "path": "visualpython - library - pandas - rowcol - insert col",
-                                        "desc": "",
-                                        "tag": "INSERT COLUMN VALUE",
-                                        "file": "m_pandas/insertColumn.js"
-                                    },
-                                    {
                                         "id": "pdEdtRC_dropRowCol",
                                         "type": "function",
                                         "level": 3,
@@ -2132,7 +2167,8 @@
                                         "path": "visualpython - library - pandas - rowcol - drop rowcol",
                                         "desc": "",
                                         "tag": "DROP ROW COLUMN, DROP",
-                                        "file": "m_pandas/dropRowCol.js"
+                                        "file": "m_pandas/dropRowCol.js",
+                                        "useAuto" : true
                                     }
                                 ]
                             }

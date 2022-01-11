@@ -251,7 +251,8 @@ define([
                     type:"create_option_page",
                     blockType: 'task',
                     menuId: item.id,
-                    menuState: {}
+                    menuState: {},
+                    afterAction: 'open'
                 });
                 $(this.wrapSelector()).trigger('change');
                 // clear search box
