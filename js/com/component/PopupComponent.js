@@ -260,6 +260,7 @@ define([
             // save state values
             $(document).on('change', this.wrapSelector('.vp-state'), function() {
                 let id = $(this)[0].id;
+                let customKey = $(this).data('key');
                 let tagName = $(this).prop('tagName'); // returns with UpperCase
                 let newValue = '';
                 switch(tagName) {
@@ -281,7 +282,18 @@ define([
                         break;
                 }
                 
-                that.state[id] = newValue;
+                // if custom key is available, use it
+                if (customKey && customKey != '') {
+                    // allow custom key until level 2
+                    let customKeys = customKey.split('.');
+                    if (customKeys.length == 2) {
+                        that.state[customKeys[0]][customKeys[1]] = newValue;
+                    } else {
+                        that.state[customKey] = newValue;
+                    }
+                } else {
+                    that.state[id] = newValue;
+                }
             });
 
             // Click buttons

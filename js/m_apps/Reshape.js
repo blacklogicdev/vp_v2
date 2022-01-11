@@ -42,7 +42,9 @@ define([
                 },
                 melt: {
                     idVars: [],
-                    ValueVars: []
+                    ValueVars: [],
+                    varName: '',
+                    valueName: ''
                 },
                 ...this.state
             }
@@ -206,6 +208,29 @@ define([
             super.render();
 
             this.loadVariableList();
+
+            var {
+                variable, type, pivot, melt, allocateTo, resetIndex
+            } = this.state;
+
+            $(this.wrapSelector('#vp_rsDataframe')).val(variable);
+            $(this.wrapSelector('#vp_rsType')).val(type);
+            $(this.wrapSelector('#vp_rsType')).trigger('change');
+
+            // pivot
+            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsIndex'), pivot.index);
+            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsColumns'), pivot.columns);
+            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsValues'), pivot.values);
+
+            // melt
+            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsIdVars'), melt.idVars);
+            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsValueVars'), melt.valueVars);
+            $(this.wrapSelector('#vp_rsVarName')).val(melt.varName);
+            $(this.wrapSelector('#vp_rsValueName')).val(melt.valueName);
+
+            // allocateTo
+            $(this.wrapSelector('#vp_rsAllocateTo')).val(allocateTo);
+            $(this.wrapSelector('#vp_rsResetIndex')).prop('checked', resetIndex);
         }
 
         /**
@@ -245,7 +270,7 @@ define([
         /**
          * Load variable list (dataframe)
          */
-         loadVariableList() {
+        loadVariableList() {
             var that = this;
             // load using kernel
             var dataTypes = ['DataFrame'];
@@ -334,6 +359,16 @@ define([
                         options.push(com_util.formatString("value_vars=[{0}]", melt.valueVars.map(col => col.code).join(',')));
                     }
                 }
+
+                // var name (optional)
+                if (melt.varName) {
+                    options.push(com_util.formatString("var_name='{0}'", melt.varName));
+                }
+
+                // value name (optional)
+                if (melt.varName) {
+                    options.push(com_util.formatString("value_name='{0}'", melt.valueName));
+                }
             }
 
             code.appendFormat('{0})', options.join(', '));
@@ -354,25 +389,7 @@ define([
         }
 
         loadState() {
-            var {
-                variable, type, pivot, melt, allocateTo, resetIndex
-            } = this.state;
-
-            $(this.wrapSelector('#vp_rsDataframe')).val(variable);
-            $(this.wrapSelector('#vp_rsType')).val(type);
-
-            // pivot
-            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsIndex'), pivot.index);
-            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsColumns'), pivot.columns);
-            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsValues'), pivot.values);
-
-            // melt
-            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsIdVars'), melt.idVars);
-            this._loadColumnSelectorInput(this.wrapSelector('#vp_rsValueVars'), melt.valueVars);
-
-            // allocateTo
-            $(this.wrapSelector('#vp_rsAllocateTo')).val(allocateTo);
-            $(this.wrapSelector('#vp_rsResetIndex')).prop('checked', resetIndex);
+            super.loadState();
         }
 
         _resetColumnSelector(target) {
