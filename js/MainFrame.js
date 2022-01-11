@@ -354,11 +354,13 @@ define([
                         popupStateList.splice(i+1, 0, ...childStates);
                     }
                 } else {
-                    vpLog.display(VP_LOG_TYPE.ERROR, 'Menu is not found (menu id: '+menuId+')');
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'Menu is not found (menu id: '+popupState.menuId+')');
                 }
             }
 
             try {
+                // loading bar enable
+                this.boardFrame.showLoadingBar();
                 // create components
                 require(loadMenuList, function() {
                     let parentBlock = null;
@@ -383,9 +385,15 @@ define([
                                 if (parentBlock == null) {
                                     parentBlock = newBlock; // set parent block of created block
                                 } else {
-                                    newBlock.setDepth(prevBlock.getChildDepth());
+                                    if (prevBlock != null) {
+                                        newBlock.setDepth(prevBlock.getChildDepth());
+                                    }
                                 }
-                                prevBlock = newBlock;
+                                if (newBlock.isGroup) {
+                                    prevBlock = newBlock;
+                                } else {
+                                    prevBlock = null;
+                                }
                             } else {
                                 // add to task list
                                 that.addTask(popup);
@@ -414,12 +422,14 @@ define([
                         // scroll to new block
                         that.boardFrame.scrollToBlock(parentBlock);
                     }
+                    that.boardFrame.hideLoadingBar();
                     that.boardFrame.reloadBlockList();
                 }, function (err) {
-                    vpLog.display(VP_LOG_TYPE.ERROR, 'Menu file is not found. (menu id: '+menuId+')');
+                    vpLog.display(VP_LOG_TYPE.ERROR, 'Error on creating popup (' + err.message + ')');
+                    that.boardFrame.hideLoadingBar();
                 });
             } catch(err) {
-                ;
+                that.boardFrame.hideLoadingBar();
             }
         }
 

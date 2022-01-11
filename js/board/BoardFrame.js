@@ -410,6 +410,14 @@ define([
             // save as metadata
             vpConfig.setMetadata({ vp_note_display: false, vp_note_width: boardWidth });
         }
+        
+        showLoadingBar() {
+            $(this.wrapSelector('#vp_boardLoading')).show();
+        }
+
+        hideLoadingBar() {
+            $(this.wrapSelector('#vp_boardLoading')).hide();
+        }
         //========================================================================
         // Note control
         //========================================================================
@@ -863,6 +871,7 @@ define([
 
         jsonToBlock(jsonList) {
             let parent = this.prop.parent; // MainFrame
+            let blockList = [];
             jsonList && jsonList.forEach((obj, idx) => {
                 let {
                     isGroup, depth, blockNumber, taskId, taskState
@@ -875,14 +884,15 @@ define([
                         blockNumber: blockNumber
                     }
                 };
-                parent.createPopup([{
+                blockList.push({
                     blockType: 'block', 
                     menuId: taskId, 
                     menuState: state, 
                     position: idx, 
                     createChild: false
-                }]);
+                });
             });
+            parent.createPopup(blockList);
         }
     } // class
 
