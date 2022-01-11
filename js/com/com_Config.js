@@ -286,7 +286,7 @@ define([], function() {
      * Frame size settings
      */
     Config.JUPYTER_HEADER_SPACING = 110;
-    Config.MENU_MIN_WIDTH = 270;
+    Config.MENU_MIN_WIDTH = 273;
     Config.BOARD_MIN_WIDTH = 263;
     Config.MENU_BOARD_SPACING = 5;
     Config.VP_MIN_WIDTH = Config.MENU_MIN_WIDTH + Config.BOARD_MIN_WIDTH + Config.MENU_BOARD_SPACING; // = MENU_MIN_WIDTH + BOARD_MIN_WIDTH + MENU_BOARD_SPACING
