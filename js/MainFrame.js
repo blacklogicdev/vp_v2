@@ -385,15 +385,11 @@ define([
                                 if (parentBlock == null) {
                                     parentBlock = newBlock; // set parent block of created block
                                 } else {
-                                    if (prevBlock != null) {
+                                    if (prevBlock != null && !newBlock.isGroup) {
                                         newBlock.setDepth(prevBlock.getChildDepth());
                                     }
                                 }
-                                if (newBlock.isGroup) {
-                                    prevBlock = newBlock;
-                                } else {
-                                    prevBlock = null;
-                                }
+                                prevBlock = newBlock;
                             } else {
                                 // add to task list
                                 that.addTask(popup);

@@ -140,6 +140,10 @@ define([
                 that.tmpState.boardTitle = fileName;
                 that.tmpState.boardPath = null;
             });
+            // click board - blur block
+            $(this.wrapSelector()).on('click', function() {
+                that.blurAllblock();
+            });
         }
 
         _bindSortable() {
