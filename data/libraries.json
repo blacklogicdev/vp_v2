@@ -1713,28 +1713,6 @@
                                 "desc": "",
                                 "item": [
                                     {
-                                        "id": "pdFunc_objCal",
-                                        "type": "function",
-                                        "level": 3,
-                                        "name": "Object Calculation",
-                                        "path": "visualpython - library - pandas - general functions - object calculation",
-                                        "desc": "",
-                                        "tag": "OBJECT CALCULATION",
-                                        "file": "m_pandas/objCal.js",
-                                        "useAuto" : true
-                                    },
-                                    {
-                                        "id": "pdFunc_basicCal",
-                                        "type": "function",
-                                        "level": 3,
-                                        "name": "Basic Calculation",
-                                        "path": "visualpython - library - pandas - general functions - basic calculation",
-                                        "desc": "",
-                                        "tag": "BASIC CALCULATION",
-                                        "file": "m_pandas/basicCal.js",
-                                        "useAuto" : true
-                                    },
-                                    {
                                         "id": "pdFunc_merge",
                                         "type": "function",
                                         "level": 3,

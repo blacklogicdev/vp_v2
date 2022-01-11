@@ -118,6 +118,7 @@ define([
                 $(com_util.formatString(".{0}", that.uuid)).removeClass('suggest-input-uninit').addClass('suggest-input');
 
                 $(com_util.formatString(".{0}", that.uuid)).autocomplete({
+                    autoFocus: true,
                     minLength: minLength,
                     source: function (req, res) {
                         var srcList = typeof that._suggestList == "function" ? that._suggestList() : that._suggestList;
@@ -139,8 +140,13 @@ define([
                         res(returlList);
                     },
                     select: function (evt, ui) {
+                        let result = true;
                         if (typeof that._selectEvent == "function")
-                            that._selectEvent(ui.item.value, ui.item);
+                            result = that._selectEvent(ui.item.value, ui.item);
+                        if (result != undefined) {
+                            return result;
+                        }
+                        return true;
                     }
                 }).focus(function () {
                     $(com_util.formatString(".{0}", that.uuid)).autocomplete('search', $(com_util.formatString(".{0}", that.uuid)).val());
