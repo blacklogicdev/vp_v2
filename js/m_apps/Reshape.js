@@ -46,6 +46,8 @@ define([
                     varName: '',
                     valueName: ''
                 },
+                userOption: '',
+                allocateTo: '',
                 ...this.state
             }
             this.popup = {
@@ -70,6 +72,7 @@ define([
             $(document).off('click', this.wrapSelector('#vp_rsIdVarsSelect'));
             $(document).off('change', this.wrapSelector('#vp_rsValueVars'));
             $(document).off('click', this.wrapSelector('#vp_rsValueVarsSelect'));
+            $(document).off('change', this.wrapSelector('#vp_rsUserOption'));
             $(document).off('change', this.wrapSelector('#vp_rsAllocateTo'));
             $(document).off('change', this.wrapSelector('#vp_rsResetIndex'));
         }
@@ -120,6 +123,10 @@ define([
                     $(that.wrapSelector('.vp-rs-type-box.pivot')).hide();
                     $(that.wrapSelector('.vp-rs-type-box.melt')).show();
                 }
+
+                // clear user option
+                $(that.wrapSelector('#vp_rsUserOption')).val('');
+                that.state.userOption = '';
             });
 
             // index change event
@@ -187,6 +194,11 @@ define([
                 that.openColumnSelector(targetVariable, $(that.wrapSelector('#vp_rsValueVars')), 'Select columns', excludeList);
             });
 
+            // userOption event
+            $(document).on('change', this.wrapSelector('#vp_rsUserOption'), function() {
+                that.state.userOption = $(this).val();
+            });
+
             // allocateTo event
             $(document).on('change', this.wrapSelector('#vp_rsAllocateTo'), function() {
                 that.state.allocateTo = $(this).val();
@@ -210,7 +222,7 @@ define([
             this.loadVariableList();
 
             var {
-                variable, type, pivot, melt, allocateTo, resetIndex
+                variable, type, pivot, melt, userOption, allocateTo, resetIndex
             } = this.state;
 
             $(this.wrapSelector('#vp_rsDataframe')).val(variable);
@@ -227,6 +239,9 @@ define([
             this._loadColumnSelectorInput(this.wrapSelector('#vp_rsValueVars'), melt.valueVars);
             $(this.wrapSelector('#vp_rsVarName')).val(melt.varName);
             $(this.wrapSelector('#vp_rsValueName')).val(melt.valueName);
+
+            // userOption
+            $(this.wrapSelector('#vp_rsUserOption')).val(userOption);
 
             // allocateTo
             $(this.wrapSelector('#vp_rsAllocateTo')).val(allocateTo);
@@ -292,7 +307,7 @@ define([
 
         generateCode() {
             var code = new com_String();
-            var { variable, type, allocateTo, resetIndex, pivot, melt } = this.state;
+            var { variable, type, userOption, allocateTo, resetIndex, pivot, melt } = this.state;
 
             //====================================================================
             // Allocation
@@ -369,6 +384,11 @@ define([
                 if (melt.varName) {
                     options.push(com_util.formatString("value_name='{0}'", melt.valueName));
                 }
+            }
+
+            // userOption
+            if (userOption && userOption != '') {
+                options.push(userOption);
             }
 
             code.appendFormat('{0})', options.join(', '));
