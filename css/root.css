@@ -274,8 +274,14 @@ hr.vp-extra-menu-line {
 .wp80 {
     width: 80% !important;
 }
+.wp50 {
+    width: 50% !important; 
+}
 .wp49 {
     width: 49% !important;
+}
+.wp5 {
+    width: 5% !important;
 }
 .w100 {
     width: 100px !important;
@@ -288,6 +294,10 @@ hr.vp-extra-menu-line {
 }
 .w30 {
     width: 30px !important;
+}
+/* temporary margin */
+.mb5 {
+    margin-bottom: 5px;
 }
 /* table style */
 .vp-tbl-gap5 {
