@@ -33,13 +33,14 @@ define([
             /** Write codes executed before rendering */
             this.config.dataview = false;
             this.config.sizeLevel = 2;
-
+            
+            this.setDefaultVariables();
             this.state = {
-                package: {},
+                kind: 'plot',
                 ...this.state
             }
+            this.package = this.plotPackage[this.state.kind];
 
-            this.setDefaultVariables();
         }
 
         _bindEvent() {
@@ -48,8 +49,125 @@ define([
 
         }
 
+        bindEventAfterRender() {
+            let that = this;
+            // show option based on chart type
+            $(this.wrapSelector('#vp_plotKind .vp-plot-item')).click(function() {
+                // plot item
+                $(this).parent().find('.vp-plot-item').removeClass('selected');
+                $(this).addClass('selected');
+    
+                // select 태그 강제 선택
+                var kind = $(this).data('kind');
+                $(that.wrapSelector('#kind')).val(kind).prop('selected', true);
+    
+                var thisPackage = { ...that.plotPackage[kind] };          
+                if (thisPackage == undefined) thisPackage = that.plotPackage['plot'];
+    
+                // 모두 숨기기 (단, 대상 변수 입력란과 차트 유형 선택지 제외)
+                $(that.wrapSelector('table.vp-plot-setting-table tr:not(:last)')).hide();
+    
+                // 해당 옵션에 있는 선택지만 보이게 처리
+                thisPackage.input && thisPackage.input.forEach(obj => {
+                    $(that.wrapSelector('#' + obj.name)).closest('tr').show();
+    
+                    var label = obj.label;
+                    if (label != undefined) {
+                        $(that.wrapSelector('#' + obj.name)).closest('tr').find('th').removeClass('vp-orange-text');
+                        if (obj.required != false) {
+                            // label = "* " + obj.label;
+                            $(that.wrapSelector('#' + obj.name)).closest('tr').find('th').addClass('vp-orange-text');
+                        }
+                        // $(that.wrapSelector("label[for='" + obj.name + "']")).text(label);
+                        $(that.wrapSelector('#' + obj.name)).closest('tr').find('th').text(label);
+                    }
+                });
+                thisPackage.variable && thisPackage.variable.forEach(obj => {
+                    $(that.wrapSelector('#' + obj.name)).closest('tr').show();
+                });
+    
+                thisPackage.input = thisPackage.input.concat(that.addOption);
+                that.package = thisPackage;
+            });
+
+            // use color
+            $(this.wrapSelector('#useColor')).change(function() {
+                var checked = $(this).prop('checked');
+                if (checked == true) {
+                    // 색상 선택 가능하게
+                    $(that.wrapSelector('#color')).removeAttr('disabled');
+                } else {
+                    $(that.wrapSelector('#color')).attr('disabled', 'true');
+                }
+            })
+
+            // marker selector
+            $(this.wrapSelector('#markerSelector')).change(function() {
+                var selected = $(this).val();
+                if (selected == "marker") {
+                    $(this).parent().find('#marker').show();
+                    $(this).parent().find('#marker').val('');
+                } else {
+                    $(this).parent().find('#marker').hide();
+                    $(this).parent().find('#marker').val(selected);
+                }
+            });
+
+            // select cmap
+            $(this.wrapSelector('.vp-plot-cmap-wrapper')).click(function() {
+                $(this).toggleClass('open');
+            });
+
+            // open file navigation
+            $(this.wrapSelector('#vp_openFileNavigationBtn')).click(function() {
+                let fileNavi = new FileNavigation({
+                    type: 'save',
+                    extensions: ['png'],
+                    finish: function(filesPath, status, error) {
+                        if (filesPath.length > 0) {
+                            let { file, path } = filesPath[0];
+                            $(that.wrapSelector('#savefigpath')).val(path);
+                            $(that.wrapSelector('#fileName')).val(file);
+                        }
+                    }
+                });
+                fileNavi.open();
+            });
+        }
+
         templateForBody() {
             return chartHTml
+        }
+
+        loadState() {
+            vpLog.display(VP_LOG_TYPE.DEVELOP, this.state);   
+
+            let that = this;
+            Object.keys(this.state).forEach(key => {
+                if (key !== 'config') {
+                    let tag = $(that.wrapSelector('#' + key));
+                    let tagName = $(tag).prop('tagName');
+                    let savedValue = that.state[key];
+                    switch(tagName) {
+                        case 'INPUT':
+                            let inputType = $(tag).prop('type');
+                            if (inputType == 'text' || inputType == 'number') {
+                                $(tag).val(savedValue);
+                                break;
+                            }
+                            if (inputType == 'checkbox') {
+                                $(tag).prop('checked', savedValue);
+                                break;
+                            }
+                            break;
+                        case 'TEXTAREA':
+                        case 'SELECT':
+                        default:
+                            $(tag).val(savedValue);
+                            break;
+                    }
+                }
+            });
         }
 
         render() {
@@ -59,9 +177,8 @@ define([
             this.renderSubplotOption1();
             this.renderCmapSelector();
 
-            this.renderSubplotOption2();
-
-            // variable selector
+            // bind event
+            this.bindEventAfterRender();
             this.bindVariableSelector();
         }
 
@@ -135,69 +252,25 @@ define([
         }
 
         renderSubplotOption1() {
-            var that = this;
-    
-            // 차트 유형 선택지 구성
+            // render kind selector
             this.renderKindSelector();
     
-            // 색상 사용여부
-            $(this.wrapSelector('#useColor')).change(function() {
-                var checked = $(this).prop('checked');
-                if (checked == true) {
-                    // 색상 선택 가능하게
-                    $(that.wrapSelector('#color')).removeAttr('disabled');
-                } else {
-                    $(that.wrapSelector('#color')).attr('disabled', 'true');
-                }
-            })
-    
-            // 마커 이미지 표시 (또는 hover에 표시)
+            // show marker image
             var optionTagList = $(this.wrapSelector('#markerSelector option'));
-            // [0] 직접입력 제외
+            // [0] : except typing tag
             for (var i = 1; i < optionTagList.length; i++) {
-                // 이미지 파일명
+                // file name
                 var imgFile = $(optionTagList[i]).data('img');
-                // 이미지 url 바인딩
+                // bind url
                 var url = com_Const.IMAGE_PATH + 'chart/marker/' + imgFile;
                 $(optionTagList[i]).attr({
                     'data-img': url
                 });
             }
-    
-            // 마커 : 직접입력 선택 시 input 태그 활성화
-            $(this.wrapSelector('#markerSelector')).change(function() {
-                var selected = $(this).val();
-                if (selected == "marker") {
-                    $(this).parent().find('#marker').show();
-                    $(this).parent().find('#marker').val('');
-                } else {
-                    $(this).parent().find('#marker').hide();
-                    $(this).parent().find('#marker').val(selected);
-                }
-            });
-        }
-
-        renderSubplotOption2() {
-            var that = this;
-            // 파일 네비게이션 오픈
-            $(this.wrapSelector('#vp_openFileNavigationBtn')).click(function() {
-                let fileNavi = new FileNavigation({
-                    type: 'save',
-                    extensions: ['png'],
-                    finish: function(filesPath, status, error) {
-                        if (filesPath.length > 0) {
-                            let { file, path } = filesPath[0];
-                            $(that.wrapSelector('#savefigpath')).val(path);
-                            $(that.wrapSelector('#fileName')).val(file);
-                        }
-                    }
-                });
-                fileNavi.open();
-            });
         }
 
         renderKindSelector() {
-            // 차트유형 selector 동적 구성
+            // chart type selector
             var selector = $(this.wrapSelector('#kind'));
             var that = this;
             this.plotKind.forEach(kind => {
@@ -218,64 +291,22 @@ define([
                 selector.append(option);
             });
     
-            // 메타데이터로 차트유형 선택
-            var plotType = 'plot';
-            if (this.state.package && this.state.package.options != undefined) {
-                plotType = this.state.package.options.filter(o => o.id == 'kind')[0].value;
-            }
+            // select chart type using metadata
+            var plotType = this.state.kind;
     
-            // 차트 선택
+            // select chart
             $(selector).val(plotType);
             $(this.wrapSelector(`#vp_plotKind .vp-plot-item[data-kind="${plotType}"]`)).addClass('selected');
             
-            // 기존 유형 선택하는 select 태그 안보이게
+            // hide original selector
             $(selector).hide();
     
-            // 차트유형 선택지에 맞게 옵션 표시
-            $(this.wrapSelector('#vp_plotKind .vp-plot-item')).click(function() {
-                // 선택한 플롯 유형 박스 표시
-                $(this).parent().find('.vp-plot-item').removeClass('selected');
-                $(this).addClass('selected');
-    
-                // select 태그 강제 선택
-                var kind = $(this).data('kind');
-                $(selector).val(kind).prop('selected', true);
-    
-                var thisPackage = { ...that.plotPackage[kind] };          
-                if (thisPackage == undefined) thisPackage = that.plotPackage['plot'];
-    
-                // 모두 숨기기 (단, 대상 변수 입력란과 차트 유형 선택지 제외)
-                $(that.wrapSelector('table.vp-plot-setting-table tr:not(:last)')).hide();
-    
-                // 해당 옵션에 있는 선택지만 보이게 처리
-                thisPackage.input && thisPackage.input.forEach(obj => {
-                    $(that.wrapSelector('#' + obj.name)).closest('tr').show();
-    
-                    var label = obj.label;
-                    if (label != undefined) {
-                        $(that.wrapSelector('#' + obj.name)).closest('tr').find('th').removeClass('vp-orange-text');
-                        if (obj.required != false) {
-                            // label = "* " + obj.label;
-                            $(that.wrapSelector('#' + obj.name)).closest('tr').find('th').addClass('vp-orange-text');
-                        }
-                        // $(that.wrapSelector("label[for='" + obj.name + "']")).text(label);
-                        $(that.wrapSelector('#' + obj.name)).closest('tr').find('th').text(label);
-                    }
-                });
-                thisPackage.variable && thisPackage.variable.forEach(obj => {
-                    $(that.wrapSelector('#' + obj.name)).closest('tr').show();
-                });
-    
-                thisPackage.input = thisPackage.input.concat(that.addOption);
-                that.state.package = thisPackage;
-            });
-    
-            // 플롯 차트 옵션으로 초기화
+            // initial plot chart option
             var plotPackage = { ...this.plotPackage[plotType] };
-            // 모두 숨기기 (단, 대상 변수 입력란과 차트 유형 선택지 제외)
+            // hide all (except allocate to, chart type selector)
             $(this.wrapSelector('table.vp-plot-setting-table tr:not(:last)')).hide();
     
-            // 해당 옵션에 있는 선택지만 보이게 처리
+            // show only options for this plot type
             plotPackage.input && plotPackage.input.forEach(obj => {
                 $(this.wrapSelector('#' + obj.name)).closest('tr').show();
                 var label = obj.label;
@@ -294,15 +325,15 @@ define([
             });
     
             plotPackage.input = plotPackage.input.concat(this.addOption);
-            this.state.package = plotPackage;
+            this.package = plotPackage;
         }
 
         renderCmapSelector() {
-            // 기존 cmap 선택하는 select 태그 안보이게
+            // hide original selector
             var cmapSelector = this.wrapSelector('#cmap');
             $(cmapSelector).hide();
     
-            // cmap 데이터로 cmap selector 동적 구성
+            // cmap selector
             this.cmap.forEach(ctype => {
                 var option = document.createElement('option');
                 $(option).attr({
@@ -313,7 +344,7 @@ define([
                 $(cmapSelector).append(option);
             });
     
-            // cmap 데이터로 팔레트 div 동적 구성
+            // dynamical div list for cmap data
             this.cmap.forEach(ctype => {
                 var divColor = document.createElement('div');
                 $(divColor).attr({
@@ -324,7 +355,7 @@ define([
                 });
                 $(divColor).text(ctype == ''?'none':ctype);
                 
-                // 이미지 url 바인딩
+                // bind url
                 var url = com_Const.IMAGE_PATH + 'chart/cmap/' + ctype + '.JPG';
                 $(divColor).css({
                     'background-image' : 'url(' + url + ')'
@@ -332,25 +363,20 @@ define([
     
                 var selectedCmap = this.wrapSelector('#vp_selectedCmap');
     
-                // 선택 이벤트 등록
+                // select color
                 $(divColor).click(function() {
                     if (!$(this).hasClass('selected')) {
                         $(this).parent().find('.vp-plot-cmap-item.selected').removeClass('selected');
                         $(this).addClass('selected');
-                        // 선택된 cmap 이름 표시
+                        // selected cmap name
                         $(selectedCmap).text(ctype == ''?'none':ctype);
-                        // 선택된 cmap data-caption-id 변경
+                        // selected cmap data-caption-id
                         $(selectedCmap).attr('data-caption-id', ctype);
-                        // select 태그 강제 선택
+                        // force selection
                         $(cmapSelector).val(ctype).prop('selected', true);
                     }
                 });
                 $(this.wrapSelector('#vp_plotCmapSelector')).append(divColor);
-            });
-    
-            // 선택 이벤트
-            $(this.wrapSelector('.vp-plot-cmap-wrapper')).click(function() {
-                $(this).toggleClass('open');
             });
         }
 
@@ -534,23 +560,6 @@ define([
                 }
                 $(that.wrapSelector('#vp_varDetailArray')).html(methodArrayCode.toString());
     
-                
-                // } else {
-                //     // select only one at a time
-                //     var methodArrayCode = new com_String();
-                //     if (dtype != undefined) {
-                //         methodArrayCode.appendFormat('<div class="{0}" data-method="{1}">{2}</div>', 'vp-method-select-item', 'index', 'index');
-                //         methodArrayCode.appendFormat('<div class="{0}" data-method="{1}">{2}</div>', 'vp-method-select-item', 'values', 'values');
-                //     }
-                //     $(that.wrapSelector('#vp_varDetailArray')).html(methodArrayCode.toString());
-        
-                //     var nowState = $(this).hasClass('selected');
-                //     $(that.wrapSelector('#vp_varDetailColList .vp-column-select-item')).removeClass('selected');
-                //     if (nowState == false) {
-                //         $(this).addClass('selected');
-                //     }
-                // }
-    
                 // set code
                 var code = that.getSelectCode();
                 $(that.wrapSelector('#vp_varSelectCode')).val(code);
@@ -589,7 +598,7 @@ define([
             });
         }
 
-        getSelectCode = function() {
+        getSelectCode() {
             var code = new com_String();
     
             // variable
@@ -629,21 +638,18 @@ define([
             return code.toString();
         }
 
-        refreshVariables = function(callback = undefined) {
+        refreshVariables (callback = undefined) {
             var that = this;
 
             var _DATA_TYPES_OF_INDEX = [
-                // Index 하위 유형
                 'RangeIndex', 'CategoricalIndex', 'MultiIndex', 'IntervalIndex', 'DatetimeIndex', 'TimedeltaIndex', 'PeriodIndex', 'Int64Index', 'UInt64Index', 'Float64Index'
             ];
         
             var _DATA_TYPES_OF_GROUPBY = [
-                // GroupBy 하위 유형
                 'DataFrameGroupBy', 'SeriesGroupBy'
             ];
         
             var _SEARCHABLE_DATA_TYPES = [
-                // pandas 객체
                 'DataFrame', 'Series', 'Index', 'Period', 'GroupBy', 'Timestamp'
                 , ..._DATA_TYPES_OF_INDEX
                 , ..._DATA_TYPES_OF_GROUPBY
@@ -670,7 +676,7 @@ define([
                             'value': varObj.varName
                         };
     
-                        // View Table에 추가
+                        // Add to View Table
                         var tagRow = $(`<tr class="vp-var-view-item"><td>${varObj.varName}</td><td>${varObj.varType}</td></tr>`);
                         $(viewList).append(tagRow);
                     }
@@ -722,7 +728,7 @@ define([
             return code;
         }
 
-        generateImportCode = function() {
+        generateImportCode () {
             var code = new com_String();
     
             // get parameters
@@ -760,12 +766,7 @@ define([
     
                 // copy package
                 var kind = $(this.wrapSelector('#kind')).val();
-                var thisPackage = this.plotPackage[kind];
-                // if there's no package, default = plot
-                if (thisPackage == undefined) {
-                    thisPackage = this.plotPackage['plot'];
-                }
-                thisPackage = JSON.parse(JSON.stringify(thisPackage));
+                let thisPackage = this.package;
     
                 // if no color selected, not generate code
                 if ($(this.wrapSelector('#useColor')).prop('checked') != true) {
@@ -786,7 +787,6 @@ define([
     
                 // plot component code
                 var plotCode = com_generator.vp_codeGenerator(this.uuid, thisPackage, userOption.toString());
-                if (plotCode == null) return "BREAK_RUN"; // 코드 생성 중 오류 발생
                 sbCode.append(plotCode);
     
                 // tail code
@@ -1410,7 +1410,7 @@ define([
                 { name: 'legendLoc', required: false },
                 { name: 'savefigpath', required: false }
             ];
-            // plot 종류
+            // plot type
             this.plotKind = [
                 'plot', 'bar', 'barh', 'hist', 'boxplot', 'stackplot',
                 'pie', 'scatter', 'hexbin', 'contour', 'imshow', 'errorbar'
@@ -1429,12 +1429,12 @@ define([
                 'imshow': 'Image',
                 'errorbar': 'Error Bar'
             };
-            // cmap 종류
+            // cmap type
             this.cmap = [
                 '', 'viridis', 'plasma', 'inferno', 'magma', 'cividis'
                 , 'Pastel1', 'Pastel2', 'Paired', 'Accent', 'Dark2', 'Set1', 'Set2', 'Set3', 'tab10', 'tab20', 'tab20b', 'tab20c'
             ];
-            // marker 종류
+            // marker type
             this.marker = {
                 // 'custom': { label: 'Custom', value: 'marker' },
                 'point' : { label: '.', value: '.', img: 'm00.png' }, 
@@ -1461,7 +1461,7 @@ define([
                 'diamond' : { label: 'diamond', value: 'D', img: 'm19.png' }, 
                 'thin_diamond' : { label: 'thin diamond', value: 'd', img: 'm20.png' }
             }
-            // 범례 위치
+            // legend position
             this.legendPosition = [
                 'best', 'upper right', 'upper left', 'lower left', 'lower right',
                 'center left', 'center right', 'lower center', 'upper center', 'center'
