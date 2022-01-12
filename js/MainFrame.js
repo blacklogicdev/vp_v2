@@ -595,9 +595,12 @@ define([
          * Blur PopupComponent
          * @param {PopupComponent} component 
          */
-        blurPopup(component) {
-            if (component instanceof PopupComponent) {
+        blurPopup(component=null) {
+            if (component && (component instanceof PopupComponent)) {
                 component.blur();
+            } else {
+                // blur all
+                $('.vp-popup-frame').removeClass('vp-focused');
             }
             this.setFocusedPage(null);
         }

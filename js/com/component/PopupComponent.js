@@ -541,8 +541,12 @@ define([
             vpLog.display(VP_LOG_TYPE.DEVELOP, 'open popup', this);
             this.loadState();
             this.show();
-            this.focus();
             this._bindCodemirror();
+
+            $(this.eventTarget).trigger({
+                type: 'focus_option_page',
+                component: this
+            });
         }
 
         setSaveOnlyMode() {
