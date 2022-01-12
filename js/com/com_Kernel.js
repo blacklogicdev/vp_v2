@@ -56,33 +56,37 @@ define([
                             output: function (msg) {
                                 var result = '';
                                 var type = '';
-                                if (msg.content) {
-                                    try {
-                                        if (msg.content['name'] == 'stderr') {
-                                            reject(msg);
-                                        } else {
-                                            if (msg.content['text']) {
-                                                result = String(msg.content['text']);
-                                                type = 'text';
-                                            } else if (msg.content.data) {
-                                                if (msg.content.data['text/plain']) {
-                                                    result = String(msg.content.data['text/plain']);
-                                                    type = 'text/plain';
-                                                } else if (msg.content.data['text/html']) {
-                                                    result = String(msg.content.data['text/html']);
-                                                    type = 'text/html';
-                                                } else if (msg.content.data['image/png']) {
-                                                    result = String(msg.content.data['image/png']);
-                                                    type = 'image/png';
-                                                }
-                                            }
-                                            resolve({result: result, type: type, msg: msg});
-                                        }
-                                    } catch(ex) {
-                                        reject(ex);
-                                    }
+                                if (msg.msg_type == 'error') {
+                                    reject({result: msg.content, type: 'error', msg: msg});
                                 } else {
-                                    resolve({result: result, type: type, msg: msg});
+                                    if (msg.content) {
+                                        try {
+                                            if (msg.content['name'] == 'stderr') {
+                                                reject(msg);
+                                            } else {
+                                                if (msg.content['text']) {
+                                                    result = String(msg.content['text']);
+                                                    type = 'text';
+                                                } else if (msg.content.data) {
+                                                    if (msg.content.data['text/plain']) {
+                                                        result = String(msg.content.data['text/plain']);
+                                                        type = 'text/plain';
+                                                    } else if (msg.content.data['text/html']) {
+                                                        result = String(msg.content.data['text/html']);
+                                                        type = 'text/html';
+                                                    } else if (msg.content.data['image/png']) {
+                                                        result = String(msg.content.data['image/png']);
+                                                        type = 'image/png';
+                                                    }
+                                                }
+                                                resolve({result: result, type: type, msg: msg});
+                                            }
+                                        } catch(ex) {
+                                            reject(ex);
+                                        }
+                                    } else {
+                                        resolve({result: result, type: type, msg: msg});
+                                    }
                                 }
                             }
                         }
