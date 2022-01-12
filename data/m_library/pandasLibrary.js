@@ -132,8 +132,8 @@ define([
             id: 'read_csv',
             name: 'Read CSV',
             library: 'pandas',
-            description: '파일의 데이터를 읽어 DataFrame으로 생성',
-            code: '${o0} = pd.read_csv(${i0}${v})',
+            description: '',
+            code: '${o0} = pd.read_csv(${i0}${v}${etc})',
             input: [
                 {
                     name:'i0',
@@ -201,8 +201,8 @@ define([
             id: 'to_csv',
             name: 'To CSV',
             library: 'pandas',
-            description: 'DataFrame을 csv 파일로 작성',
-            code: '${i0}.to_csv(${i1}${v})',
+            description: 'dataframe to csv',
+            code: '${i0}.to_csv(${i1}${v}${etc})',
             input: [
                 {
                     name:'i0',
@@ -2971,8 +2971,8 @@ define([
             id: 'read_json',
             name: 'Read Json',
             library: 'pandas',
-            description: 'json형식 파일을 읽어 DataFrame/Series로 생성',
-            code: '${o0} = pd.read_json(${i0}${v})',
+            description: 'json to pandas object',
+            code: '${o0} = pd.read_json(${i0}${v}${etc})',
             input: [
                 {
                     name:'i0',
@@ -3031,8 +3031,8 @@ define([
             id: 'to_json',
             name: 'To Json',
             library: 'pandas',
-            description: 'DataFrame/Series 데이터로 Json 파일 생성',
-            code: '${o0} = ${i0}.to_json(${v})',
+            description: 'DataFrame/Series to Json file',
+            code: '${o0} = ${i0}.to_json(${v}${etc})',
             input: [
                 {
                     name: 'i0',
@@ -3068,8 +3068,8 @@ define([
             id: 'to_pickle',
             name: 'To Pickle',
             library: 'pandas',
-            description: 'DataFrame/Series 데이터로 Pickle 파일 생성',
-            code: '${i0}.to_pickle(${path})',
+            description: 'DataFrame/Series to Pickle file',
+            code: '${i0}.to_pickle(${path}${etc})',
             input: [
                 {
                     name: 'i0',
@@ -3093,8 +3093,8 @@ define([
             id: 'read_pickle',
             name: 'Read Pickle',
             library: 'pandas',
-            description: 'Pickle 파일에서 Pandas 객체 복구',
-            code: '${o0} = pd.read_pickle(${i0}${v})',
+            description: 'Pickle to pandas object',
+            code: '${o0} = pd.read_pickle(${i0}${v}${etc})',
             input: [
                 {
                     name: 'i0',
@@ -5279,8 +5279,8 @@ define([
             id: 'readExcel',
             name: 'Read Excel',
             library: 'pandas',
-            description: '엑셀 파일을 불러와 DataFrame 생성',
-            code: '${o0} = pd.read_excel(${i0}${v})',
+            description: 'excel to pandas object',
+            code: '${o0} = pd.read_excel(${i0}${v}${etc})',
             input: [
                 {
                     name: 'i0',
@@ -5308,8 +5308,8 @@ define([
             id: 'to_excel',
             name: 'To Excel',
             library: ['pandas', 'xlwt', 'openpyxl'], // TODO: required packages
-            description: 'DataFrame을 excel 파일로 작성',
-            code: '${i0}.to_excel(${i1}${v})',
+            description: 'DataFrame to excel file',
+            code: '${i0}.to_excel(${i1}${v}${etc})',
             input: [
                 {
                     name: 'i0',
