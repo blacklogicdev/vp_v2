@@ -40,6 +40,9 @@
 .vp-popup-frame.vp-close > .vp-popup-footer {
     display: none;
 }
+.vp-popup-frame.vp-focused {
+    border: 1px solid var(--highlight-color);
+}
 .vp-popup-header {
     position: relative;
     height: 30px;
@@ -159,6 +162,7 @@
     width: 120px;
     text-align: center;
     line-height: 30px;
+    z-index: 2;
 }
 .vp-popup-detail-button {
     color: var(--font-primary);
@@ -265,7 +269,7 @@
     font-size: 13px;
     line-height: 16px;
     height: 30px;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     padding: 3px 7px;
     color: var(--font-primary);
     background: #FFFFFF;
@@ -315,6 +319,28 @@
 /* resizable handler */
 .vp-popup-frame .ui-resizable-se {
     background-image: url('');
+}
+
+/* error box */
+.vp-popup-data-error-box {
+    margin: 7px;
+    padding: 10px;
+    background: #FFFFFF;
+    border: 0.25px solid #E4E4E4;
+    box-shadow: 1px 1px 2px rgb(0 0 0 / 10%);
+    border-radius: 2px;
+}
+.vp-popup-data-error-box i.fa-exclamation-triangle {
+    color: #F37704;
+}
+.vp-popup-data-error-box-title {
+    color: #F37704;
+    font-weight: bold;
+}
+.vp-popup-data-error-box pre {
+    background: #eeeeee;
+    margin: 0px;
+    padding: 7px;
 }
 
 /* inner popup */

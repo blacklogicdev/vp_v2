@@ -27,7 +27,6 @@ define([
         _init() {
             super._init();
             /** Write codes executed before rendering */
-            this.config.dataview = false;
             this.config.sizeLevel = 1;
 
             this.howList = [
@@ -62,6 +61,7 @@ define([
                     on: [],
                     how: 'inner',
                 },
+                userOption: '',
                 allocateTo: '',
                 resetIndex: false,
                 ...this.state
@@ -97,6 +97,7 @@ define([
             $(document).off('change', this.wrapSelector('#vp_gbRightIndex'));
             $(document).off('change', this.wrapSelector('#vp_bdLeftSuffix'));
             $(document).off('change', this.wrapSelector('#vp_bdRightSuffix'));
+            $(document).off('change', this.wrapSelector('#vp_bdUserOption'));
             $(document).off('change', this.wrapSelector('#vp_bdAllocateTo'));
             $(document).off('change', this.wrapSelector('#vp_bdResetIndex'));
         }
@@ -117,6 +118,9 @@ define([
                     $(that.wrapSelector('.vp-bd-type-box.merge')).show();
                     $(that.wrapSelector('.vp-bd-type-box.concat')).hide();
                 }
+                // clear user option
+                $(that.wrapSelector('#vp_bdUserOption')).val('');
+                that.state.userOption = '';
             });
 
             //====================================================================
@@ -282,6 +286,11 @@ define([
                 that.state.merge.right.suffix = $(this).val();
             });
 
+            // userOption event
+            $(document).on('change', this.wrapSelector('#vp_bdUserOption'), function() {
+                that.state.userOption = $(this).val();
+            });
+
             // allocateTo event
             $(document).on('change', this.wrapSelector('#vp_bdAllocateTo'), function() {
                 that.state.allocateTo = $(this).val();
@@ -295,6 +304,79 @@ define([
 
         templateForBody() {
             return bindHtml;
+        }
+
+        templateForDataView() {
+            return '';
+        }
+
+        renderDataView() {
+            super.renderDataView();
+
+            this.loadDataPage();
+            $(this.wrapSelector('.vp-popup-dataview-box')).css('height', '300px');
+        }
+
+        renderDataPage(renderedText, isHtml = true) {
+            var tag = new com_String();
+            tag.appendFormatLine('<div class="{0} vp-close-on-blur vp-scrollbar">', 'rendered_html'); // 'rendered_html' style from jupyter output area
+            if (isHtml) {
+                tag.appendLine(renderedText);
+            } else {
+                tag.appendFormatLine('<pre>{0}</pre>', renderedText);
+            }
+            tag.appendLine('</div>');
+            $(this.wrapSelector('.vp-popup-dataview-box')).html(tag.toString());
+        }
+
+        loadDataPage() {
+            var that = this;
+            var code = this.generateCode();
+            // if not, get output of all data in selected pandasObject
+            vpKernel.execute(code).then(function(resultObj) {
+                let { msg } = resultObj;
+                if (msg.content.data) {
+                    var htmlText = String(msg.content.data["text/html"]);
+                    var codeText = String(msg.content.data["text/plain"]);
+                    if (htmlText != 'undefined') {
+                        that.renderDataPage(htmlText);
+                    } else if (codeText != 'undefined') {
+                        // plain text as code
+                        that.renderDataPage(codeText, false);
+                    } else {
+                        that.renderDataPage('');
+                    }
+                } else {
+                    var errorContent = new com_String();
+                    if (msg.content.ename) {
+                        errorContent.appendFormatLine('<div class="{0}">', 'vp-popup-data-error-box');
+                        errorContent.appendLine('<i class="fa fa-exclamation-triangle"></i>');
+                        errorContent.appendFormatLine('<label class="{0}">{1}</label>',
+                            'vp-popup-data-error-box-title', msg.content.ename);
+                        if (msg.content.evalue) {
+                            // errorContent.appendLine('<br/>');
+                            errorContent.appendFormatLine('<pre>{0}</pre>', msg.content.evalue.split('\\n').join('<br/>'));
+                        }
+                        errorContent.appendLine('</div>');
+                    }
+                    that.renderDataPage(errorContent);
+                }
+            }).catch(function(resultObj) {
+                let { msg } = resultObj;
+                var errorContent = new com_String();
+                if (msg.content.ename) {
+                    errorContent.appendFormatLine('<div class="{0}">', 'vp-popup-data-error-box');
+                    errorContent.appendLine('<i class="fa fa-exclamation-triangle"></i>');
+                    errorContent.appendFormatLine('<label class="{0}">{1}</label>',
+                    'vp-popup-data-error-box-title', msg.content.ename);
+                    if (msg.content.evalue) {
+                        // errorContent.appendLine('<br/>');
+                        errorContent.appendFormatLine('<pre>{0}</pre>', msg.content.evalue.split('\\n').join('<br/>'));
+                    }
+                    errorContent.appendLine('</div>');
+                }
+                that.renderDataPage(errorContent);
+            });
         }
 
         render() {
@@ -355,7 +437,7 @@ define([
         generateCode() {
             var code = new com_String();
             var {
-                type, concat, merge, allocateTo, resetIndex
+                type, concat, merge, allocateTo, resetIndex, userOption
             } = this.state;
 
             //====================================================================
@@ -389,6 +471,13 @@ define([
                 //====================================================================
                 if (resetIndex) {
                     code.append(', ignore_index=True');
+                }
+
+                //====================================================================
+                // User option
+                //====================================================================
+                if (userOption && userOption != '') {
+                    code.appendFormat(", {0}", userOption);
                 }
 
                 code.append(')');
@@ -437,6 +526,13 @@ define([
                     code.appendFormat(", suffixes=('{0}', '{1}')", merge.left.suffix, merge.right.suffix);
                 }
     
+                //====================================================================
+                // User option
+                //====================================================================
+                if (userOption && userOption != '') {
+                    code.appendFormat(", {0}", userOption);
+                }
+
                 code.append(')');
     
                 //====================================================================
@@ -457,7 +553,7 @@ define([
 
         loadState() {
             var {
-                type, concat, merge, allocateTo, resetIndex
+                type, concat, merge, userOption, allocateTo, resetIndex
             } = this.state;
 
             // type
@@ -496,6 +592,7 @@ define([
                 $(this.wrapSelector('#vp_bdLeftSuffix')).val(merge.left.suffix);
                 $(this.wrapSelector('#vp_bdRightSuffix')).val(merge.right.suffix);
             }
+            $(this.wrapSelector('#vp_bdUserOption')).val(userOption);
             $(this.wrapSelector('#vp_bdAllocateTo')).val(allocateTo);
             $(this.wrapSelector('#vp_bdResetIndex')).prop('checked', resetIndex);
 

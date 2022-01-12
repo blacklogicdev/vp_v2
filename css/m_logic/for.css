@@ -1,16 +1,15 @@
-.vp-grid-box {
-    display: grid;
-    grid-column-gap: 5px;
-    grid-template-columns: 30px calc(100% - 30px);
-}
-.vp-for-sub-box {
-    display: grid;
-    grid-template-columns: max-content;
-    margin-left: 35px;
-}
-.vp-for-sub-header {
+.vp-flex-row-between {
     display: flex;
+    flex-direction: row;
     justify-content: space-around;
-    height: 25px;
-    line-height: 25px;
+}
+.vp-flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.vp-flex-row-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
 }

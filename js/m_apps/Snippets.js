@@ -311,7 +311,7 @@ define([
 
         bindSnippetItem() {
             let that = this;
-            // item header click (toggle & select item) &  double click (edit title)
+            // item header click (select item) &  double click (edit title)
             $(this.wrapSelector('.vp-sn-item-header')).off('click');
             $(this.wrapSelector('.vp-sn-item-header')).on('click', function(evt) {
                 // stop propagation on checkbox
@@ -323,10 +323,12 @@ define([
                 that.clicked++;
                 if (that.clicked == 1) {
                     setTimeout(function(){
-                        if(that.clicked > 1) {
-                            // double click
+                        let selected = $(thisHeader).hasClass('selected');
+                        if(selected || that.clicked > 1) {
+                            // double click or clicked after selection
                             // enable input
                             $(thisHeader).find('.vp-sn-item-title').prop('disabled', false);
+                            $(thisHeader).find('.vp-sn-item-title').select();
                             $(thisHeader).find('.vp-sn-item-title').focus();
 
                         } 
@@ -336,28 +338,32 @@ define([
                         $(that.wrapSelector('.vp-sn-item-header')).removeClass('selected');
                         // select item
                         $(thisHeader).addClass('selected');
-
-                        // toggle item
-                        var parent = $(thisHeader).parent();
-                        var indicator = $(thisHeader).find('.vp-sn-indicator');
-                        var hasOpen = $(indicator).hasClass('open');
-                        // Deprecated: hide all codebox
-                        // $(that.wrapSelector('.vp-sn-indicator')).removeClass('open');
-                        // $(that.wrapSelector('.vp-sn-item-code')).hide();
-                        
-                        if (that.clicked > 1 || !hasOpen) {
-                            // show code
-                            $(indicator).addClass('open');
-                            $(parent).find('.vp-sn-item-code').show();
-                        } else {
-                            // hide code
-                            $(indicator).removeClass('open');
-                            $(parent).find('.vp-sn-item-code').hide();
-                        }
                         that.clicked = 0;
                     }, 200);
                 }
                 evt.stopPropagation();
+            });
+
+            // item indicator click (toggle item)
+            $(this.wrapSelector('.vp-sn-indicator')).off('click');
+            $(this.wrapSelector('.vp-sn-indicator')).on('click', function(evt) {
+                // toggle item
+                var parent = $(this).parent().parent();
+                var indicator = $(this);
+                var hasOpen = $(indicator).hasClass('open');
+                // Deprecated: hide all codebox
+                // $(that.wrapSelector('.vp-sn-indicator')).removeClass('open');
+                // $(that.wrapSelector('.vp-sn-item-code')).hide();
+                
+                if (!hasOpen) {
+                    // show code
+                    $(indicator).addClass('open');
+                    $(parent).find('.vp-sn-item-code').show();
+                } else {
+                    // hide code
+                    $(indicator).removeClass('open');
+                    $(parent).find('.vp-sn-item-code').hide();
+                }
             });
 
             // prevent occuring header click event by clicking input
@@ -473,17 +479,19 @@ define([
                     });
                     
                 } else if (menu == 'save') {
-                    var codemirror = that.codemirrorList[title];
-                    codemirror.save();
-                    var code = codemirror.getValue();
-                    
-                    // save changed code
-                    var timestamp = new Date().getTime();
-                    var updateSnippet = { [title]: { code: code, timestamp: timestamp } };
-                    vpConfig.setData(updateSnippet);
-
-                    // hide it
-                    $(this).hide();
+                    if (!$(this).hasClass('vp-disable')) {
+                        var codemirror = that.codemirrorList[title];
+                        codemirror.save();
+                        var code = codemirror.getValue();
+                        
+                        // save changed code
+                        var timestamp = new Date().getTime();
+                        var updateSnippet = { [title]: { code: code, timestamp: timestamp } };
+                        vpConfig.setData(updateSnippet);
+    
+                        // disable it
+                        $(this).addClass('vp-disable');
+                    }
                 }
                 evt.stopPropagation();
             });
@@ -514,15 +522,13 @@ define([
                 events: [{ 
                     key: 'change',
                     callback: function(evt, chgObj) {
-                        if (chgObj.removed.length > 1 || chgObj.text.length > 1) {
-                            // show save button
-                            $(selector).parent().find('.vp-sn-save').show();
+                        if (chgObj.removed.join('') != '' || chgObj.text.join('') != '') {
+                            // enable save button
+                            $(selector).parent().find('.vp-sn-save').removeClass('vp-disable');
                         }
                     }
                 }]
             });
-            let prevValue = $(selector).val();
-            cmCode.setValue(prevValue);
             this.codemirrorList[title] = cmCode;
         }
 
@@ -565,7 +571,7 @@ define([
             item.appendLine('</div>'); // end of vp-sn-item-header
             item.appendFormatLine('<div class="{0}">', 'vp-sn-item-code');
             item.appendFormatLine('<textarea>{0}</textarea>', code);
-            item.appendFormatLine('<div class="{0} {1}" data-menu="{2}" title="{3}">', 'vp-sn-item-menu-item', 'vp-sn-save', 'save', 'Save changes');
+            item.appendFormatLine('<div class="{0} {1} vp-disable" data-menu="{2}" title="{3}">', 'vp-sn-item-menu-item', 'vp-sn-save', 'save', 'Save changes');
             item.appendFormatLine('<img src="{0}"/>', '/nbextensions/visualpython/img/snippets/save_orange.svg');
             item.appendLine('</div>'); // vp-sn-save
             item.appendLine('</div>'); // end of vp-sn-item-code

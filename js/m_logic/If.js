@@ -31,7 +31,7 @@ define([
             this.config.saveOnly = true;
 
             this.state = {
-                v1: [],
+                v1: [{ type: 'condition', value: {} }],
                 ...this.state
             }
         }
@@ -43,11 +43,23 @@ define([
             // Add param
             $(this.wrapSelector('#vp_addCondition')).on('click', function() {
                 that.state.v1.push({ type: 'condition', value: {} });
-                $(that.wrapSelector('.v1 tbody')).append(that.templateForList(that.state.v1.length, {}));
+                $(that.wrapSelector('.v1-table')).append(that.templateForList(that.state.v1.length, {}));
+
+                // enable and disable last one
+                // enable all operator
+                $(that.wrapSelector('.v1 .v1-i4')).prop('disabled', false);
+                // disable last operator
+                $(that.wrapSelector('.v1 tr:last .v1-i4')).prop('disabled', true);
             });
             $(this.wrapSelector('#vp_addUserInput')).on('click', function() {
                 that.state.v1.push({ type: 'input', value: {} });
-                $(that.wrapSelector('.v1 tbody')).append(that.templateForInput(that.state.v1.length, {}));
+                $(that.wrapSelector('.v1-table')).append(that.templateForInput(that.state.v1.length, {}));
+
+                // enable and disable last one
+                // enable all operator
+                $(that.wrapSelector('.v1 .v1-i4')).prop('disabled', false);
+                // disable last operator
+                $(that.wrapSelector('.v1 tr:last .v1-i4')).prop('disabled', true);
             });
 
             // Delete param
@@ -61,6 +73,9 @@ define([
                 $(that.wrapSelector('.v1-tr')).each((idx, tag) => {
                     $(tag).find('th').text(idx + 1);
                 });
+
+                // disable last operator
+                $(that.wrapSelector('.v1 tr:last .v1-i4')).prop('disabled', true);
             });
         }
 
@@ -94,7 +109,8 @@ define([
             var page = new com_String();
             page.appendLine('<table class="v1 wp100" style="margin: 10px 0">');
             // page.appendLine('<thead><tr><td></td><td>Parameter</td><td></td><td>Default Value</td></tr></thead>');
-            page.appendLine('<tbody><colgroup><col width="20px"><col width="100px"><col width="100px"><col width="100px"><col width="100px"><col width="30px"></colgroup>');
+            page.appendLine('<colgroup><col width="20px"><col width="100px"><col width="100px"><col width="100px"><col width="100px"><col width="30px"></colgroup>');
+            page.appendLine('<tbody class="v1-table">');
             this.state.v1.forEach((v, idx) => {
                 if (v.type == 'condition') {
                     page.appendLine(this.templateForList(idx + 1, v.value));
@@ -168,6 +184,8 @@ define([
         render() {
             super.render();
 
+            // disable last operator
+            $(this.wrapSelector('.v1 tr:last .v1-i4')).prop('disabled', true);
         }
 
         generateCode() {

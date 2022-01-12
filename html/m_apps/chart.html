@@ -78,9 +78,9 @@
                 <span class="vp-accordian-caption">Required Input</span>
             </div>
             <div class="vp-accordian-box">
-                <input type="hidden" class="vp-input input-single" id="i0" value="plt" />
+                <input type="hidden" class="vp-input input-single vp-state" id="i0" value="plt" />
                 <div class="vp-thead vp-orange-text">
-                    Chart Type</div><select id="kind" class="vp-select option-select"></select>
+                    Chart Type</div><select id="kind" class="vp-select option-select vp-state"></select>
                 <div id="vp_plotKind" class="vp-plot-kind">
                     <div class="vp-plot-item" data-kind="plot" data-show-text="Line">
                         <div class="vp-plot-thumb plot"></div>
@@ -137,7 +137,7 @@
                             Bar</div>
                     </div>
                 </div>
-                <table class='u0b497696-10f6-45e0-ae1f-d169eb45450f vp-option-vertical-table-layout  vp-plot-setting-table'>
+                <table class='vp-option-vertical-table-layout  vp-plot-setting-table'>
                     <colgroup>
                         <col width='15%' />
                         <col width='*' />
@@ -145,33 +145,33 @@
                     <tbody>
                         <tr>
                             <th class="vp-orange-text">X Value</th>
-                            <td><input type="text" class="vp-input" id="x" />
+                            <td><input type="text" class="vp-input vp-state" id="x" />
                                 <input type="button" class="vp-button vp-select-data" data-axes="x" value="Select" /></td>
                         </tr>
                         <tr>
                             <th class="vp-orange-text">Y Value</th>
-                            <td><input type="text" class="vp-input" id="y" />
+                            <td><input type="text" class="vp-input vp-state" id="y" />
                                 <input type="button" class="vp-button vp-select-data" data-axes="y" value="Select" /></td>
                         </tr>
                         <tr>
                             <th class="vp-orange-text">Z Value</th>
-                            <td><input type="text" class="vp-input" id="z" placeholder="[[2-dimension]]" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="z" placeholder="[[2-dimension]]" /></td>
                         </tr>
                         <tr>
                             <th class="vp-orange-text">Bins</th>
-                            <td><input type="text" class="vp-input" id="bins" value="10" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="bins" value="10" /></td>
                         </tr>
                         <tr>
                             <th>X, Y Extent</th>
-                            <td><input type="text" class="vp-input" id="extent" placeholder="[xmin, xmax, ymin, ymax]" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="extent" placeholder="[xmin, xmax, ymin, ymax]" /></td>
                         </tr>
                         <tr>
                             <th>Origin</th>
-                            <td><input type="text" class="vp-input" id="origin" value="lower" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="origin" value="lower" /></td>
                         </tr>
                         <tr>
                             <th>Color Map</th>
-                            <td><select id="cmap" class="vp-select"></select>
+                            <td><select id="cmap" class="vp-select vp-state"></select>
                                 <div class="vp-plot-cmap-wrapper">
                                     <div id="vp_plotCmap" , class="vp-plot-cmap"><span id="vp_selectedCmap" class="vp-multilang"
                                             data-caption-id="nothing_selected">none</span></div>
@@ -181,16 +181,16 @@
                         </tr>
                         <tr>
                             <th>Chart Label</th>
-                            <td><input type="text" class="vp-input" id="label" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="label" /></td>
                         </tr>
                         <tr>
                             <th>Color</th>
-                            <td><input type="checkbox" class="vp-input" id="useColor" /><label for="useColor">use
-                                    color</label><br /><input type="color" class="vp-input" id="color" /></td>
+                            <td><input type="checkbox" class="vp-input vp-state" id="useColor" /><label for="useColor">use
+                                    color</label><br /><input type="color" class="vp-input vp-state" id="color" /></td>
                         </tr>
                         <tr>
                             <th>Marker</th>
-                            <td><select id="markerSelector" class="vp-select option-select">
+                            <td><select id="markerSelector" class="vp-select option-select vp-state">
                                     <option value="." data-img="m00.png" data-caption-id="point">.</option>
                                     <option value="," data-img="m01.png" data-caption-id="pixel">,</option>
                                     <option value="o" data-img="m02.png" data-caption-id="circle">o</option>
@@ -215,11 +215,11 @@
                                     <option value="D" data-img="m19.png" data-caption-id="diamond">diamond</option>
                                     <option value="d" data-img="m20.png" data-caption-id="thin_diamond">thin diamond</option>
                                 </select><br />
-                                <input type="text" id="marker" class="vp-input" style="display:none;"/></td>
+                                <input type="text" id="marker" class="vp-input vp-state" style="display:none;"/></td>
                         </tr>
                         <tr>
                             <th>Line Style</th>
-                            <td><select id="linestyle" class="vp-select option-select">
+                            <td><select id="linestyle" class="vp-select option-select vp-state">
                                     <option value="-">solid</option>
                                     <option value="--">dashed</option>
                                     <option value=":">dotted</option>
@@ -229,7 +229,7 @@
                         </tr>
                         <tr>
                             <th>User Option</th>
-                            <td><input id="vp_userOption" type="text" class="vp-input" placeholder="key=value, key=value ..." />
+                            <td><input id="vp_userOption" type="text" class="vp-input vp-state" placeholder="key=value, key=value ..." />
                             </td>
                         </tr>
                     </tbody>
@@ -251,23 +251,23 @@
                     <tbody>
                         <tr>
                             <th>Title</th>
-                            <td><input type="text" class="vp-input" id="title" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="title" /></td>
                         </tr>
                         <tr>
                             <th>X Label</th>
-                            <td><input type="text" class="vp-input" id="xlabel" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="xlabel" /></td>
                         </tr>
                         <tr>
                             <th>Y Label</th>
-                            <td><input type="text" class="vp-input" id="ylabel" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="ylabel" /></td>
                         </tr>
                         <tr>
                             <th>X Limit</th>
-                            <td><input type="text" class="vp-input" id="xlimit" placeholder="(min, max)" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="xlimit" placeholder="(min, max)" /></td>
                         </tr>
                         <tr>
                             <th>Y Limit</th>
-                            <td><input type="text" class="vp-input" id="ylimit" placeholder="(min, max)" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="ylimit" placeholder="(min, max)" /></td>
                         </tr>
                         <tr>
                             <th></th>
@@ -277,15 +277,15 @@
                         </tr>
                         <tr>
                             <th>Legend Title</th>
-                            <td><input type="text" class="vp-input" id="legendTitle" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="legendTitle" /></td>
                         </tr>
                         <tr>
                             <th>Legend Labels</th>
-                            <td><input type="text" class="vp-input" id="legendLabel" /></td>
+                            <td><input type="text" class="vp-input vp-state" id="legendLabel" /></td>
                         </tr>
                         <tr>
                             <th>Legend Position</th>
-                            <td><select class="vp-select" id="legendLoc">
+                            <td><select class="vp-select vp-state" id="legendLoc">
                                     <option value="best">best</option>
                                     <option value="upper right">upper right</option>
                                     <option value="upper left">upper left</option>
@@ -309,7 +309,7 @@
                         </tr>
                         <tr>
                             <th>Save Figure</th>
-                            <td><input type="text" class="vp-input" id="savefigpath" placeholder="file.png" />
+                            <td><input type="text" class="vp-input vp-state" id="savefigpath" placeholder="file.png" />
                                 <div id="vp_openFileNavigationBtn" class="vp-file-browser-button"></div>
                             </td>
                         </tr>

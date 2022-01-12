@@ -145,6 +145,13 @@ define([], function() {
                     }
                 },
                 {
+                    method: 'blur_all_option_page',
+                    selector: '#vp_wrapper',
+                    operation: (evt) => {
+                        that.mainFrame.blurPopup();
+                    }
+                },
+                {
                     method: 'remove_option_page',
                     selector: '#vp_wrapper',
                     operation: (evt) => {

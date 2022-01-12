@@ -307,7 +307,7 @@ define([
             // set popup state's default values
             let defaultPopupState = {
                 blockType: 'task',
-                position: -1,
+                position: this.blockPopupList.length,
                 createChild: true,
                 menuId: '',
                 menuState: {}, // taskState, blockState
@@ -349,7 +349,7 @@ define([
                     }
                     loadStateList.push(tmpState);
                     // if createChild, get childStateInfo
-                    if (tmpState.createChild) {
+                    if (tmpState.blockType == 'block' && tmpState.createChild) {
                         let childStates = this.getChildState(tmpState.menuId, tmpState.position);
                         popupStateList.splice(i+1, 0, ...childStates);
                     }
@@ -551,11 +551,17 @@ define([
             if (taskType == 'task') {
                 // remove from taskBlockList
                 this.removeTask(component);
-                let newBlock = this.addBlock(component);
-
-                // close and focus block (sequence is important)
                 component.close();
-                newBlock.focusItem();
+
+                this.createPopup([{
+                    menuId: component.id,
+                    menuState: {
+                        taskState: component.state
+                    },
+                    blockType: 'block'
+                }]);
+                // close and focus block (sequence is important)
+                // newBlock.focusItem();
             } else {
                 component.close();
             }
@@ -595,9 +601,12 @@ define([
          * Blur PopupComponent
          * @param {PopupComponent} component 
          */
-        blurPopup(component) {
-            if (component instanceof PopupComponent) {
+        blurPopup(component=null) {
+            if (component && (component instanceof PopupComponent)) {
                 component.blur();
+            } else {
+                // blur all
+                $('.vp-popup-frame').removeClass('vp-focused');
             }
             this.setFocusedPage(null);
         }
