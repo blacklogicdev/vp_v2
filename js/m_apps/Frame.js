@@ -1169,126 +1169,137 @@ define([
                     var data = JSON.parse(result);
                     
                     vpKernel.getColumnList(tempObj).then(function(colResObj) {
-                        let columnResult = colResObj.result;
-                        var columnList = JSON.parse(columnResult);
-                        // var columnList = data.columns;
-                        var indexList = data.index;
-                        var dataList = data.data;
-    
-                        columnList = columnList.map(col => { return { label: col.label, type: col.dtype, code: col.value } });
-                        indexList = indexList.map(idx => { return { label: idx, code: idx } });
+                        try {
+                            let columnResult = colResObj.result;
+                            var columnList = JSON.parse(columnResult);
+                            // var columnList = data.columns;
+                            var indexList = data.index;
+                            var dataList = data.data;
         
-                        if (!more) {
-                            // table
-                            var table = new com_String();
-                            // table.appendFormatLine('<table border="{0}" class="{1}">', 1, 'dataframe');
-                            table.appendLine('<thead>');
-                            table.appendLine('<tr><th></th>');
-                            columnList && columnList.forEach(col => {
-                                var colCode = col.code;
-                                var colClass = '';
-                                if (that.state.axis == FRAME_AXIS.COLUMN && that.state.selected.map(col=>col.code).includes(colCode)) {
-                                    colClass = 'selected';
-                                }
-                                table.appendFormatLine('<th data-code="{0}" data-axis="{1}" data-type="{2}" class="{3} {4}">{5}</th>'
-                                                        , colCode, FRAME_AXIS.COLUMN, col.type, VP_FE_TABLE_COLUMN, colClass, col.label);
-                            });
-                            // add column
-                            table.appendFormatLine('<th class="{0}"><img src="{1}"/></th>', VP_FE_ADD_COLUMN, '/nbextensions/visualpython/img/plus.svg');
+                            columnList = columnList.map(col => { return { label: col.label, type: col.dtype, code: col.value } });
+                            indexList = indexList.map(idx => { return { label: idx, code: idx } });
             
-                            table.appendLine('</tr>');
-                            table.appendLine('</thead>');
-                            table.appendLine('<tbody>');
-            
-                            dataList && dataList.forEach((row, idx) => {
-                                table.appendLine('<tr>');
-                                var idxName = indexList[idx].label;
-                                var idxLabel = com_util.convertToStr(idxName, typeof idxName == 'string');
-                                var idxClass = '';
-                                if (that.state.axis == FRAME_AXIS.ROW && that.state.selected.includes(idxLabel)) {
-                                    idxClass = 'selected';
-                                }
-                                table.appendFormatLine('<th data-code="{0}" data-axis="{1}" class="{2} {3}">{4}</th>', idxLabel, FRAME_AXIS.ROW, VP_FE_TABLE_ROW, idxClass, idxName);
-                                row.forEach((cell, colIdx) => {
-                                    if (cell == null) {
-                                        cell = 'NaN';
+                            if (!more) {
+                                // table
+                                var table = new com_String();
+                                // table.appendFormatLine('<table border="{0}" class="{1}">', 1, 'dataframe');
+                                table.appendLine('<thead>');
+                                table.appendLine('<tr><th></th>');
+                                columnList && columnList.forEach(col => {
+                                    var colCode = col.code;
+                                    var colClass = '';
+                                    if (that.state.axis == FRAME_AXIS.COLUMN && that.state.selected.map(col=>col.code).includes(colCode)) {
+                                        colClass = 'selected';
                                     }
-                                    var cellType = columnList[colIdx].type;
-                                    if (cellType.includes('datetime')) {
-                                        cell = new Date(parseInt(cell)).toLocaleString();
-                                    }
-                                    table.appendFormatLine('<td>{0}</td>', cell);
+                                    table.appendFormatLine('<th data-code="{0}" data-axis="{1}" data-type="{2}" class="{3} {4}">{5}</th>'
+                                                            , colCode, FRAME_AXIS.COLUMN, col.type, VP_FE_TABLE_COLUMN, colClass, col.label);
                                 });
-                                // empty data
-                                // table.appendLine('<td></td>');
+                                // add column
+                                table.appendFormatLine('<th class="{0}"><img src="{1}"/></th>', VP_FE_ADD_COLUMN, '/nbextensions/visualpython/img/plus.svg');
+                
                                 table.appendLine('</tr>');
-                            });
-                            // add row
-                            table.appendLine('<tr>');
-                            table.appendFormatLine('<th class="{0}"><img src="{1}"/></th>', VP_FE_ADD_ROW, '/nbextensions/visualpython/img/plus.svg');
-                            table.appendLine('</tr>');
-                            table.appendLine('</tbody>');
-                            $(that.wrapSelector('.' + VP_FE_TABLE)).replaceWith(function() {
-                                return that.renderTable(table.toString());
-                            });
-                        } else {
-                            var table = new com_String();
-                            dataList && dataList.forEach((row, idx) => {
-                                table.appendLine('<tr>');
-                                var idxName = indexList[idx].label;
-                                var idxLabel = com_util.convertToStr(idxName, typeof idxName == 'string');
-                                var idxClass = '';
-                                if (that.state.axis == FRAME_AXIS.ROW && that.state.selected.includes(idxLabel)) {
-                                    idxClass = 'selected';
-                                }
-                                table.appendFormatLine('<th data-code="{0}" data-axis="{1}" class="{2} {3}">{4}</th>', idxLabel, FRAME_AXIS.ROW, VP_FE_TABLE_ROW, idxClass, idxName);
-                                row.forEach((cell, colIdx) => {
-                                    if (cell == null) {
-                                        cell = 'NaN';
+                                table.appendLine('</thead>');
+                                table.appendLine('<tbody>');
+                
+                                dataList && dataList.forEach((row, idx) => {
+                                    table.appendLine('<tr>');
+                                    var idxName = indexList[idx].label;
+                                    var idxLabel = com_util.convertToStr(idxName, typeof idxName == 'string');
+                                    var idxClass = '';
+                                    if (that.state.axis == FRAME_AXIS.ROW && that.state.selected.includes(idxLabel)) {
+                                        idxClass = 'selected';
                                     }
-                                    var cellType = columnList[colIdx].type;
-                                    if (cellType.includes('datetime')) {
-                                        cell = new Date(parseInt(cell)).toLocaleString();
-                                    }
-                                    table.appendFormatLine('<td>{0}</td>', cell);
+                                    table.appendFormatLine('<th data-code="{0}" data-axis="{1}" class="{2} {3}">{4}</th>', idxLabel, FRAME_AXIS.ROW, VP_FE_TABLE_ROW, idxClass, idxName);
+                                    row.forEach((cell, colIdx) => {
+                                        if (cell == null) {
+                                            cell = 'NaN';
+                                        }
+                                        var cellType = columnList[colIdx].type;
+                                        if (cellType.includes('datetime')) {
+                                            cell = new Date(parseInt(cell)).toLocaleString();
+                                        }
+                                        table.appendFormatLine('<td>{0}</td>', cell);
+                                    });
+                                    // empty data
+                                    // table.appendLine('<td></td>');
+                                    table.appendLine('</tr>');
                                 });
-                                // empty data
-                                // table.appendLine('<td></td>');
+                                // add row
+                                table.appendLine('<tr>');
+                                table.appendFormatLine('<th class="{0}"><img src="{1}"/></th>', VP_FE_ADD_ROW, '/nbextensions/visualpython/img/plus.svg');
                                 table.appendLine('</tr>');
-                            });
-                            // insert before last tr tag(add row button)
-                            $(table.toString()).insertBefore($(that.wrapSelector('.' + VP_FE_TABLE + ' tbody tr:last')));
-                        }
-    
-                        // save columnList & indexList as state
-                        that.state.columnList = columnList;
-                        if (!more) {
-                            that.state.indexList = indexList;
-                        } else {
-                            that.state.indexList = that.state.indexList.concat(indexList);
-                        }
-    
-    
-                        // load info
-                        that.loadInfo();
-                        // add to stack
-                        if (codeStr !== '') {
-                            that.state.steps.push(codeStr);
-                            var replacedCode = codeStr.replaceAll(that.state.tempObj, that.state.returnObj);
-                            that.setPreview(replacedCode);
-                        }
-                        
-                        // if scrollPos is saved, go to the position
-                        if (scrollPos >= 0) {
-                            $(that.wrapSelector('.vp-fe-table')).scrollTop(scrollPos);
-                        }
+                                table.appendLine('</tbody>');
+                                $(that.wrapSelector('.' + VP_FE_TABLE)).replaceWith(function() {
+                                    return that.renderTable(table.toString());
+                                });
+                            } else {
+                                var table = new com_String();
+                                dataList && dataList.forEach((row, idx) => {
+                                    table.appendLine('<tr>');
+                                    var idxName = indexList[idx].label;
+                                    var idxLabel = com_util.convertToStr(idxName, typeof idxName == 'string');
+                                    var idxClass = '';
+                                    if (that.state.axis == FRAME_AXIS.ROW && that.state.selected.includes(idxLabel)) {
+                                        idxClass = 'selected';
+                                    }
+                                    table.appendFormatLine('<th data-code="{0}" data-axis="{1}" class="{2} {3}">{4}</th>', idxLabel, FRAME_AXIS.ROW, VP_FE_TABLE_ROW, idxClass, idxName);
+                                    row.forEach((cell, colIdx) => {
+                                        if (cell == null) {
+                                            cell = 'NaN';
+                                        }
+                                        var cellType = columnList[colIdx].type;
+                                        if (cellType.includes('datetime')) {
+                                            cell = new Date(parseInt(cell)).toLocaleString();
+                                        }
+                                        table.appendFormatLine('<td>{0}</td>', cell);
+                                    });
+                                    // empty data
+                                    // table.appendLine('<td></td>');
+                                    table.appendLine('</tr>');
+                                });
+                                // insert before last tr tag(add row button)
+                                $(table.toString()).insertBefore($(that.wrapSelector('.' + VP_FE_TABLE + ' tbody tr:last')));
+                            }
         
-                        that.loading = false;
+                            // save columnList & indexList as state
+                            that.state.columnList = columnList;
+                            if (!more) {
+                                that.state.indexList = indexList;
+                            } else {
+                                that.state.indexList = that.state.indexList.concat(indexList);
+                            }
+        
+        
+                            // load info
+                            that.loadInfo();
+                            // add to stack
+                            if (codeStr !== '') {
+                                that.state.steps.push(codeStr);
+                                var replacedCode = codeStr.replaceAll(that.state.tempObj, that.state.returnObj);
+                                that.setPreview(replacedCode);
+                            }
+                            
+                            // if scrollPos is saved, go to the position
+                            if (scrollPos >= 0) {
+                                $(that.wrapSelector('.vp-fe-table')).scrollTop(scrollPos);
+                            }
+            
+                            that.loading = false;
+                        } catch (err1) {
+                            vpLog.display(VP_LOG_TYPE.ERROR, err1);
+                            that.loading = false;
+                            throw err1;
+                        }
                     });
                 } catch (err) {
                     vpLog.display(VP_LOG_TYPE.ERROR, err);
                     that.loading = false;
                 }
+            }).catch(function(resultObj) {
+                let { result, type, msg } = resultObj;
+                vpLog.display(VP_LOG_TYPE.ERROR, result.ename + ': ' + result.evalue, msg);
+                com_util.renderAlertModal(result.ename + ': ' + result.evalue);
+                that.loading = false;
             });
     
             return code.toString();

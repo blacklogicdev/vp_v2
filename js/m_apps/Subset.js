@@ -558,6 +558,21 @@ define([
                     }
                     that.renderDataPage(errorContent);
                 }
+            }).catch(function(resultObj) {
+                let { msg } = resultObj;
+                var errorContent = new com_String();
+                if (msg.content.ename) {
+                    errorContent.appendFormatLine('<div class="{0}">', VP_DS_DATA_ERROR_BOX);
+                    errorContent.appendLine('<i class="fa fa-exclamation-triangle"></i>');
+                    errorContent.appendFormatLine('<label class="{0}">{1}</label>',
+                        VP_DS_DATA_ERROR_BOX_TITLE, msg.content.ename);
+                    if (msg.content.evalue) {
+                        // errorContent.appendLine('<br/>');
+                        errorContent.appendFormatLine('<pre>{0}</pre>', msg.content.evalue.split('\\n').join('<br/>'));
+                    }
+                    errorContent.appendLine('</div>');
+                }
+                that.renderDataPage(errorContent);
             });
         }
         /**
