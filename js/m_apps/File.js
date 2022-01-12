@@ -58,6 +58,7 @@ define([
                 selectedPath: '',
                 vp_fileioType: 'Read',
                 vp_pageDom: '',
+                userOption: '',
                 ...this.state
             }
 
@@ -282,6 +283,20 @@ define([
                     $(`<option value="${type}">${type}</option>`)
                 );
             });
+
+            // prepend user option
+            let hasAllocateTo = $(this.wrapSelector(prefix + '#o0')).length > 0;
+            if (hasAllocateTo) {
+                $(this.wrapSelector(prefix + '#o0')).closest('tr').before(
+                    $('<tr>').append($(`<td><label for="userOption">User Option</label></td>`))
+                        .append($('<td><input id="userOption" type="text" class="vp-input vp-state" placeholder="key=value, ..."/></td>'))
+                )
+            } else {
+                $(this.wrapSelector(prefix + '#vp_inputOutputBox table')).append(
+                    $('<tr>').append($(`<td><label for="userOption">User Option</label></td>`))
+                        .append($('<td><input id="userOption" type="text" class="vp-input vp-state" placeholder="key=value, ..."/></td>'))
+                )
+            }
     
             $(this.wrapSelector(prefix + '#fileType')).val(selectedType);
     
@@ -352,9 +367,16 @@ define([
 
             this.saveState();
 
+            var prefix = '#vp_file' + pageType + ' ';
+            var userOption = new com_String();
+            var userOptValue = $(this.wrapSelector(prefix + '#userOption')).val();
+            if (userOptValue != '') {
+                userOption.appendFormat(', {0}', userOptValue);
+            }
+
             if (pageType == 'Sample') {
                 // sample csv code
-                var result = pdGen.vp_codeGenerator(this.uuid + ' #vp_fileSample', { ...this.fileState[pageType] });
+                var result = pdGen.vp_codeGenerator(this.uuid + ' #vp_fileSample', { ...this.fileState[pageType] }, userOption.toString());
                 sbCode.append(result);
             } else if (pageType == 'Read') {
                 var thisPkg = JSON.parse(JSON.stringify(this.fileState[pageType].package));
@@ -362,7 +384,7 @@ define([
                     name: 'fileType',
                     type: 'var'
                 });
-                var result = pdGen.vp_codeGenerator(this.uuid + ' #vp_fileRead', thisPkg);
+                var result = pdGen.vp_codeGenerator(this.uuid + ' #vp_fileRead', thisPkg, userOption.toString());
                 sbCode.append(result);
             } else if (pageType == 'Write') {
                 var thisPkg = JSON.parse(JSON.stringify(this.fileState[pageType].package));
@@ -370,7 +392,7 @@ define([
                     name: 'fileType',
                     type: 'var'
                 });
-                var result = pdGen.vp_codeGenerator(this.uuid + ' #vp_fileWrite', thisPkg);
+                var result = pdGen.vp_codeGenerator(this.uuid + ' #vp_fileWrite', thisPkg, userOption.toString());
                 sbCode.append(result);
             }
 
