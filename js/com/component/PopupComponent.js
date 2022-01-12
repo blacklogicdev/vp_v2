@@ -294,6 +294,7 @@ define([
                 } else {
                     that.state[id] = newValue;
                 }
+                vpLog.display(VP_LOG_TYPE.DEVELOP, 'saved state : ' + id+ '/'+tagName+'/'+newValue);
             });
 
             // Click buttons
@@ -518,6 +519,45 @@ define([
 
         saveState() {
             /** Implementation needed */
+            let that = this;
+            $(this.wrapSelector('.vp-state')).each((idx, tag) => {
+                let id = tag.id;
+                let customKey = $(tag).data('key');
+                let tagName = $(tag).prop('tagName'); // returns with UpperCase
+                let newValue = '';
+                switch(tagName) {
+                    case 'INPUT':
+                        let inputType = $(tag).prop('type');
+                        if (inputType == 'text' || inputType == 'number') {
+                            newValue = $(tag).val();
+                            break;
+                        }
+                        if (inputType == 'checkbox') {
+                            newValue = $(tag).prop('checked');
+                            break;
+                        }
+                        break;
+                    case 'TEXTAREA':
+                    case 'SELECT':
+                    default:
+                        newValue = $(tag).val();
+                        break;
+                }
+                
+                // if custom key is available, use it
+                if (customKey && customKey != '') {
+                    // allow custom key until level 2
+                    let customKeys = customKey.split('.');
+                    if (customKeys.length == 2) {
+                        that.state[customKeys[0]][customKeys[1]] = newValue;
+                    } else {
+                        that.state[customKey] = newValue;
+                    }
+                } else {
+                    that.state[id] = newValue;
+                }
+            }); 
+            vpLog.display(VP_LOG_TYPE.DEVELOP, 'savedState', that.state);   
         }
 
         run(execute=true) {
