@@ -62,6 +62,7 @@ define([
                     on: [],
                     how: 'inner',
                 },
+                userOption: '',
                 allocateTo: '',
                 resetIndex: false,
                 ...this.state
@@ -97,6 +98,7 @@ define([
             $(document).off('change', this.wrapSelector('#vp_gbRightIndex'));
             $(document).off('change', this.wrapSelector('#vp_bdLeftSuffix'));
             $(document).off('change', this.wrapSelector('#vp_bdRightSuffix'));
+            $(document).off('change', this.wrapSelector('#vp_bdUserOption'));
             $(document).off('change', this.wrapSelector('#vp_bdAllocateTo'));
             $(document).off('change', this.wrapSelector('#vp_bdResetIndex'));
         }
@@ -117,6 +119,9 @@ define([
                     $(that.wrapSelector('.vp-bd-type-box.merge')).show();
                     $(that.wrapSelector('.vp-bd-type-box.concat')).hide();
                 }
+                // clear user option
+                $(that.wrapSelector('#vp_bdUserOption')).val('');
+                that.state.userOption = '';
             });
 
             //====================================================================
@@ -282,6 +287,11 @@ define([
                 that.state.merge.right.suffix = $(this).val();
             });
 
+            // userOption event
+            $(document).on('change', this.wrapSelector('#vp_bdUserOption'), function() {
+                that.state.userOption = $(this).val();
+            });
+
             // allocateTo event
             $(document).on('change', this.wrapSelector('#vp_bdAllocateTo'), function() {
                 that.state.allocateTo = $(this).val();
@@ -355,7 +365,7 @@ define([
         generateCode() {
             var code = new com_String();
             var {
-                type, concat, merge, allocateTo, resetIndex
+                type, concat, merge, allocateTo, resetIndex, userOption
             } = this.state;
 
             //====================================================================
@@ -389,6 +399,13 @@ define([
                 //====================================================================
                 if (resetIndex) {
                     code.append(', ignore_index=True');
+                }
+
+                //====================================================================
+                // User option
+                //====================================================================
+                if (userOption && userOption != '') {
+                    code.appendFormat(", {0}", userOption);
                 }
 
                 code.append(')');
@@ -437,6 +454,13 @@ define([
                     code.appendFormat(", suffixes=('{0}', '{1}')", merge.left.suffix, merge.right.suffix);
                 }
     
+                //====================================================================
+                // User option
+                //====================================================================
+                if (userOption && userOption != '') {
+                    code.appendFormat(", {0}", userOption);
+                }
+
                 code.append(')');
     
                 //====================================================================
@@ -457,7 +481,7 @@ define([
 
         loadState() {
             var {
-                type, concat, merge, allocateTo, resetIndex
+                type, concat, merge, userOption, allocateTo, resetIndex
             } = this.state;
 
             // type
@@ -496,6 +520,7 @@ define([
                 $(this.wrapSelector('#vp_bdLeftSuffix')).val(merge.left.suffix);
                 $(this.wrapSelector('#vp_bdRightSuffix')).val(merge.right.suffix);
             }
+            $(this.wrapSelector('#vp_bdUserOption')).val(userOption);
             $(this.wrapSelector('#vp_bdAllocateTo')).val(allocateTo);
             $(this.wrapSelector('#vp_bdResetIndex')).prop('checked', resetIndex);
 
