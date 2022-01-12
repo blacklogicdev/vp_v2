@@ -40,6 +40,9 @@
 .vp-popup-frame.vp-close > .vp-popup-footer {
     display: none;
 }
+.vp-popup-frame.vp-focused {
+    border: 1px solid var(--highlight-color);
+}
 .vp-popup-header {
     position: relative;
     height: 30px;
