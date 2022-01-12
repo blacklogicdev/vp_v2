@@ -162,6 +162,7 @@
     width: 120px;
     text-align: center;
     line-height: 30px;
+    z-index: 2;
 }
 .vp-popup-detail-button {
     color: var(--font-primary);
