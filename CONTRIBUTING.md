@@ -17,7 +17,8 @@ and your contribution would be greatly appreciated ! <br><br>
 
 NOTE : Any submissions are understood to be under the same GPLv3 License that covers the project.
 
-* GUI Kit available as a Figma library: [Visual Python GUI Kit 1.0](https://www.figma.com/community/file/976035035360380841).
+* Programming Guide: [Developer Documentation](https://bird-energy-733.notion.site/visualpython-docs-85c0274ff7564747bb8e8d77909fc8b7) 
+* GUI Design Guide: [Visual Python GUI Kit 1.0](https://www.figma.com/community/file/976035035360380841)
 
 
 ### Creating an issue
@@ -60,4 +61,3 @@ NOTE : Your work can be of great help for someone who struggles to find a soluti
 NOTE : Recommend reading [Figma: Publish Community files](https://help.figma.com/hc/en-us/articles/360040035974-Publish-Community-files) before starting the work for better understanding of the system. 
 
 <br>
-

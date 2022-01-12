@@ -16,9 +16,8 @@ define([
     'vp_base/js/com/com_util',
     'vp_base/js/com/com_Const',
     'vp_base/js/com/com_String',
-    'vp_base/js/com/com_setting',
     'vp_base/js/com/component/PopupComponent'
-], function(com_util, com_Const, com_String, com_setting, PopupComponent) {
+], function(com_util, com_Const, com_String, PopupComponent) {
 
     /**
      * Import
