@@ -40,6 +40,7 @@ define([
                 v6: '', //       - step
                 v7: '', // Variable
                 v8: '', // Typing
+                useEnumerate: true,
                 ...this.state
             }
             
@@ -50,14 +51,16 @@ define([
             super._bindEvent();
             /** Implement binding events */
             let that = this;
-            $(this.wrapSelector('#v3')).on('click', function() {
+            $(this.wrapSelector('#v3')).on('change', function() {
                 let type = $(this).val();
 
                 // show input
                 if (type == 'range') {
-                    $(that.wrapSelector('#v1')).hide();
+                    $(that.wrapSelector('#v2')).hide();
+                    $(that.wrapSelector('.vp-enumerate-box')).hide();
                 } else {
-                    $(that.wrapSelector('#v1')).show();
+                    $(that.wrapSelector('#v2')).show();
+                    $(that.wrapSelector('.vp-enumerate-box')).show();
                 }
                 // show sub box
                 $('.vp-for-sub-box').hide();
@@ -68,6 +71,16 @@ define([
                 let value = evt.value;
                 that.state.v7 = value;
             });
+
+            $(this.wrapSelector('#useEnumerate')).on('change', function() {
+                let checked = $(this).prop('checked');
+                that.state.useEnumerate = checked;
+                if (checked) {
+                    $(that.wrapSelector('#v1')).show();
+                } else {
+                    $(that.wrapSelector('#v1')).hide();
+                }
+            });
         }
 
         templateForBody() {
@@ -77,10 +90,14 @@ define([
             page.appendLine('<div class="vp-flex-row-between">');
             page.appendLine('<div class="vp-orange-text vp-bold vp-flex-column-center wp5">For</div>');
             page.appendLine('<div class="vp-flex-row-between wp80">');
+            let showIndex = true;
+            if (this.state.v3 != 'range' && this.state.useEnumerate == false) {
+                showIndex = false;
+            }
             page.appendFormatLine('<input type="text" id="v1" class="vp-input vp-state wp100" value="{0}" placeholder="{1}" {2}>'
-                                , this.state.v1, 'Index', this.state.v3 != 'range'?'':'style="display:none;"');
-            page.appendFormatLine('<input type="text" id="v2" class="vp-input vp-state wp100" value="{0}" placeholder="{1}">'
-                                , this.state.v2, 'Item');
+                                , this.state.v1, 'Index', showIndex?'':'style="display:none;"');
+            page.appendFormatLine('<input type="text" id="v2" class="vp-input vp-state wp100" value="{0}" placeholder="{1}" {2}>'
+                                , this.state.v2, 'Item', this.state.v3 == 'range'?'style="display:none;"':'');
             page.appendLine('</div>');
             page.appendLine('</div>');
             page.appendLine('<div class="vp-flex-row-between mb5">');
@@ -98,6 +115,10 @@ define([
             page.appendLine(this.templateForRangeBox());
             page.appendLine(this.templateForVariableBox());
             page.appendLine(this.templateForTypingBox());
+            page.appendFormatLine('<div class="vp-enumerate-box vp-flex-row-between mb5" {0}>', this.state.v3 == 'range'?'style="display:none;"':'');
+            page.appendFormatLine(`<div class="vp-flex-column-center wp5"></div>
+            <div class="vp-flex-row-right wp80"><input type="checkbox" id="useEnumerate" {0}/><label for="useEnumerate">Enumerate</label></div>
+            </div>`, this.state.useEnumerate?'checked':'');
             page.appendLine('</div>');
             return page.toString();
         }
@@ -150,27 +171,47 @@ define([
         }
 
         templateForTypingBox() {
-            return `<div class="vp-for-sub-box vp-sub-typing vp-flex-row-between mb5" ${this.state.v3=='typing'?'':'style="display:none;"'}>
+            return `<div class="vp-for-sub-box vp-sub-typing" ${this.state.v3=='typing'?'':'style="display:none;"'}>
+                <div class="vp-flex-row-between mb5">
                     <div class="vp-flex-column-center wp5"></div>
                     <div class="vp-flex-row-between wp80">
                         <input type="text" id="v8" class="vp-input vp-state wp100" value="${this.state.v8}" placeholder="User Input">
                     </div>
+                </div>
             </div>`;
         }
 
         generateCode() {
-            let { v1, v2, v3, v4 ,v5, v6, v7, v8 } = this.state;
+            let { v1, v2, v3, v4 ,v5, v6, v7, v8, useEnumerate } = this.state;
             let front = v2;
-            if (v3 != 'range' && v1 != '') {
-                front = v1 + ', ' + v2;
-            }
             let back = '';
             if (v3 == 'range') {
+                front = v1;
                 back = `range(${v4}${v5!=''?', '+v5:''}${v6!=''?', '+v6:''})`
             } else if (v3 == 'variable') {
-                back = `(${v7})`;
+                if (useEnumerate) {
+                    let optionList = [];
+                    if (v1 != '') {
+                        optionList.push(v1);
+                    }
+                    if (v2 != '') {
+                        optionList.push(v2);
+                    }
+                    front = optionList.join(', ');
+                }
+                back = `${useEnumerate?'enumerate':''}(${v7})`;
             } else {
-                back = v8;
+                if (useEnumerate) {
+                    let optionList = [];
+                    if (v1 != '') {
+                        optionList.push(v1);
+                    }
+                    if (v2 != '') {
+                        optionList.push(v2);
+                    }
+                    front = optionList.join(', ');
+                }
+                back = `${useEnumerate?'enumerate':''}(${v8})`;
             }
 
             return com_util.formatString('for {0} in {1}:', front, back);

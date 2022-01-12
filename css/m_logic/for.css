@@ -8,3 +8,8 @@
     flex-direction: column;
     justify-content: center;
 }
+.vp-flex-row-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
